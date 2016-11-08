@@ -1,0 +1,13 @@
+{
+  "name": "systeminfo",
+  "version": "0.0.1",
+  "description": "Returns system information",
+  "author": "Your Name <you.name@example.org>",
+  "inputs":[],
+  "outputs": [
+    {
+      "name": "hostname",
+      "type": "string"
+    }
+  ]
+}
