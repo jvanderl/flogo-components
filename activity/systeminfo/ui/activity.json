@@ -2,7 +2,7 @@
   "name": "systeminfo",
   "version": "0.0.1",
   "description": "Returns system information",
-  "title": "System Info",
+  "title": "Get System Info",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/activity/systeminfo",
   "inputs":[],
