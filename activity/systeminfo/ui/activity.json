@@ -2,7 +2,9 @@
   "name": "systeminfo",
   "version": "0.0.1",
   "description": "Returns system information",
-  "author": "Your Name <you.name@example.org>",
+  "title": "System Info",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/activity/systeminfo",
   "inputs":[],
   "outputs": [
     {
