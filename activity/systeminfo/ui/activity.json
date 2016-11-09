@@ -8,6 +8,10 @@
     {
       "name": "hostname",
       "type": "string"
+    },
+    {
+      "name": "ipaddress",
+      "type": "string"
     }
   ]
 }
