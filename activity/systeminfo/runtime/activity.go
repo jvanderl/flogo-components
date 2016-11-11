@@ -2,8 +2,8 @@ package systeminfo
 
 import (
 	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
-	"os"
 	"net"
+	"os"
 )
 
 // MyActivity is a stub for your Activity implementation
@@ -32,9 +32,9 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 		context.SetOutput("hostname", host)
 		addrs, _ := net.LookupIP(host)
 		for _, addr := range addrs {
-    		if ipv4 := addr.To4(); ipv4 != nil {
-        		 ipaddrs = addr.String()
-    		}   
+			if ipv4 := addr.To4(); ipv4 != nil {
+				ipaddrs = addr.String()
+			}
 		}
 		context.SetOutput("ipaddress", ipaddrs)
 	} else {
