@@ -1,8 +1,10 @@
 {
   "name": "mqtt",
   "version": "0.0.1",
-  "description": "Pubishes a message on an MQTT topic",
+  "description": "Pubishes message on MQTT topic",
+  "title": "Publish MQTT Message",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/activity/systeminfo",  
   "inputs":[
    {
       "name": "broker",
