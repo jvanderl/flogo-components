@@ -33,7 +33,7 @@ var jsonMetadata = `{
       "name": "qos",
       "type": "integer",
       "required": true,
-      "allowed" : [0, 1, 2]
+      "allowed" : ["0", "1", "2"]
     },
     {
       "name": "message",
