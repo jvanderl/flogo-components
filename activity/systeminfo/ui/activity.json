@@ -4,7 +4,7 @@
   "description": "Returns system information",
   "title": "Get System Info",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "homepage": "https://github.com/jvanderl/flogo-components/activity/systeminfo",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/systeminfo",
   "inputs":[],
   "outputs": [
     {
