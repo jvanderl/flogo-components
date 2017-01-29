@@ -1,5 +1,5 @@
 {
   "name": "mqtt",
   "version": "0.0.1",
-  "description": "Pubishes a message on an MQTT topic",
+  "description": "Pubishes a message on an MQTT topic"
 }
