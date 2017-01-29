@@ -4,7 +4,7 @@
   "description": "Pubishes message on MQTT topic",
   "title": "Publish MQTT Message",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "homepage": "https://github.com/jvanderl/flogo-components/activity/systeminfo",  
+  "homepage": "https://github.com/jvanderl/flogo-components/activity/mqtt",  
   "inputs":[
    {
       "name": "broker",
