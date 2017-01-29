@@ -1,11 +1,11 @@
-# tibco-coap
-This activity provides your flogo application the ability to send a CoAP message.
+# Publish MQTT Message
+This activity provides your flogo application the ability to publish a message on an MQTT topic.
 
 
 ## Installation
 
 ```bash
-flogo add activity github.com/TIBCOSoftware/flogo-contrib/activity/coap
+flogo add activity github.com/jvanderl/flogo-components/activity/mqtt
 ```
 
 ## Schema
@@ -14,40 +14,43 @@ Inputs and Outputs:
 ```json
 {
   "inputs":[
-    {
-      "name": "uri",
+   {
+      "name": "broker",
       "type": "string",
       "required": true
     },
     {
-      "name": "method",
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "user",
+      "type": "string"
+    },
+    {
+      "name": "password",
+      "type": "string"
+    },
+    {
+      "name": "topic",
       "type": "string",
       "required": true
     },
     {
-      "name": "queryParams",
-      "type": "params"
+      "name": "qos",
+      "type": "integer",
+      "required": true,
+      "allowed" : ["0", "1", "2"]
     },
     {
-      "name": "type",
-      "type": "string"
-    },
-    {
-      "name": "messageId",
-      "type": "integer"
-    },
-    {
-      "name": "options",
-      "type": "params"
-    },
-    {
-      "name": "payload",
-      "type": "string"
+      "name": "message",
+      "type": "string",
+      "required": true
     }
   ],
   "outputs": [
     {
-      "name": "response",
+      "name": "result",
       "type": "string"
     }
   ]
@@ -56,32 +59,61 @@ Inputs and Outputs:
 ## Settings
 | Setting   | Description    |
 |:----------|:---------------|
-| method    | The CoAP method (POST,GET,PUT,DELETE)|
-| uri   | The CoAP resource URI |         
-| queryParams | The query parameters |
-| type      | Message Type (Confirmable, NonConfirmable, Acknowledgement, Reset) |
-| messageId | ID used to detect duplicates and for optional reliability |
-| options   | CoAP options |
-| payload   | The message payload |
+| broker    | the MQTT Broker URI (tcp://<hostname>:<portnumber>)|
+| id        | The MQTT Client ID |         
+| user      | The UserID used when connecting to the MQTT broker |
+| password  | The Password used when connecting to the MQTT broker |
+| topic     | Topic on which the message is published |
+| qos       | MQTT Quality of Service |
+| message   | The message payload |
 
 
 ## Configuration Examples
 ### Simple
-Configure a task in flow to send a "hello world" message via CoAP:
+Configure a task in flow to publish a "hello world" message on MQTT topic called "flogo":
 
 ```json
 {
-  "id": 3,
+  "id": 2,
+  "name": "Publish MQTT Message",
   "type": 1,
-  "activityType": "tibco-coap",
-  "name": "Send CoAP Message",
+  "activityType": "mqtt",
   "attributes": [
-    { "name": "method", "value": "POST" },
-    { "name": "address", "value": "coap://localhost:5683/device" },
-    { "name": "type", "value": "Confirmable" },
-    { "name": "messageId", "value": 12345 },
-    { "name": "payload", "value": "hello world" },
-    { "name": "options", "value": {"ETag":"tag", "MaxAge":2 }
+    {
+      "name": "broker",
+      "value": "tcp://localhost:1883",
+      "type": "string"
+    },
+    {
+      "name": "id",
+      "value": "testmqtt",
+      "type": "string"
+    },
+    {
+      "name": "user",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "name": "password",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "name": "topic",
+      "value": "flogo",
+      "type": "string"
+    },
+    {
+      "name": "qos",
+      "value": "0",
+      "type": "integer"
+    },
+    {
+      "name": "message",
+      "value": "Hello World",
+      "type": "string"
+    }
   ]
 }
 ```
