@@ -59,7 +59,7 @@ Inputs and Outputs:
 ## Settings
 | Setting   | Description    |
 |:----------|:---------------|
-| broker    | the MQTT Broker URI (tcp://<hostname>:<portnumber>)|
+| broker    | the MQTT Broker URI (tcp://[hostname]:[port])|
 | id        | The MQTT Client ID |         
 | user      | The UserID used when connecting to the MQTT broker |
 | password  | The Password used when connecting to the MQTT broker |
