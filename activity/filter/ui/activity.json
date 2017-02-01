@@ -1,8 +1,10 @@
 {
   "name": "filter",
   "version": "0.0.1",
-  "description": "Filters input data based on min, max value and time interval",  
+  "description": "Filters input data based on min, max value and time interval",
+  "title": "Filter Data",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/filter",   
   "inputs":[
     {
       "name": "input",
