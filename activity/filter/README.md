@@ -67,7 +67,7 @@ Inputs and Outputs:
 | Setting   | Description    |
 |:----------|:---------------|
 | input    | the input data |
-| datasource For identifying unique values (only used i.c.w. interval) |
+| datasource | For identifying unique values (only used i.c.w. interval) |
 | datatype  | The type of data offert (int, uint or float32) |
 | minvalue  | The minimum value that gets passed through |
 | maxvalue  | The maximum value that gets passed through |
