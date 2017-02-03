@@ -2,7 +2,7 @@
   "name": "filter",
   "version": "0.0.1",
   "description": "Filters input data based on min, max value and time interval",
-  "title": "Publish MQTT Message",
+  "title": "Filter Data",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/activity/filter",
   "inputs":[

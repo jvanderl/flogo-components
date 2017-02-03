@@ -1,4 +1,4 @@
-# mqtt2
+# MQTT Topic Subscriber
 This trigger provides your flogo application the ability to start a flow via MQTT
 It is different from the original one by Michael Register <mregiste@tibco.com> in the sense that it takes wildcards per endpoint and returns the actual topic that is used in a spearate output.
 
