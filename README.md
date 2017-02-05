@@ -8,7 +8,6 @@ Collection custom built flogo components
 * [mqtt](activity/mqtt): Publish MQTT Message
 * [splitjson](activity/splitjson): Splits JSON structure into separate name-value pairs
 * [splitpath](activity/splitpath): Splits a path into separate parts
-* [mqtt](activity/mqtt): Publish MQTT Message
 * [systeminfo](activity/systeminfo): Retrieve System Information
 * [throttle](activity/throttle): Throttle data based on interval
 
