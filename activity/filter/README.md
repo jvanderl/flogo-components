@@ -13,15 +13,11 @@ Inputs and Outputs:
 
 ```json
 {
- "inputs":[
+  "inputs":[
     {
       "name": "input",
       "type": "string",
       "required": true
-    },
-    {
-      "name": "datasource",
-      "type": "string"
     },
     {
       "name": "datatype",
@@ -38,30 +34,17 @@ Inputs and Outputs:
       "type": "string"
     },
     {
-      "name": "interval",
-      "type": "integer"
-    },
-    {
-      "name": "intervaltype",
-      "type": "string",
-      "allowed" : ["hours", "minutes", "seconds", "milliseconds"]
+      "name": "inverse",
+      "type": "boolean"
     }
   ],
   "outputs": [
     {
-      "name": "result",
-      "type": "string"
-    },
-    {
-      "name": "usevalue",
+      "name": "pass",
       "type": "boolean"
     },
     {
       "name": "reason",
-      "type": "string"
-    },
-    {
-      "name": "lasttimepassed",
       "type": "string"
     }
   ]
@@ -71,20 +54,16 @@ Inputs and Outputs:
 | Setting   | Description    |
 |:----------|:---------------|
 | input    | the input data |
-| datasource | For identifying unique values (only used i.c.w. interval) |
 | datatype  | The type of data offert (int, uint or float32) |
 | minvalue  | The minimum value that gets passed through |
 | maxvalue  | The maximum value that gets passed through |
-| interval  | The time interval for passing unique data|
-| intervaltype | Unit of time for interval (hours, minutes, seconds or milliseconds) |
+| inverse  | Invert the filter, can be used for filtering out a mid-section|
 
 ## Ouputs
 | Output   | Description    |
 |:----------|:---------------|
-| result    | The output data when not filtered out |
-| usevalue | Determines if the result should be used or not (true, false) |
+| pass | Determines if the result should be used or not (true, false) |
 | reason  | When the data is not to be used, reason explains why |
-| lasttimepassed  | When the filtering by interval, this holds the time when data was last used |
 
 
 ## Configuration Examples
@@ -111,12 +90,7 @@ Configure a task in flow to only forward data between 100 and 200 with a 10 seco
         "attributes": [
           {
             "name": "input",
-            "value": "125",
-            "type": "string"
-          },
-          {
-            "name": "datasource",
-            "value": "flogo/device/DEV12345/distance",
+            "value": "150",
             "type": "string"
           },
           {
@@ -135,14 +109,9 @@ Configure a task in flow to only forward data between 100 and 200 with a 10 seco
             "type": "string"
           },
           {
-            "name": "interval",
-            "value": "10",
-            "type": "integer"
-          },
-          {
-            "name": "intervaltype",
-            "value": "seconds",
-            "type": "string"
+            "name": "inverse",
+            "value": "false",
+            "type": "boolean"
           }
         ]
       },
@@ -171,7 +140,7 @@ Configure a task in flow to only forward data between 100 and 200 with a 10 seco
         "inputMappings": [
           {
             "type": 1,
-            "value": "{A2.result}",
+            "value": "{A2.reason}",
             "mapTo": "message"
           }
         ]

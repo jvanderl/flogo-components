@@ -1,5 +1,5 @@
 {
   "name": "filter",
   "version": "0.0.1",
-  "description": "Filters input data based on min, max value and time interval"
+  "description": "Filters input data based on min, max value"
 }
