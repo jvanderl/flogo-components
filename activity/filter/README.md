@@ -1,4 +1,4 @@
-# Publish MQTT Message
+# Filter Data
 This activity provides your flogo application the ability to filter out unwanted data.
 
 
