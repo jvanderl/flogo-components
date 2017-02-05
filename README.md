@@ -7,9 +7,10 @@ Collection custom built flogo components
 * [filter](activity/filter): Filter out unwanted data
 * [mqtt](activity/mqtt): Publish MQTT Message
 * [splitjson](activity/splitjson): Splits JSON structure into separate name-value pairs
-* [splitpath](activity/splitjson): Splits a path into separate parts
+* [splitpath](activity/splitpath): Splits a path into separate parts
 * [mqtt](activity/mqtt): Publish MQTT Message
 * [systeminfo](activity/systeminfo): Retrieve System Information
+* [throttle](activity/throttle): Throttle data based on interval
 
 ### Triggers
 * [mqtt2](trigger/mqtt2): Receive MQTT Message
@@ -39,6 +40,11 @@ flogo add activity github.com/jvanderl/flogo-components/activity/splitpath
 #### Install SystemInfo Activity
 ```bash
 flogo add activity github.com/jvanderl/flogo-components/activity/systeminfo
+```
+
+#### Install Throttle Activity
+```bash
+flogo add activity github.com/jvanderl/flogo-components/activity/throttle
 ```
 
 #### Install Receive MQTT Message trigger

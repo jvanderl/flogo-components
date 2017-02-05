@@ -1,0 +1,5 @@
+{
+  "name": "throttle",
+  "version": "0.0.1",
+  "description": "Trottles output based on unique data source and time interval"
+}
