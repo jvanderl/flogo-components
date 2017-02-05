@@ -47,8 +47,8 @@ Inputs and Outputs:
 ## Settings
 | Setting   | Description    |
 |:----------|:---------------|
-| datasource | For identifying unique values (only used i.c.w. interval) |
-| interval  | The time interval for passing unique data|
+| datasource | For identifying unique values |
+| interval  | The time interval for passing unique data |
 | intervaltype | Unit of time for interval (hours, minutes, seconds or milliseconds) |
 
 ## Ouputs
