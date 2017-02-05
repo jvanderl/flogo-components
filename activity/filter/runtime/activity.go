@@ -3,8 +3,8 @@ package filter
 import (
 	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
 	"github.com/op/go-logging"
-	"fmt"
 	"strconv"
+	"fmt"
 )
 
 const (
@@ -48,13 +48,11 @@ func (a *MyActivity) Metadata() *activity.Metadata {
 // Eval implements activity.Activity.Eval
 func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
 
-	//filter out by default
-	context.SetOutput(pass, false)
-
 	// check input value data type
 	datatypeInput := context.GetInput(datatype)
 	ivdatatype, ok := datatypeInput.(string)
 	if !ok {
+		context.SetOutput(pass, false)
 		context.SetOutput(reason, "DATATYPE_NOT_SET")
 		return true, fmt.Errorf("Data type not set.")
 	}
@@ -62,6 +60,7 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
 	// check the value matches the data type
 	ifInput = validateValue(context, input, ivdatatype)
 	if ifInput == nil {
+		context.SetOutput(pass, false)
 		context.SetOutput(reason, "INPUT_INVALID")
 		return true, fmt.Errorf("Invalid input data.")
 	}
@@ -80,6 +79,7 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
 		// there is a minvalue assigned, now check for validity
 		ifMinValue = validateValue(context, minvalue, ivdatatype)
 				if ifMinValue == nil {
+				context.SetOutput(pass, false)
 				context.SetOutput(reason, "MIN_VALUE_INVALID")
 				return true, fmt.Errorf("Invalid minimum value.")
 		} else {
@@ -107,9 +107,10 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
 	if cxMaxValue != "" {
 		// there is a minvalue assigned, now check for validity
 		ifMaxValue = validateValue(context, maxvalue, ivdatatype)
-				if ifMaxValue == nil {
-				context.SetOutput(reason, "MAX_VALUE_INVALID")
-				return true, fmt.Errorf("Invalid maximum value.")
+			if ifMaxValue == nil {
+			context.SetOutput(pass, false)
+			context.SetOutput(reason, "MAX_VALUE_INVALID")
+			return true, fmt.Errorf("Invalid maximum value.")
 		} else {
 			maximumSet = true
 			if !ifInverse {
@@ -132,16 +133,19 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
 
 	if (!ifInverse && valueTooLow) || (ifInverse && !minimumSet && valueTooLow) {
 		// normal filter and value is too low or inverse filter, no minumum set and value too low
+		context.SetOutput(pass, false)
 		context.SetOutput(reason, "VALUE_TOO_LOW")
 		return true, nil
 	}
 	if (!ifInverse && valueTooHigh) || (ifInverse && !maximumSet && valueTooHigh)  {
 		// normal filter and value is too high or inverse filter, no maximum set and value too high
+		context.SetOutput(pass, false)
 		context.SetOutput(reason, "VALUE_TOO_HIGH")
 		return true, nil
 	}
 	if (ifInverse && minimumSet && valueTooHigh && maximumSet && valueTooLow) {
 		// normal filter and value is too high or inverse filter, no maximum set and value too high
+		context.SetOutput(pass, false)
 		context.SetOutput(reason, "MID_SECTION_FILTERED")
 		return true, nil
 	}
