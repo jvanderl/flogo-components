@@ -59,6 +59,10 @@ Inputs and Outputs:
     {
       "name": "reason",
       "type": "string"
+    },
+    {
+      "name": "lasttimepassed",
+      "type": "string"
     }
   ]
 }
@@ -71,7 +75,7 @@ Inputs and Outputs:
 | datatype  | The type of data offert (int, uint or float32) |
 | minvalue  | The minimum value that gets passed through |
 | maxvalue  | The maximum value that gets passed through |
-| interval  | The time interval for passing unique data (not yet implemented) |
+| interval  | The time interval for passing unique data|
 | intervaltype | Unit of time for interval (hours, minutes, seconds or milliseconds) |
 
 ## Ouputs
@@ -80,11 +84,12 @@ Inputs and Outputs:
 | result    | The output data when not filtered out |
 | usevalue | Determines if the result should be used or not (true, false) |
 | reason  | When the data is not to be used, reason explains why |
+| lasttimepassed  | When the filtering by interval, this holds the time when data was last used |
 
 
 ## Configuration Examples
 ### Simple
-Configure a task in flow to filter out an integer based on maximum value":
+Configure a task in flow to only forward data between 100 and 200 with a 10 second interval:
 
 ```json
 {
@@ -110,23 +115,28 @@ Configure a task in flow to filter out an integer based on maximum value":
             "type": "string"
           },
           {
+            "name": "datasource",
+            "value": "flogo/device/DEV12345/distance",
+            "type": "string"
+          },
+          {
             "name": "datatype",
             "value": "int",
             "type": "string"
           },
           {
             "name": "minvalue",
-            "value": "",
-            "type": "string"
-          },
-          {
-            "name": "maxvalue",
             "value": "100",
             "type": "string"
           },
           {
+            "name": "maxvalue",
+            "value": "200",
+            "type": "string"
+          },
+          {
             "name": "interval",
-            "value": "5",
+            "value": "10",
             "type": "integer"
           },
           {

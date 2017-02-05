@@ -51,6 +51,10 @@ var jsonMetadata = `{
     {
       "name": "reason",
       "type": "string"
+    },
+    {
+      "name": "lasttimepassed",
+      "type": "string"
     }
   ]
 }`
