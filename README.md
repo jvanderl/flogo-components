@@ -5,6 +5,7 @@ Collection custom built flogo components
 
 ### Activities
 * [filter](activity/filter): Filter out unwanted data
+* [getjson](activity/getjson): Retrieve specific elements from a JSON structure
 * [mqtt](activity/mqtt): Publish MQTT Message
 * [splitjson](activity/splitjson): Splits JSON structure into separate name-value pairs
 * [splitpath](activity/splitpath): Splits a path into separate parts
@@ -19,6 +20,11 @@ Collection custom built flogo components
 #### Install Filter Activity
 ```bash
 flogo add activity github.com/jvanderl/flogo-components/activity/filter
+```
+
+#### Install Get JSON Activity
+```bash
+flogo add activity github.com/jvanderl/flogo-components/activity/getjson
 ```
 
 #### Install MQTT Activity
