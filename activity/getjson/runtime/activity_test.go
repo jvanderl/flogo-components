@@ -1,4 +1,4 @@
-package splitjson
+package getjson
 
 import (
 	"testing"
@@ -8,7 +8,7 @@ import (
 )
 
 func TestRegistered(t *testing.T) {
-	act := activity.Get("splitjson")
+	act := activity.Get("getjson")
 
 	if act == nil {
 		t.Error("Activity Not Registered")
@@ -34,19 +34,17 @@ func TestEval(t *testing.T) {
 
 	//setup attrs
 	tc.SetInput("input", "{\"distance\":150, \"status\":\"optimal\"}")
+	tc.SetInput("name1", "distance")
+	tc.SetInput("name2", "status")
 
 	act.Eval(tc)
 
 	result := tc.GetOutput("result")
-	name1 := tc.GetOutput("name1")
 	value1 := tc.GetOutput("value1")
-	name2 := tc.GetOutput("name2")
 	value2 := tc.GetOutput("value2")
 	
 	fmt.Println("result: ", result)
-	fmt.Println("name1: ", name1)
 	fmt.Println("value1: ", value1)
-	fmt.Println("name2: ", name2)
 	fmt.Println("value2: ", value2)
 
 	if result == nil {

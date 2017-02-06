@@ -1,0 +1,5 @@
+{
+  "name": "getjson",
+  "version": "0.0.1",
+  "description": "Retrieves specific elements from a JSON structure"
+}
