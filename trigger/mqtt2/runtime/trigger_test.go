@@ -13,7 +13,7 @@ const testConfig string = `{
   "name": "mqtt2",
   "settings": {
     "topic": "flogo/#",
-    "broker": "tcp://vm-jl-centos7:1883",
+    "broker": "tcp://127.0.0.1:1883",
     "id": "flogoEngine",
     "user": "",
     "password": "",
@@ -67,14 +67,14 @@ func TestEndpoint(t *testing.T) {
 	tgr.Start()
 	defer tgr.Stop()
 
-	opts := MQTT.NewClientOptions()
-	opts.AddBroker("tcp://vm-jl-centos7:1883")
+	opts := mqtt.NewClientOptions()
+	opts.AddBroker("tcp://localhost:1883")
 	opts.SetClientID("flogoEngine")
 	opts.SetUsername("")
 	opts.SetPassword("")
 	opts.SetCleanSession(false)
 
-	client := MQTT.NewClient(opts)
+	client := mqtt.NewClient(opts)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
 		panic(token.Error())
 	}

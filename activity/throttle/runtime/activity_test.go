@@ -4,6 +4,8 @@ import (
 	"testing"
 	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
 	"github.com/TIBCOSoftware/flogo-lib/flow/test"
+	"fmt"
+	"time"
 )
 
 func TestRegistered(t *testing.T) {
@@ -31,7 +33,57 @@ func TestEval(t *testing.T) {
 	tc := test.NewTestActivityContext(md)
 	//setup attrs
 
+
+	fmt.Println("Setting up Throttle for 'UID123123' with interval 5 seconds")
+	tc.SetInput("datasource", "UID123123")
+	tc.SetInput("interval", 5)
+	tc.SetInput("intervaltype", "seconds")
+
+	fmt.Println("First run should pass")
+
 	act.Eval(tc)
 
+	pass := tc.GetOutput("pass")
+	reason := tc.GetOutput("reason")
+	lasttimepassed := tc.GetOutput("lasttimepassed")
+	
+	fmt.Println("pass: ", pass)
+	fmt.Println("reason: ", reason)
+	fmt.Println("lasttimepassed: ", lasttimepassed)
+
+	fmt.Println("Wait 2 seconds")
+	time.Sleep(2000 * time.Millisecond)
+
+	fmt.Println("Second run should not pass")
+
+	act.Eval(tc)
+
+	pass = tc.GetOutput("pass")
+	reason = tc.GetOutput("reason")
+	lasttimepassed = tc.GetOutput("lasttimepassed")
+	
+	fmt.Println("pass: ", pass)
+	fmt.Println("reason: ", reason)
+	fmt.Println("lasttimepassed: ", lasttimepassed)
+
+
+	fmt.Println("Wait 3 more seconds")
+	time.Sleep(3000 * time.Millisecond)
+
+	fmt.Println("Third run should pass again")
+
+	act.Eval(tc)
+
+	pass = tc.GetOutput("pass")
+	reason = tc.GetOutput("reason")
+	lasttimepassed = tc.GetOutput("lasttimepassed")
+	
+	fmt.Println("pass: ", pass)
+	fmt.Println("reason: ", reason)
+	fmt.Println("lasttimepassed: ", lasttimepassed)
 	//check result attr
+
+	if pass == nil {
+		t.Fail()
+	}
 }

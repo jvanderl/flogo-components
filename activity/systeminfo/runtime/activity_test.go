@@ -4,6 +4,7 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
 	"github.com/TIBCOSoftware/flogo-lib/flow/test"
 	"testing"
+	"fmt"
 )
 
 func TestRegistered(t *testing.T) {
@@ -31,7 +32,20 @@ func TestEval(t *testing.T) {
 	tc := test.NewTestActivityContext(md)
 	//setup attrs
 
+	fmt.Println("Retrieving Sytem Information")
+
 	act.Eval(tc)
 
 	//check result attr
+
+	hostname := tc.GetOutput("hostname")
+	ipaddress := tc.GetOutput("ipaddress")
+
+	fmt.Println("hostname: ", hostname)
+	fmt.Println("ipaddress: ", ipaddress)
+
+	if hostname == nil {
+		t.Fail()
+	}
+
 }

@@ -48,48 +48,48 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
 	ivInput := context.GetInput(input).(string)
 	ivDelimiter := context.GetInput(delimiter).(string)
 	ivFixedPath := context.GetInput(fixedpath).(string)
-	log.Debug("input: '", ivInput, "'")
-	log.Debug("delimiter: '", ivDelimiter, "'")
-	log.Debug("fixedpath: '", ivFixedPath, "'")
+//	log.Debug("input: '", ivInput, "'")
+//	log.Debug("delimiter: '", ivDelimiter, "'")
+//	log.Debug("fixedpath: '", ivFixedPath, "'")
 
-	log.Debug("Checking if fixed path exists")	
+	log.Debug("Proecssing fixed path")	
 	if ivFixedPath != "" {
 		//forward the fixedpath to output
 		context.SetOutput(fixedpath, ivFixedPath)
-		log.Debug("Checking if start of input matches fixed path")
+//		log.Debug("Checking if start of input matches fixed path")
 		//check if input actually starts with fixedpath
 		if strings.HasPrefix(ivInput,ivFixedPath) == false {
 			context.SetOutput(result, "PREFIX_MISMATCH")
 			return true, nil
 		} else {
 			// strip fixed path from input
-			log.Debug("fixed path matches, stripping it from the input")
+//			log.Debug("fixed path matches, stripping it from the input")
 			ivInput = strings.TrimPrefix(ivInput, ivFixedPath)
-			log.Debug("input to split is now: ", ivInput)
+//			log.Debug("input to split is now: ", ivInput)
 		}
 	}
 
 	// check if input starts with delimiter, remove it
-	log.Debug("Checking if input starts with delimiter")	
+//	log.Debug("Checking if input starts with delimiter")	
 	if strings.HasPrefix(ivInput,ivDelimiter) {
-		log.Debug("Input starts with delimiter, removing delimiter at start")	
+//		log.Debug("Input starts with delimiter, removing delimiter at start")	
 		ivInput = strings.TrimPrefix(ivInput, ivDelimiter)
-		log.Debug("input to split is now: ", ivInput)
+//		log.Debug("input to split is now: ", ivInput)
 	}
 
 	log.Debug("Splitting the input")
 	parts := strings.Split(ivInput, ivDelimiter)
 	numparts := len(parts)
-	log.Debug("Number of parts after split: ", numparts)
+	log.Debug("Number of parts: ", numparts)
 
 	// check if there are more parts than 8
-	log.Debug("Checking if there's more than 8 parts")
+	log.Debug("Populating parts")
 	if numparts > 8 {
-		log.Debug("There are more than 8 parts")
+//		log.Debug("There are more than 8 parts")
 
 		// first fill the individual parts
 		for i := 0; i < 8; i++ {
-			log.Debug("In for loop filling part: ", i)
+//			log.Debug("In for loop filling part: ", i)
 			position := numparts - i -1
 			switch i {
 				case 0 : context.SetOutput(part1, parts[position])
@@ -103,12 +103,12 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
 			}
 		}
 		// now create the reamainder string
-		log.Debug("Now doing the remainder")
+		log.Debug("Populating remainder")
 		remainparts := parts [0:numparts-8]
 		ovRemainder := strings.Join(remainparts, ivDelimiter)
 		context.SetOutput(remainder, ovRemainder)
 	} else {
-		log.Debug("There are no more than 8 parts")
+//		log.Debug("There are no more than 8 parts")
 		//all can go into parts, start with highest part
 		for i := 0; i < numparts; i++ {
 //			log.Debug("In for loop filling part: ", i)

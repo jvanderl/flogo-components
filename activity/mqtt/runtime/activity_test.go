@@ -4,6 +4,7 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
 	"github.com/TIBCOSoftware/flogo-lib/flow/test"
 	"testing"
+	"fmt"
 )
 
 func TestRegistered(t *testing.T) {
@@ -31,7 +32,22 @@ func TestEval(t *testing.T) {
 	tc := test.NewTestActivityContext(md)
 	//setup attrs
 
+	fmt.Println("Publishing a flogo test message to topic 'flogo' on broker 'localhost:1883'")
+
+	tc.SetInput("broker", "tcp://127.0.0.1:1883")
+	tc.SetInput("id", "flogo_tester")
+	tc.SetInput("topic", "flogo")
+	tc.SetInput("qos", 0)
+	tc.SetInput("message", "This is a test message from flogo")
+
 	act.Eval(tc)
 
 	//check result attr
+	result := tc.GetOutput("result")
+	fmt.Println("result: ", result)
+
+	if result == nil {
+		t.Fail()
+	}
+
 }
