@@ -9,7 +9,6 @@ var jsonMetadata = `{
     {
       "name": "input",
       "type": "string",
-      "required": true
     },
     {
       "name": "datatype",
