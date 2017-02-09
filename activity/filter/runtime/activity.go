@@ -161,7 +161,7 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
 
 func validateValue(context activity.Context, element string, datatype string) interface{}  {
 
-	dataInput := context.GetInput(element)
+	dataInput := context.GetInput(element).(string)
 
 	switch datatype {
 		case "int": dataOutput, err := strconv.ParseInt(dataInput.(string), 10, strconv.IntSize)
