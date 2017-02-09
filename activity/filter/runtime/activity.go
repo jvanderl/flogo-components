@@ -161,18 +161,19 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
 
 func validateValue(context activity.Context, element string, datatype string) interface{}  {
 
-	dataInput := context.GetInput(element).(string)
+	cxDataInput := context.GetInput(element)
+	dataInput := cxDataInput.(string)
 
 	switch datatype {
-		case "int": dataOutput, err := strconv.ParseInt(dataInput.(string), 10, strconv.IntSize)
+		case "int": dataOutput, err := strconv.ParseInt(dataInput, 10, strconv.IntSize)
 			if err == nil {
 				return int(dataOutput)
 			}
-		case "uint": dataOutput, err := strconv.ParseUint(dataInput.(string), 10, strconv.IntSize)
+		case "uint": dataOutput, err := strconv.ParseUint(dataInput, 10, strconv.IntSize)
 			if err == nil {
 				return uint(dataOutput)
 			}
-		case "float32": dataOutput, err := strconv.ParseFloat(dataInput.(string), 32)
+		case "float32": dataOutput, err := strconv.ParseFloat(dataInput, 32)
 			if err == nil {
 				return float32(dataOutput)
 			}
