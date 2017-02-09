@@ -48,6 +48,8 @@ func (a *MyActivity) Metadata() *activity.Metadata {
 // Eval implements activity.Activity.Eval
 func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
 
+	valueTooLow = false
+	valueTooHigh = false
 	// check input value data type
 	datatypeInput := context.GetInput(datatype)
 	ivdatatype, ok := datatypeInput.(string)
