@@ -56,6 +56,8 @@ flogo add activity github.com/jvanderl/flogo-components/activity/throttle
 ```bash
 flogo add trigger github.com/jvanderl/flogo-components/trigger/mqtt2
 ```
+link for flog web:
+https://github.com/jvanderl/flogo-components/trigger/mqtt2
 
 ## Related Information
 These components are built for TIBCO flogo.
