@@ -21,43 +21,49 @@ Collection custom built flogo components
 ```bash
 flogo add activity github.com/jvanderl/flogo-components/activity/filter
 ```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/filter
 
 #### Install Get JSON Activity
 ```bash
 flogo add activity github.com/jvanderl/flogo-components/activity/getjson
 ```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/getjson
 
 #### Install MQTT Activity
 ```bash
 flogo add activity github.com/jvanderl/flogo-components/activity/mqtt
 ```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/mqtt
 
 #### Install Split JSON Activity
 ```bash
 flogo add activity github.com/jvanderl/flogo-components/activity/splitjson
 ```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/splitjson
 
 #### Install Split Path Activity
 ```bash
 flogo add activity github.com/jvanderl/flogo-components/activity/splitpath
 ```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/splitpath
 
 #### Install SystemInfo Activity
 ```bash
 flogo add activity github.com/jvanderl/flogo-components/activity/systeminfo
 ```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/systeminfo
 
 #### Install Throttle Activity
 ```bash
 flogo add activity github.com/jvanderl/flogo-components/activity/throttle
 ```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/throttle
 
 #### Install Receive MQTT Message trigger
 ```bash
 flogo add trigger github.com/jvanderl/flogo-components/trigger/mqtt2
 ```
-link for flog web:
-https://github.com/jvanderl/flogo-components/trigger/mqtt2
+Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/mqtt2
 
 ## Related Information
 These components are built for TIBCO flogo.
