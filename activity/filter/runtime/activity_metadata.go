@@ -8,7 +8,7 @@ var jsonMetadata = `{
   "inputs":[
     {
       "name": "input",
-      "type": "string",
+      "type": "string"
     },
     {
       "name": "datatype",
