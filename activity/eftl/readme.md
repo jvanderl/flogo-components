@@ -1,7 +1,8 @@
 ![gofmt status](https://img.shields.io/badge/gofmt-compliant-green.svg?style=flat-square) ![golint status](https://img.shields.io/badge/golint-compliant-green.svg?style=flat-square) ![automated test coverage](https://img.shields.io/badge/test%20coverage-1%20testcase-orange.svg?style=flat-square)
 
-# sendWSMessage
+# Send eFTL Message
 This activity sends a message to TIBCO eFTL.
+Code is based on the WSMessage activity created by Leon Stigter
 
 
 ## Installation
@@ -70,7 +71,7 @@ The below configuration would connect to a WebSocket server based on TIBCO eFTL 
 ```json
       {
         "id": 2,
-        "name": "Send a message to a WebSocket server",
+        "name": "Send a message to eFTL",
         "type": 1,
         "activityType": "eftl",
         "attributes": [

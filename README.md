@@ -4,6 +4,7 @@ Collection custom built flogo components
 ## Components
 
 ### Activities
+* [eftl](activity/eftl): Send message to eFTL
 * [filter](activity/filter): Filter out unwanted data
 * [getjson](activity/getjson): Retrieve specific elements from a JSON structure
 * [mqtt](activity/mqtt): Publish MQTT Message
@@ -16,6 +17,12 @@ Collection custom built flogo components
 * [mqtt2](trigger/mqtt2): Receive MQTT Message
 
 ## Installation
+
+#### Install eFTL Activity
+```bash
+flogo add activity github.com/jvanderl/flogo-components/activity/eftl
+```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/eftl
 
 #### Install Filter Activity
 ```bash
