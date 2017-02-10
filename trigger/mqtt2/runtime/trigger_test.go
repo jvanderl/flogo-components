@@ -3,10 +3,10 @@ package mqtt2
 import (
 	"context"
 	"encoding/json"
-	"testing"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/eclipse/paho.mqtt.golang"
+	"testing"
 )
 
 const testConfig string = `{
@@ -85,4 +85,3 @@ func TestEndpoint(t *testing.T) {
 	client.Disconnect(250)
 	log.Debug("Sample Publisher Disconnected")
 }
-

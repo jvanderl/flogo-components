@@ -1,10 +1,10 @@
 package getjson
 
 import (
-	"testing"
+	"fmt"
 	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
 	"github.com/TIBCOSoftware/flogo-lib/flow/test"
-	"fmt"
+	"testing"
 )
 
 func TestRegistered(t *testing.T) {
@@ -42,7 +42,7 @@ func TestEval(t *testing.T) {
 	result := tc.GetOutput("result")
 	value1 := tc.GetOutput("value1")
 	value2 := tc.GetOutput("value2")
-	
+
 	fmt.Println("result: ", result)
 	fmt.Println("value1: ", value1)
 	fmt.Println("value2: ", value2)

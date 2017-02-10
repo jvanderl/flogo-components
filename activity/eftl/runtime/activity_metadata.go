@@ -4,7 +4,7 @@ var jsonMetadata = `{
   "name": "eftl",
   "version": "0.0.1",
   "title": "Send eFTL Message",
-  "description": "This activity sends a message to TIBCO eFTL",
+  "description": "Sends a message to TIBCO eFTL",
   "inputs":[
     {
       "name": "Server",

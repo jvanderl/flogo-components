@@ -1,10 +1,10 @@
 package throttle
 
 import (
-	"testing"
+	"fmt"
 	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
 	"github.com/TIBCOSoftware/flogo-lib/flow/test"
-	"fmt"
+	"testing"
 	"time"
 )
 
@@ -33,7 +33,6 @@ func TestEval(t *testing.T) {
 	tc := test.NewTestActivityContext(md)
 	//setup attrs
 
-
 	fmt.Println("Setting up Throttle for 'UID123123' with interval 5 seconds")
 	tc.SetInput("datasource", "UID123123")
 	tc.SetInput("interval", 5)
@@ -46,7 +45,7 @@ func TestEval(t *testing.T) {
 	pass := tc.GetOutput("pass")
 	reason := tc.GetOutput("reason")
 	lasttimepassed := tc.GetOutput("lasttimepassed")
-	
+
 	fmt.Println("pass: ", pass)
 	fmt.Println("reason: ", reason)
 	fmt.Println("lasttimepassed: ", lasttimepassed)
@@ -61,11 +60,10 @@ func TestEval(t *testing.T) {
 	pass = tc.GetOutput("pass")
 	reason = tc.GetOutput("reason")
 	lasttimepassed = tc.GetOutput("lasttimepassed")
-	
+
 	fmt.Println("pass: ", pass)
 	fmt.Println("reason: ", reason)
 	fmt.Println("lasttimepassed: ", lasttimepassed)
-
 
 	fmt.Println("Wait 3 more seconds")
 	time.Sleep(3000 * time.Millisecond)
@@ -77,7 +75,7 @@ func TestEval(t *testing.T) {
 	pass = tc.GetOutput("pass")
 	reason = tc.GetOutput("reason")
 	lasttimepassed = tc.GetOutput("lasttimepassed")
-	
+
 	fmt.Println("pass: ", pass)
 	fmt.Println("reason: ", reason)
 	fmt.Println("lasttimepassed: ", lasttimepassed)

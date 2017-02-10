@@ -1,10 +1,10 @@
 package filter
 
 import (
-	"testing"
+	"fmt"
 	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
 	"github.com/TIBCOSoftware/flogo-lib/flow/test"
-	"fmt"
+	"testing"
 )
 
 func TestRegistered(t *testing.T) {
@@ -50,7 +50,7 @@ func TestEval(t *testing.T) {
 	fmt.Println("pass: ", pass)
 	fmt.Println("reason: ", reason)
 
-////////////////////////
+	////////////////////////
 
 	fmt.Println("Setting input to 150, maxvalue: 100. Should not pass, value too high")
 
@@ -68,7 +68,7 @@ func TestEval(t *testing.T) {
 	fmt.Println("pass: ", pass)
 	fmt.Println("reason: ", reason)
 
-////////////////////////
+	////////////////////////
 
 	fmt.Println("Setting input to 150, minvalue: 200. Should not pass, value too low")
 
@@ -86,7 +86,7 @@ func TestEval(t *testing.T) {
 	fmt.Println("pass: ", pass)
 	fmt.Println("reason: ", reason)
 
-////////////////////////
+	////////////////////////
 	fmt.Println("Setting input to 150, minvalue: 100, maxvalue: 200, inverse: true. Should not pass, filter out mid section")
 
 	tc.SetInput("input", "150")
@@ -104,7 +104,7 @@ func TestEval(t *testing.T) {
 	fmt.Println("pass: ", pass)
 	fmt.Println("reason: ", reason)
 
-////////////////////////
+	////////////////////////
 
 	if reason == nil {
 		t.Fail()

@@ -46,7 +46,7 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	ivbroker, ok := brokerInput.(string)
 	if !ok {
 		context.SetOutput("result", "BROKER_NOT_SET")
-		return true, fmt.Errorf("Broker not set.")
+		return true, fmt.Errorf("broker not set")
 	}
 
 	topicInput := context.GetInput(topic)
@@ -54,7 +54,7 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	ivtopic, ok := topicInput.(string)
 	if !ok {
 		context.SetOutput("result", "TOPIC_NOT_SET")
-		return true, fmt.Errorf("Topic not set.")
+		return true, fmt.Errorf("topic not set")
 	}
 
 	payloadInput := context.GetInput(payload)
@@ -62,14 +62,14 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	ivpayload, ok := payloadInput.(string)
 	if !ok {
 		context.SetOutput("result", "PAYLOAD_NOT_SET")
-		return true, fmt.Errorf("Payload not set.")
+		return true, fmt.Errorf("payload not set")
 	}
 
 	ivqos, ok := context.GetInput(qos).(int)
 
 	if !ok {
 		context.SetOutput("result", "QOS_NOT_SET")
-		return true, fmt.Errorf("QoS not set.")
+		return true, fmt.Errorf("qos not set")
 	}
 
 	idInput := context.GetInput(id)
@@ -77,7 +77,7 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	ivID, ok := idInput.(string)
 	if !ok {
 		context.SetOutput("result", "CLIENTID_NOT_SET")
-		return true, fmt.Errorf("Client ID not set.")
+		return true, fmt.Errorf("client id not set")
 	}
 
 	userInput := context.GetInput(user)

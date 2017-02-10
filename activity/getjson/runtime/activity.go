@@ -1,30 +1,30 @@
 package getjson
 
 import (
+	"encoding/json"
 	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
 	"github.com/op/go-logging"
-	"encoding/json"
 )
 
 const (
-	input   	 = "input"
-	result		 = "result"
-	name1		 = "name1"
-	value1		 = "value1"
-	name2		 = "name2"
-	value2		 = "value2"
-	name3		 = "name3"
-	value3		 = "value3"
-	name4		 = "name4"
-	value4		 = "value4"
-	name5		 = "name5"
-	value5		 = "value5"
-	name6		 = "name6"
-	value6		 = "value6"
-	name7		 = "name7"
-	value7		 = "value7"
-	name8		 = "name8"
-	value8		 = "value8"
+	input  = "input"
+	result = "result"
+	name1  = "name1"
+	value1 = "value1"
+	name2  = "name2"
+	value2 = "value2"
+	name3  = "name3"
+	value3 = "value3"
+	name4  = "name4"
+	value4 = "value4"
+	name5  = "name5"
+	value5 = "value5"
+	name6  = "name6"
+	value6 = "value6"
+	name7  = "name7"
+	value7 = "value7"
+	name8  = "name8"
+	value8 = "value8"
 )
 
 var ifName1 = ""
@@ -35,6 +35,7 @@ var ifName5 = ""
 var ifName6 = ""
 var ifName7 = ""
 var ifName8 = ""
+
 // log is the default package logger
 var log = logging.MustGetLogger("activity-tibco-getjson")
 
@@ -55,7 +56,7 @@ func (a *MyActivity) Metadata() *activity.Metadata {
 }
 
 // Eval implements activity.Activity.Eval
-func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
+func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 
 	// do eval
 	ifInput := context.GetInput(input).(string)
@@ -73,55 +74,55 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error)  {
 
 	var dat map[string]interface{}
 
-    if err := json.Unmarshal(byt, &dat); err != nil {
-    	context.SetOutput("result", "ERROR_JSON_DECODE")
-       	return true, nil
-    }
+	if err := json.Unmarshal(byt, &dat); err != nil {
+		context.SetOutput("result", "ERROR_JSON_DECODE")
+		return true, nil
+	}
 
-    log.Debug("Umarchalled: ", dat)
+	log.Debug("Umarchalled: ", dat)
 
-	context.SetOutput(value1,dat[ifName1])
-	context.SetOutput(value2,dat[ifName2])
-	context.SetOutput(value3,dat[ifName3])
-	context.SetOutput(value4,dat[ifName4])
-	context.SetOutput(value5,dat[ifName5])
-	context.SetOutput(value6,dat[ifName6])
-	context.SetOutput(value7,dat[ifName7])
-	context.SetOutput(value8,dat[ifName8])
+	context.SetOutput(value1, dat[ifName1])
+	context.SetOutput(value2, dat[ifName2])
+	context.SetOutput(value3, dat[ifName3])
+	context.SetOutput(value4, dat[ifName4])
+	context.SetOutput(value5, dat[ifName5])
+	context.SetOutput(value6, dat[ifName6])
+	context.SetOutput(value7, dat[ifName7])
+	context.SetOutput(value8, dat[ifName8])
 
-/*
+	/*
 
-    for key, value := range dat {
-	    log.Debug("got key: ", key, ", value: ", value)
-    	switch key {
-    		case ifName1 : {
-    			context.SetOutput("value1", value)
-    			}
-    		case ifName2 : {
-    			context.SetOutput("value2", value)
-    			}
-    		case ifName3 : {
-    			context.SetOutput("value3", value)
-    			}
-    		case ifName4 : {
-    			context.SetOutput("value4", value)
-    			}
-    		case ifName5 : {
-    			context.SetOutput("value5", value)
-    			}
-    		case ifName6 : {
-    			context.SetOutput("value6", value)
-    			}
-    		case ifName7 : {
-    			context.SetOutput("value7", value)
-	    			}
-    		case ifName8 : {
-    			context.SetOutput("value8", value)
-    			}
-    		}
-    }
-    */
-   	context.SetOutput("result", "OK")
+	       for key, value := range dat {
+	   	    log.Debug("got key: ", key, ", value: ", value)
+	       	switch key {
+	       		case ifName1 : {
+	       			context.SetOutput("value1", value)
+	       			}
+	       		case ifName2 : {
+	       			context.SetOutput("value2", value)
+	       			}
+	       		case ifName3 : {
+	       			context.SetOutput("value3", value)
+	       			}
+	       		case ifName4 : {
+	       			context.SetOutput("value4", value)
+	       			}
+	       		case ifName5 : {
+	       			context.SetOutput("value5", value)
+	       			}
+	       		case ifName6 : {
+	       			context.SetOutput("value6", value)
+	       			}
+	       		case ifName7 : {
+	       			context.SetOutput("value7", value)
+	   	    			}
+	       		case ifName8 : {
+	       			context.SetOutput("value8", value)
+	       			}
+	       		}
+	       }
+	*/
+	context.SetOutput("result", "OK")
 
 	return true, nil
 }

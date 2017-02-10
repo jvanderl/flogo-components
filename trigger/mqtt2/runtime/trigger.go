@@ -3,13 +3,13 @@ package mqtt2
 import (
 	"context"
 	"encoding/json"
-	"strconv"
-	"strings"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/flow/support"
 	"github.com/eclipse/paho.mqtt.golang"
 	"github.com/op/go-logging"
+	"strconv"
+	"strings"
 )
 
 // log is the default package logger
@@ -79,13 +79,13 @@ func (t *MqttTrigger) Start() error {
 		if found {
 			t.RunAction(actionType, actionURI, payload, topic)
 		} else {
-		// search for wildcards
+			// search for wildcards
 
 			for _, endpoint := range t.config.Endpoints {
 				eptopic := endpoint.Settings["topic"]
-				if strings.HasSuffix(eptopic,"/#") {
+				if strings.HasSuffix(eptopic, "/#") {
 					// is wildcard, now check actual topic starts with wildcard
-					if strings.HasPrefix(topic,strings.TrimSuffix(eptopic,"/#")) {
+					if strings.HasPrefix(topic, strings.TrimSuffix(eptopic, "/#")) {
 						// Got a match, now get the action for the wildcard topic
 						actionType, found := t.topicToActionType[eptopic]
 						actionURI, _ := t.topicToActionURI[eptopic]
@@ -98,7 +98,6 @@ func (t *MqttTrigger) Start() error {
 		}
 
 	})
-
 
 	client := mqtt.NewClient(opts)
 	t.client = client
@@ -151,8 +150,6 @@ func (t *MqttTrigger) RunAction(actionType string, actionURI string, payload str
 	log.Debug("Action URI: ", actionURI)
 	log.Debug("Payload: ", payload)
 	log.Debug("Actual Topic: ", topic)
-
-
 
 	req := t.constructStartRequest(payload, topic)
 	//err := json.NewDecoder(strings.NewReader(payload)).Decode(req)

@@ -1,10 +1,10 @@
 package systeminfo
 
 import (
+	"fmt"
 	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
 	"github.com/TIBCOSoftware/flogo-lib/flow/test"
 	"testing"
-	"fmt"
 )
 
 func TestRegistered(t *testing.T) {

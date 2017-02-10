@@ -1,10 +1,10 @@
 package splitpath
 
 import (
-	"testing"
+	"fmt"
 	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
 	"github.com/TIBCOSoftware/flogo-lib/flow/test"
-	"fmt"
+	"testing"
 )
 
 func TestRegistered(t *testing.T) {
@@ -31,9 +31,9 @@ func TestEval(t *testing.T) {
 
 	tc := test.NewTestActivityContext(md)
 
-///////////////////
+	///////////////////
 
-	fmt.Println ( "Splitting a path with normal length, should fill two parts and a fixed path")
+	fmt.Println("Splitting a path with normal length, should fill two parts and a fixed path")
 	//setup attrs
 	tc.SetInput("input", "flogo/device/DEV12345/distance")
 	tc.SetInput("delimiter", "/")
@@ -52,7 +52,7 @@ func TestEval(t *testing.T) {
 	part7 := tc.GetOutput("part7")
 	part8 := tc.GetOutput("part8")
 	remainder := tc.GetOutput("remainder")
-	
+
 	fmt.Println("result: ", result)
 	fmt.Println("fixedpath: ", fixedpath)
 	fmt.Println("part1: ", part1)
@@ -65,10 +65,9 @@ func TestEval(t *testing.T) {
 	fmt.Println("part8: ", part8)
 	fmt.Println("remainder: ", remainder)
 
+	///////////////////
 
-///////////////////
-
-	fmt.Println ( "Splitting a path with high length, should fill all parts and a remainder")
+	fmt.Println("Splitting a path with high length, should fill all parts and a remainder")
 	//setup attrs
 	tc.SetInput("input", "flogo/device/DEV/1/2/3/4/5/6/7/8/9/distance")
 	tc.SetInput("delimiter", "/")
@@ -87,7 +86,7 @@ func TestEval(t *testing.T) {
 	part7 = tc.GetOutput("part7")
 	part8 = tc.GetOutput("part8")
 	remainder = tc.GetOutput("remainder")
-	
+
 	fmt.Println("result: ", result)
 	fmt.Println("fixedpath: ", fixedpath)
 	fmt.Println("part1: ", part1)
