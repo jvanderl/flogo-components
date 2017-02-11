@@ -7,6 +7,7 @@ Collection custom built flogo components
 * [eftl](activity/eftl): Send message to eFTL
 * [filter](activity/filter): Filter out unwanted data
 * [getjson](activity/getjson): Retrieve specific elements from a JSON structure
+* [kafka](activity/kafka): Send message to Kafka
 * [mqtt](activity/mqtt): Publish MQTT Message
 * [splitjson](activity/splitjson): Splits JSON structure into separate name-value pairs
 * [splitpath](activity/splitpath): Splits a path into separate parts
@@ -35,6 +36,12 @@ Link for flogo web: https://github.com/jvanderl/flogo-components/activity/filter
 flogo add activity github.com/jvanderl/flogo-components/activity/getjson
 ```
 Link for flogo web: https://github.com/jvanderl/flogo-components/activity/getjson
+
+#### Install Send Kafka Activity
+```bash
+flogo add activity github.com/jvanderl/flogo-components/activity/kafka
+```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/kafka
 
 #### Install MQTT Activity
 ```bash
