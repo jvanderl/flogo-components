@@ -1,5 +1,5 @@
 {
   "name": "kafka",
   "version": "0.0.1",
-  "description": "Send message to Kafka",
+  "description": "Send message to Kafka"
 }
