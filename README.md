@@ -15,6 +15,7 @@ Collection custom built flogo components
 * [throttle](activity/throttle): Throttle data based on interval
 
 ### Triggers
+* [Kafka](trigger/kafka): Receive Kafka Message
 * [mqtt2](trigger/mqtt2): Receive MQTT Message
 
 ## Installation
@@ -72,6 +73,12 @@ Link for flogo web: https://github.com/jvanderl/flogo-components/activity/system
 flogo add activity github.com/jvanderl/flogo-components/activity/throttle
 ```
 Link for flogo web: https://github.com/jvanderl/flogo-components/activity/throttle
+
+#### Install Receive Kafka Message trigger
+```bash
+flogo add trigger github.com/jvanderl/flogo-components/trigger/kafka
+```
+Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/kafka
 
 #### Install Receive MQTT Message trigger
 ```bash

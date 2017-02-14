@@ -1,11 +1,11 @@
 {
   "name": "kafka",
   "version": "0.0.1",
-  "title": "Send to Kafka",
-  "description": "Send message to Kafka",
+  "title": "Receive Kafka Message",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "homepage": "https://github.com/TIBCOSoftware/jvanderl/activity/kafka",
-  "inputs":[
+  "description": "Kafka Topic Subscriber",
+  "homepage": "https://github.com/jvanderl/flogo-components/trigger/kafka",
+  "settings":[
     {
       "name": "server",
       "type": "string"
@@ -21,16 +21,20 @@
     {
       "name": "partition",
       "type": "int"
-    },
+    }
+  ],
+  "outputs": [
     {
       "name": "message",
       "type": "string"
     }
   ],
-  "outputs": [
-    {
-      "name": "result",
-      "type": "string"
-    }
-  ]
+  "endpoint": {
+    "settings": [
+      {
+        "name": "topic",
+        "type": "string"
+      }
+    ]
+  }
 }

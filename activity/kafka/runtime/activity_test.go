@@ -35,7 +35,7 @@ func TestEval(t *testing.T) {
 	tc.SetInput(server, "192.168.178.41:9092")
 	tc.SetInput(configid, "flogo-test")
 	tc.SetInput(topic, "test")
-	tc.SetInput(partition, "1")
+	tc.SetInput(partition, "0")
 	tc.SetInput(message, "Kafka test message")
 
 	act.Eval(tc)
