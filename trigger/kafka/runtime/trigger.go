@@ -212,14 +212,14 @@ func (t *KafkaTrigger) RunAction(actionType string, actionURI string, payload st
 
 	log.Debugf("Ran action: [%s-%s]", actionType, actionURI)
 
-	if replyData != nil {
+/*	if replyData != nil {
 		data, err := json.Marshal(replyData)
 		if err != nil {
 			log.Error(err)
 		} else {
 			t.publishMessage(req.ReplyTo, partition, string(data))
 		}
-	}
+	}*/
 }
 
 func (t *KafkaTrigger) publishMessage(topic string, partition int32, message string) {
