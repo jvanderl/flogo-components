@@ -67,23 +67,23 @@ func TestEndpoint(t *testing.T) {
 	tgr.Start()
 	defer tgr.Stop()
 
-    conf := kafka.NewBrokerConf("test-client")
-    conf.AllowTopicCreation = true
+	conf := kafka.NewBrokerConf("test-client")
+	conf.AllowTopicCreation = true
 
-    // connect to kafka cluster
-    broker, err := kafka.Dial(kafkaAddrs, conf)
-    if err != nil {
-        log.Fatalf("cannot connect to kafka cluster: %s", err)
-    }
-    defer broker.Close()
+	// connect to kafka cluster
+	broker, err := kafka.Dial(kafkaAddrs, conf)
+	if err != nil {
+		log.Fatalf("cannot connect to kafka cluster: %s", err)
+	}
+	defer broker.Close()
 
-    producer := broker.Producer(kafka.NewProducerConf())
-    message := "Test message from Flogo"
-    msg := &proto.Message{Value: []byte(message)}
+	producer := broker.Producer(kafka.NewProducerConf())
+	message := "Test message from Flogo"
+	msg := &proto.Message{Value: []byte(message)}
 	log.Debug("---- doing publish ----")
-    if _, err := producer.Produce("test", 0, msg); err != nil {
-        log.Fatalf("cannot produce message to %s:%d: %s", "test", 0, err)
-    }
+	if _, err := producer.Produce("test", 0, msg); err != nil {
+		log.Fatalf("cannot produce message to %s:%d: %s", "test", 0, err)
+	}
 
 	broker.Close()
 	log.Debug("Sample Publisher Disconnected")

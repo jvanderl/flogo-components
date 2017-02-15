@@ -2,7 +2,7 @@ package kafka
 
 import (
 	"context"
-//	"encoding/json"
+	//	"encoding/json"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/flow/support"
@@ -10,12 +10,13 @@ import (
 	"github.com/optiopay/kafka"
 	"github.com/optiopay/kafka/proto"
 	"strconv"
-//	"bytes"
+	//	"bytes"
 )
 
 // log is the default package logger
 var log = logging.MustGetLogger("trigger-tibco-kafka")
 var broker kafka.Broker
+
 // todo: switch to use endpoint registration
 
 // KafkaTrigger is simple Kafka trigger
@@ -49,11 +50,9 @@ func (t *KafkaTrigger) Init(config *trigger.Config, runner action.Runner) {
 // Start implements ext.Trigger.Start
 func (t *KafkaTrigger) Start() error {
 
-
-
 	ifServers := []string{t.settings["server"]}
 	log.Debug("ifServers: ", ifServers)
-	
+
 	ifConfigID := t.settings["configid"]
 	ifTopic := t.settings["topic"]
 	cxPartition, err := strconv.ParseInt(t.settings["partition"], 10, 32)
@@ -61,7 +60,6 @@ func (t *KafkaTrigger) Start() error {
 	if err == nil {
 		ifPartition = int32(cxPartition)
 	}
-	
 
 	conf := kafka.NewBrokerConf(ifConfigID)
 	conf.AllowTopicCreation = true
@@ -71,20 +69,20 @@ func (t *KafkaTrigger) Start() error {
 	broker, err := kafka.Dial(ifServers, conf)
 	if err != nil {
 		log.Fatalf("cannot connect to kafka cluster: %s", err)
-    	return err
+		return err
 	}
 	defer broker.Close()
 	log.Debug("Connected to Kafka server")
 
-    conf2 := kafka.NewConsumerConf(ifTopic, ifPartition)
-    conf2.StartOffset = kafka.StartOffsetNewest
+	conf2 := kafka.NewConsumerConf(ifTopic, ifPartition)
+	conf2.StartOffset = kafka.StartOffsetNewest
 	log.Debug("subscribing to topic ", ifTopic)
-    consumer, err := broker.Consumer(conf2)
-    if err != nil {
-        log.Fatalf("cannot create kafka consumer for %s:%d: %s", ifTopic, ifPartition, err)
-    }
+	consumer, err := broker.Consumer(conf2)
+	if err != nil {
+		log.Fatalf("cannot create kafka consumer for %s:%d: %s", ifTopic, ifPartition, err)
+	}
 	log.Debug("Subscription successful", ifTopic)
-	
+
 	t.topicToActionType = make(map[string]string)
 	t.topicToActionURI = make(map[string]string)
 
@@ -93,28 +91,27 @@ func (t *KafkaTrigger) Start() error {
 		t.topicToActionType[endpoint.Settings["topic"]] = endpoint.ActionType
 	}
 
-    for {
-        msg, err := consumer.Consume()
-        if err != nil {
-            if err != kafka.ErrNoData {
-                log.Debug("cannot consume %q topic message: %s", ifTopic, err)
-            }
-            break
-        }
+	for {
+		msg, err := consumer.Consume()
+		if err != nil {
+			if err != kafka.ErrNoData {
+				log.Debug("cannot consume %q topic message: %s", ifTopic, err)
+			}
+			break
+		}
 		message := convert(msg.Value)
-        log.Debug("Received message", msg.Offset, message)
+		log.Debug("Received message", msg.Offset, message)
 		actionType, found := t.topicToActionType[ifTopic]
 		actionURI, _ := t.topicToActionURI[ifTopic]
 		if found {
-		    log.Debug("Found actionType", actionType)
-		    log.Debug("Found actionURI", actionURI)
+			log.Debug("Found actionType", actionType)
+			log.Debug("Found actionURI", actionURI)
 			t.RunAction(actionType, actionURI, message, ifTopic, ifPartition)
 		} else {
-		    log.Debug("actionType and URI not found")
-		}	
-    }
-    log.Debug("consumer quit")
-
+			log.Debug("actionType and URI not found")
+		}
+	}
+	log.Debug("consumer quit")
 
 	/*opts.SetDefaultPublishHandler(func(client mqtt.Client, msg mqtt.Message) {
 
@@ -149,33 +146,33 @@ func (t *KafkaTrigger) Start() error {
 			}
 		}
 
-	} 
+	}
 	)*/
 
-/*	client := mqtt.NewClient(opts)
-	t.client = client
-	if token := client.Connect(); token.Wait() && token.Error() != nil {
-		panic(token.Error())
-	}
-
-	i, err := strconv.Atoi(t.settings["qos"])
-	if err != nil {
-		log.Error("Error converting \"qos\" to an integer ", err.Error())
-		return err
-	}
-
-	t.topicToActionType = make(map[string]string)
-	t.topicToActionURI = make(map[string]string)
-
-	for _, endpoint := range t.config.Endpoints {
-		if token := t.client.Subscribe(endpoint.Settings["topic"], byte(i), nil); token.Wait() && token.Error() != nil {
-			log.Errorf("Error subscribing to topic %s: %s", endpoint.Settings["topic"], token.Error())
+	/*	client := mqtt.NewClient(opts)
+		t.client = client
+		if token := client.Connect(); token.Wait() && token.Error() != nil {
 			panic(token.Error())
-		} else {
-			t.topicToActionURI[endpoint.Settings["topic"]] = endpoint.ActionURI
-			t.topicToActionType[endpoint.Settings["topic"]] = endpoint.ActionType
 		}
-	} */
+
+		i, err := strconv.Atoi(t.settings["qos"])
+		if err != nil {
+			log.Error("Error converting \"qos\" to an integer ", err.Error())
+			return err
+		}
+
+		t.topicToActionType = make(map[string]string)
+		t.topicToActionURI = make(map[string]string)
+
+		for _, endpoint := range t.config.Endpoints {
+			if token := t.client.Subscribe(endpoint.Settings["topic"], byte(i), nil); token.Wait() && token.Error() != nil {
+				log.Errorf("Error subscribing to topic %s: %s", endpoint.Settings["topic"], token.Error())
+				panic(token.Error())
+			} else {
+				t.topicToActionURI[endpoint.Settings["topic"]] = endpoint.ActionURI
+				t.topicToActionType[endpoint.Settings["topic"]] = endpoint.ActionType
+			}
+		} */
 
 	return nil
 }
@@ -213,7 +210,7 @@ func (t *KafkaTrigger) RunAction(actionType string, actionURI string, payload st
 	log.Debugf("Ran action: [%s-%s]", actionType, actionURI)
 	log.Debug("Reply data: ", replyData)
 
-/*	if replyData != nil {
+	/*	if replyData != nil {
 		data, err := json.Marshal(replyData)
 		if err != nil {
 			log.Error(err)
@@ -266,7 +263,7 @@ type StartRequest struct {
 	ReplyTo     string                 `json:"replyTo"`
 }
 
-func convert( b []byte ) string {
+func convert(b []byte) string {
 	n := len(b)
-    return string(b[:n])
+	return string(b[:n])
 }
