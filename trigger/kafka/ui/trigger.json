@@ -4,7 +4,6 @@
   "title": "Receive Kafka Message",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "description": "Kafka Topic Subscriber",
-  "homepage": "https://github.com/jvanderl/flogo-components/trigger/kafka",
   "settings":[
     {
       "name": "server",
