@@ -20,9 +20,10 @@ const testConfig string = `{
   },
   "endpoints": [
     {
-      "flowURI": "local://testFlow",
+      "actionType": "flow",
+      "actionURI": "local://testFlow",
       "settings": {
-        "actiontopic": "test_start"
+        "topic": "test"
       }
     }
   ]

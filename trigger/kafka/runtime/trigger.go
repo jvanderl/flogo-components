@@ -84,6 +84,15 @@ func (t *KafkaTrigger) Start() error {
         log.Fatalf("cannot create kafka consumer for %s:%d: %s", ifTopic, ifPartition, err)
     }
 	log.Debug("Subscription successful", ifTopic)
+	
+	t.topicToActionType = make(map[string]string)
+	t.topicToActionURI = make(map[string]string)
+
+	for _, endpoint := range t.config.Endpoints {
+		t.topicToActionURI[endpoint.Settings["topic"]] = endpoint.ActionURI
+		t.topicToActionType[endpoint.Settings["topic"]] = endpoint.ActionType
+	}
+
     for {
         msg, err := consumer.Consume()
         if err != nil {
@@ -97,9 +106,11 @@ func (t *KafkaTrigger) Start() error {
 		actionType, found := t.topicToActionType[ifTopic]
 		actionURI, _ := t.topicToActionURI[ifTopic]
 		if found {
+		    log.Debug("Found actionType", actionType)
+		    log.Debug("Found actionURI", actionURI)
 			t.RunAction(actionType, actionURI, message, ifTopic, ifPartition)
 		} else {
-
+		    log.Debug("actionType and URI not found")
 		}	
     }
     log.Debug("consumer quit")
