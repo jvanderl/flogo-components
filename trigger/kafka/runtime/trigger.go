@@ -211,6 +211,7 @@ func (t *KafkaTrigger) RunAction(actionType string, actionURI string, payload st
 	}
 
 	log.Debugf("Ran action: [%s-%s]", actionType, actionURI)
+	log.Debug("Reply data: ", replyData)
 
 /*	if replyData != nil {
 		data, err := json.Marshal(replyData)
