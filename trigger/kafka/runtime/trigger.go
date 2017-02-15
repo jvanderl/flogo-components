@@ -2,7 +2,7 @@ package kafka
 
 import (
 	"context"
-	"encoding/json"
+//	"encoding/json"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/flow/support"
