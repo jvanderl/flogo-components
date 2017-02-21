@@ -32,11 +32,11 @@ func TestEval(t *testing.T) {
 	tc := test.NewTestActivityContext(md)
 	//setup attrs
 
-	fmt.Println("Publishing a flogo test message to destination 'default' on channel '/channel' on eFTL Server '10.10.1.50:9191'")
+	fmt.Println("Publishing a flogo test message to destination 'sample' on channel '/channel' on eFTL Server '192.168.178.41:9191'")
 
-	tc.SetInput("Server", "10.10.1.50:9191")
+	tc.SetInput("Server", "192.168.178.41:9191")
 	tc.SetInput("Channel", "/channel")
-	tc.SetInput("Destination", "default")
+	tc.SetInput("Destination", "sample")
 	tc.SetInput("Username", "user")
 	tc.SetInput("Password", "password")
 	tc.SetInput("Message", "{\"deviceID\":\"5CCF7F942BCB\",\"distance\":9,\"distState\":\"Safe\"}")
