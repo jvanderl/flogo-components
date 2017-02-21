@@ -16,34 +16,34 @@ Inputs and Outputs:
 
 ```json
 {
-"inputs":[
+  "inputs":[
     {
-      "name": "Server",
+      "name": "server",
       "type": "string",
       "value": ""
     },
     {
-      "name": "Channel",
+      "name": "channel",
       "type": "string",
       "value": ""
     },
     {
-      "name": "Destination",
+      "name": "destination",
       "type": "string",
       "value": ""
     },
     {
-      "name": "Message",
+      "name": "message",
       "type": "string",
       "value": ""
     },
     {
-      "name": "Username",
+      "name": "user",
       "type": "string",
       "value": ""
     },
     {
-      "name": "Password",
+      "name": "password",
       "type": "string",
       "value": ""
     }
@@ -59,12 +59,12 @@ Inputs and Outputs:
 ## Settings
 | Setting     | Description    |
 |:------------|:---------------|
-| Server      | The WebSocket server to connect to (e.g. `localhost:9191`) |         
-| Channel     | The channel to send the message to (e.g. `/channel`)   |
-| Destination | The destination to send the message to (e.g. `default`) |
-| Message     | The actual message to send |
-| Username    | The username to connect to the WebSocket server (e.g. `user`) |
-| Password    | The password to connect to the WebSocket server (e.g. `password`) |
+| server      | The WebSocket server to connect to (e.g. `localhost:9191`) |         
+| channel     | The channel to send the message to (e.g. `/channel`)   |
+| destination | The destination to send the message to (e.g. `default`) |
+| message     | The actual message to send |
+| username    | The username to connect to the WebSocket server (e.g. `user`) |
+| password    | The password to connect to the WebSocket server (e.g. `password`) |
 
 ## Configuration Examples
 The below configuration would connect to a WebSocket server based on TIBCO eFTL and send a message saying `Hello World`
@@ -76,32 +76,32 @@ The below configuration would connect to a WebSocket server based on TIBCO eFTL 
         "activityType": "eftl",
         "attributes": [
           {
-            "name": "Server",
+            "name": "server",
             "value": "localhost:9191",
             "type": "string"
           },
           {
-            "name": "Channel",
+            "name": "channel",
             "value": "/channel",
             "type": "string"
           },
           {
-            "name": "Destination",
+            "name": "destination",
             "value": "default",
             "type": "string"
           },
           {
-            "name": "Message",
+            "name": "message",
             "value": "Hello World",
             "type": "string"
           },
           {
-            "name": "Username",
+            "name": "user",
             "value": "user",
             "type": "string"
           },
           {
-            "name": "Password",
+            "name": "password",
             "value": "password",
             "type": "string"
           }

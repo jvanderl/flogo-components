@@ -11,6 +11,15 @@ import (
 // log is the default package logger
 var log = logging.MustGetLogger("activity-eftl")
 
+type eftlLoginMessage struct {
+	Operator int  `json:"op"`
+	ClientType string `json:"client_type"`
+	ClientVersion string `json:"client_version"`
+	User string `json:"user"`
+	Password string `json:"password"`
+	LoginOptions map[string]string `json:"login_options"`
+}
+
 // MyActivity is a stub for your Activity implementation
 type MyActivity struct {
 	metadata *activity.Metadata
@@ -31,12 +40,12 @@ func (a *MyActivity) Metadata() *activity.Metadata {
 func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 
 	// Get the activity data from the context
-	wsHost := context.GetInput("Server").(string)
-	wsChannel := context.GetInput("Channel").(string)
-	wsDestination := context.GetInput("Destination").(string)
-	wsMessage := context.GetInput("Message").(string)
-	wsUser := context.GetInput("Username").(string)
-	wsPassword := context.GetInput("Password").(string)
+	wsHost := context.GetInput("server").(string)
+	wsChannel := context.GetInput("channel").(string)
+	wsDestination := context.GetInput("destination").(string)
+	wsMessage := context.GetInput("message").(string)
+	wsUser := context.GetInput("user").(string)
+	wsPassword := context.GetInput("password").(string)
 
 	wsURL := url.URL{Scheme: "ws", Host: wsHost, Path: wsChannel}
 	log.Debugf("connecting to %s", wsURL.String())

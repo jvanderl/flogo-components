@@ -1,6 +1,6 @@
 # Send message to Kafka
 This activity provides your flogo application the ability to send a message to an Apache Kafka broker.
-
+Code is based on the Kafka activity created by Kai Waehner
 
 ## Installation
 
@@ -70,3 +70,7 @@ Configure a task in flow to send 'hello from flogo' to kafka topic 'test', parti
   ]
 }
 ```
+
+## Contributors
+[Kai Waehner](https://github.com/kwaehner)
+[Jan van der Lugt](https://github.com/jvanderl)

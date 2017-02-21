@@ -4,35 +4,35 @@
   "description": "Sends a message to TIBCO eFTL",
   "title": "Send eFTL Message",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/eftl" ,
+  "homepage": "https://github.com/jvanderl/flogo-components/activity/eftl" ,
   "inputs":[
     {
-      "name": "Server",
+      "name": "server",
       "type": "string",
       "value": ""
     },
     {
-      "name": "Channel",
+      "name": "channel",
       "type": "string",
       "value": ""
     },
     {
-      "name": "Destination",
+      "name": "destination",
       "type": "string",
       "value": ""
     },
     {
-      "name": "Message",
+      "name": "message",
       "type": "string",
       "value": ""
     },
     {
-      "name": "Username",
+      "name": "user",
       "type": "string",
       "value": ""
     },
     {
-      "name": "Password",
+      "name": "password",
       "type": "string",
       "value": ""
     }

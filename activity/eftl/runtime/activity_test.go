@@ -34,17 +34,24 @@ func TestEval(t *testing.T) {
 
 	fmt.Println("Publishing a flogo test message to destination 'sample' on channel '/channel' on eFTL Server '192.168.178.41:9191'")
 
-	tc.SetInput("Server", "192.168.178.41:9191")
-	tc.SetInput("Channel", "/channel")
-	tc.SetInput("Destination", "sample")
-	tc.SetInput("Username", "user")
-	tc.SetInput("Password", "password")
-	tc.SetInput("Message", "{\"deviceID\":\"5CCF7F942BCB\",\"distance\":9,\"distState\":\"Safe\"}")
+	tc.SetInput("server", "192.168.178.41:9191")
+	tc.SetInput("channel", "/channel")
+	tc.SetInput("destination", "flogo")
+	tc.SetInput("user", "user")
+	tc.SetInput("password", "password")
+	tc.SetInput("message", "{\"deviceID\":\"5CCF7F942BCB\",\"distance\":9,\"distState\":\"Safe\"}")
+
+	act.Eval(tc)
+
+	result := tc.GetOutput("result")
+	fmt.Println("result: ", result)
+
+	tc.SetInput("destination", "sample")
 
 	act.Eval(tc)
 
 	//check result attr
-	result := tc.GetOutput("result")
+	result = tc.GetOutput("result")
 	fmt.Println("result: ", result)
 
 	if result == nil {

@@ -22,6 +22,13 @@ const testConfig string = `{
       "actionType": "flow",
       "actionURI": "local://testFlow",
       "settings": {
+        "destination": "flogo"
+      }
+    },
+    {
+      "actionType": "flow",
+      "actionURI": "local://testFlow2",
+      "settings": {
         "destination": "sample"
       }
     }

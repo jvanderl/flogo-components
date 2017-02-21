@@ -7,32 +7,32 @@ var jsonMetadata = `{
   "description": "Sends a message to TIBCO eFTL",
   "inputs":[
     {
-      "name": "Server",
+      "name": "server",
       "type": "string",
       "value": ""
     },
     {
-      "name": "Channel",
+      "name": "channel",
       "type": "string",
       "value": ""
     },
     {
-      "name": "Destination",
+      "name": "destination",
       "type": "string",
       "value": ""
     },
     {
-      "name": "Message",
+      "name": "message",
       "type": "string",
       "value": ""
     },
     {
-      "name": "Username",
+      "name": "user",
       "type": "string",
       "value": ""
     },
     {
-      "name": "Password",
+      "name": "password",
       "type": "string",
       "value": ""
     }
