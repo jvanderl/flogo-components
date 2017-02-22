@@ -69,25 +69,29 @@ func (t *MyTrigger) Start() error {
 	}
 	
 	// Connect to eFTL server
-	wsConn, err := eftl.Connect(wsHost, wsChannel)
+//	wsConn, err := eftl.Connect(wsHost, wsChannel)
+	var eftlConn eftl.Connection
+
+	eftlConn, err := eftl.Connect(wsHost, wsChannel, "")
 	if err != nil {
 		log.Debugf("Error while connecting to wsHost: [%s]", err)
 		return err
 	}
 
 	// Login to eFTL
-	wsClientID, wsIDToken, err := eftl.Login (*wsConn, wsUser, wsPassword)
+//	wsClientID, wsIDToken, err := eftl.Login (*wsConn, wsUser, wsPassword)
+	err = eftlConn.Login (wsUser, wsPassword)
 	if err != nil {
 		log.Debugf("Error while Loggin in: [%s]", err)
 	}
-	log.Debugf("Login succesful. client_id: [%s], id_token: [%s]", wsClientID, wsIDToken)
+	log.Debugf("Login succesful. client_id: [%s], id_token: [%s]", eftlConn.ClientID, eftlConn.ReconnectToken)
 
 	//Subscribe to destination in endpoints
-	i := 0
+//	i := 0
 	for _, endpoint := range t.config.Endpoints {
-		i++
-		destination := endpoint.Settings["destination"]
-		wsSubscriptionID, err := eftl.Subscribe (*wsConn, wsClientID, i, destination)
+//		i++
+		destination := "{\"_dest\":\"" + endpoint.Settings["destination"] + "\"}"
+		wsSubscriptionID, err := eftlConn.Subscribe (destination, "")
 		if err != nil {
 			log.Debugf("Error while subscribing in: [%s]", err)
 		}
@@ -95,7 +99,7 @@ func (t *MyTrigger) Start() error {
 	}
 
 	for {
-		msg, op := eftl.GetMessage(*wsConn)
+		msg, op := eftlConn.GetMessage()
 		switch op {
 			case 0 : { //Heartbeat
 				// {"op":0}

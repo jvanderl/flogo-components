@@ -3,7 +3,8 @@ package eftl
 import (
 	"encoding/json"
 	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
-	"github.com/gorilla/websocket"
+	"github.com/jvanderl/go-eftl"
+//	"github.com/gorilla/websocket"
 	"github.com/op/go-logging"
 	"net/url"
 )
@@ -47,7 +48,23 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	wsUser := context.GetInput("user").(string)
 	wsPassword := context.GetInput("password").(string)
 
-	wsURL := url.URL{Scheme: "ws", Host: wsHost, Path: wsChannel}
+
+	// Connect to eFTL server
+	wsConn, err := eftl.Connect(wsHost, wsChannel)
+	if err != nil {
+		log.Debugf("Error while connecting to wsHost: [%s]", err)
+		return err
+	}
+
+	// Login to eFTL
+	wsClientID, wsIDToken, err := eftl.Login (*wsConn, wsUser, wsPassword)
+	if err != nil {
+		log.Debugf("Error while Loggin in: [%s]", err)
+	}
+	log.Debugf("Login succesful. client_id: [%s], id_token: [%s]", wsClientID, wsIDToken)
+
+
+/*	wsURL := url.URL{Scheme: "ws", Host: wsHost, Path: wsChannel}
 	log.Debugf("connecting to %s", wsURL.String())
 
 	wsConn, _, err := websocket.DefaultDialer.Dial(wsURL.String(), nil)
