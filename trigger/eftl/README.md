@@ -25,11 +25,6 @@ Settings, Outputs and Endpoint:
       "value": ""
     },
     {
-      "name": "destination",
-      "type": "string",
-      "value": ""
-    },
-    {
       "name": "username",
       "type": "string",
       "value": ""
@@ -61,7 +56,6 @@ Settings, Outputs and Endpoint:
 |:----------|:---------------|
 | server    | the eFTL server [hostname]:[port]|
 | channel     | The channel to send the message to (e.g. `/channel`)   |
-| destination | The destination to send the message to (e.g. `default`) |
 | message     | The actual message to send |
 | user    | The username to connect to the WebSocket server (e.g. `user`) |
 | password    | The password to connect to the WebSocket server (e.g. `password`) |
@@ -82,7 +76,7 @@ Settings, Outputs and Endpoint:
 Triggers are configured via the triggers.json of your application. The following are some example configuration of the eFTL Trigger.
 
 ### Start a flow
-Configure the Trigger to start "myflow". "settings" "destination" is not used. So in this case the "endpoints" "settings" "destination" is "flogo/#" will start "myflow" flow when a message arrives on a destination called "sample" in this case.
+Configure the Trigger to start "myflow". So in this case the "endpoints" "settings" "destination" is "flogo" will start "myflow" flow when a message arrives on a destination called "flogo" in this case.
 
 ```json
 {
@@ -90,7 +84,6 @@ Configure the Trigger to start "myflow". "settings" "destination" is not used. S
   "settings": {
     "server": "192.168.178.41:9191",
     "channel": "/channel",
-    "destination": "sample",
     "user": "user",
     "password": "password"
   },
@@ -99,7 +92,7 @@ Configure the Trigger to start "myflow". "settings" "destination" is not used. S
       "actionType": "flow",
       "actionURI": "local://testFlow",
       "settings": {
-        "destination": "sample"
+        "destination": "flogo"
       }
     }
   ]

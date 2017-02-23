@@ -45,19 +45,11 @@ func (t *MyTrigger) Metadata() *trigger.Metadata {
 
 // Start implements trigger.Trigger.Start
 func (t *MyTrigger) Start() error {
-	// start the trigger
-	
+	// start the trigger	
 	wsHost := t.settings["server"]
 	wsChannel := t.settings["channel"]
-    wsDestination := t.settings["destination"]
 	wsUser := t.settings["user"]
 	wsPassword := t.settings["password"]
-	
-	log.Debug("server:", wsHost)
-	log.Debug("channel:", wsChannel)
-	log.Debug("destination:", wsDestination)
-	log.Debug("user:", wsUser)
-	log.Debug("password:", wsPassword)
 
 // Read Actions from trigger endpoints 
 	t.destinationToActionType = make(map[string]string)
@@ -69,8 +61,7 @@ func (t *MyTrigger) Start() error {
 	}
 	
 	// Connect to eFTL server
-//	wsConn, err := eftl.Connect(wsHost, wsChannel)
-	var eftlConn eftl.Connection
+//	var eftlConn eftl.Connection
 
 	eftlConn, err := eftl.Connect(wsHost, wsChannel, "")
 	if err != nil {
@@ -79,7 +70,6 @@ func (t *MyTrigger) Start() error {
 	}
 
 	// Login to eFTL
-//	wsClientID, wsIDToken, err := eftl.Login (*wsConn, wsUser, wsPassword)
 	err = eftlConn.Login (wsUser, wsPassword)
 	if err != nil {
 		log.Debugf("Error while Loggin in: [%s]", err)
@@ -87,9 +77,7 @@ func (t *MyTrigger) Start() error {
 	log.Debugf("Login succesful. client_id: [%s], id_token: [%s]", eftlConn.ClientID, eftlConn.ReconnectToken)
 
 	//Subscribe to destination in endpoints
-//	i := 0
 	for _, endpoint := range t.config.Endpoints {
-//		i++
 		destination := "{\"_dest\":\"" + endpoint.Settings["destination"] + "\"}"
 		wsSubscriptionID, err := eftlConn.Subscribe (destination, "")
 		if err != nil {
@@ -99,31 +87,16 @@ func (t *MyTrigger) Start() error {
 	}
 
 	for {
-		msg, op := eftlConn.GetMessage()
-		switch op {
-			case 0 : { //Heartbeat
-				// {"op":0}
-				log.Debug("Heartbeat Received")
-			}
-			case 7 : { // Regular Message
-				message, destination, err := eftl.MessageDetails(msg)
-				if err == nil {
-					log.Debugf("Regular Message Received: [%s]", message )
-					log.Debugf("Destination: [%s]", destination)
-					actionType, found := t.destinationToActionType[destination]
-					actionURI, _ := t.destinationToActionURI[destination]
-					if found {
-						log.Debugf("Found actionType [%s]", actionType)
-						log.Debugf("Found actionURI [%s]", actionURI)
-						t.RunAction(actionType, actionURI, message, destination)
-					} else {
-						log.Debug("actionType and URI not found")
-					}
-				}
-			}
-			default : {
-				log.Debugf("Other message Received: [%s]", convert(msg))
-			}
+		message, destination, err := eftlConn.ReceiveMessage()
+		if err != nil {
+			return err
+		}
+		actionType, found := t.destinationToActionType[destination]
+		actionURI, _ := t.destinationToActionURI[destination]
+		if found {
+			t.RunAction(actionType, actionURI, message, destination)
+		} else {
+			log.Debug("actionType and URI not found")
 		}
 	}
 	return nil
@@ -156,7 +129,6 @@ func (t *MyTrigger) RunAction(actionType string, actionURI string, payload strin
 		log.Error(err)
 	}
 
-	log.Debugf("Ran action: [%s-%s]", actionType, actionURI)
 	log.Debug("Reply data: ", replyData)
 
 	/*	if replyData != nil {
@@ -170,8 +142,6 @@ func (t *MyTrigger) RunAction(actionType string, actionURI string, payload strin
 }
 
 func (t *MyTrigger) constructStartRequest(message string, destination string) *StartRequest {
-
-	log.Debug("Received contstruct start request")
 
 	//TODO how to handle reply to, reply feature
 	req := &StartRequest{}

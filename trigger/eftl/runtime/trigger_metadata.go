@@ -17,11 +17,6 @@ var jsonMetadata = `{
       "value": ""
     },
     {
-      "name": "destination",
-      "type": "string",
-      "value": ""
-    },
-    {
       "name": "user",
       "type": "string",
       "value": ""

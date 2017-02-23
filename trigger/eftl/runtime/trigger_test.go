@@ -13,7 +13,6 @@ const testConfig string = `{
   "settings": {
     "server": "192.168.178.41:9191",
     "channel": "/channel",
-    "destination": "sample",
     "user": "user",
     "password": "password"
   },
@@ -23,13 +22,6 @@ const testConfig string = `{
       "actionURI": "local://testFlow",
       "settings": {
         "destination": "flogo"
-      }
-    },
-    {
-      "actionType": "flow",
-      "actionURI": "local://testFlow2",
-      "settings": {
-        "destination": "sample"
       }
     }
   ]

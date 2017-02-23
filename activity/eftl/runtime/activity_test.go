@@ -46,14 +46,6 @@ func TestEval(t *testing.T) {
 	result := tc.GetOutput("result")
 	fmt.Println("result: ", result)
 
-	tc.SetInput("destination", "sample")
-
-	act.Eval(tc)
-
-	//check result attr
-	result = tc.GetOutput("result")
-	fmt.Println("result: ", result)
-
 	if result == nil {
 		t.Fail()
 	}
