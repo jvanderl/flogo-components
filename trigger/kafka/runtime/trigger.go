@@ -19,8 +19,8 @@ var broker kafka.Broker
 
 // todo: switch to use endpoint registration
 
-// KafkaTrigger is simple Kafka trigger
-type KafkaTrigger struct {
+// MyTrigger is simple Kafka trigger
+type MyTrigger struct {
 	metadata          *trigger.Metadata
 	runner            action.Runner
 	settings          map[string]string
@@ -31,16 +31,16 @@ type KafkaTrigger struct {
 
 func init() {
 	md := trigger.NewMetadata(jsonMetadata)
-	trigger.Register(&KafkaTrigger{metadata: md})
+	trigger.Register(&MyTrigger{metadata: md})
 }
 
 // Metadata implements trigger.Trigger.Metadata
-func (t *KafkaTrigger) Metadata() *trigger.Metadata {
+func (t *MyTrigger) Metadata() *trigger.Metadata {
 	return t.metadata
 }
 
 // Init implements ext.Trigger.Init
-func (t *KafkaTrigger) Init(config *trigger.Config, runner action.Runner) {
+func (t *MyTrigger) Init(config *trigger.Config, runner action.Runner) {
 
 	t.config = config
 	t.settings = config.Settings
@@ -48,7 +48,7 @@ func (t *KafkaTrigger) Init(config *trigger.Config, runner action.Runner) {
 }
 
 // Start implements ext.Trigger.Start
-func (t *KafkaTrigger) Start() error {
+func (t *MyTrigger) Start() error {
 
 	ifServers := []string{t.settings["server"]}
 	log.Debug("ifServers: ", ifServers)
@@ -178,7 +178,7 @@ func (t *KafkaTrigger) Start() error {
 }
 
 // Stop implements ext.Trigger.Stop
-func (t *KafkaTrigger) Stop() error {
+func (t *MyTrigger) Stop() error {
 
 	broker.Close()
 
@@ -186,7 +186,7 @@ func (t *KafkaTrigger) Stop() error {
 }
 
 // RunAction starts a new Process Instance
-func (t *KafkaTrigger) RunAction(actionType string, actionURI string, payload string, topic string, partition int32) {
+func (t *MyTrigger) RunAction(actionType string, actionURI string, payload string, topic string, partition int32) {
 
 	log.Debug("Starting new Process Instance")
 	log.Debug("Action Type: ", actionType)
@@ -220,7 +220,7 @@ func (t *KafkaTrigger) RunAction(actionType string, actionURI string, payload st
 	}*/
 }
 
-func (t *KafkaTrigger) publishMessage(topic string, partition int32, message string) {
+func (t *MyTrigger) publishMessage(topic string, partition int32, message string) {
 
 	log.Debug("ReplyTo topic: ", topic)
 	log.Debug("Publishing message: ", message)
@@ -242,7 +242,7 @@ func (t *KafkaTrigger) publishMessage(topic string, partition int32, message str
 	log.Debug("Message sent succesfully")
 }
 
-func (t *KafkaTrigger) constructStartRequest(message string, topic string) *StartRequest {
+func (t *MyTrigger) constructStartRequest(message string, topic string) *StartRequest {
 
 	log.Debug("Received contstruct start request")
 

@@ -2,10 +2,10 @@ package eftl
 
 import (
 	"context"
-	"testing"
 	"encoding/json"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
+	"testing"
 )
 
 const testConfig string = `{

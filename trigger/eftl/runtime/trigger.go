@@ -1,12 +1,12 @@
 package eftl
 
 import (
+	"context"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/flow/support"
 	"github.com/jvanderl/go-eftl"
 	"github.com/op/go-logging"
-	"context"
 )
 
 var dat map[string]interface{}
@@ -16,12 +16,11 @@ var dat map[string]interface{}
 var log = logging.MustGetLogger("trigger-eftl")
 
 // MyTrigger is a stub for your Trigger implementation
-
 type MyTrigger struct {
-	metadata *trigger.Metadata
-	runner   action.Runner
-	settings          map[string]string
-	config            *trigger.Config
+	metadata                *trigger.Metadata
+	runner                  action.Runner
+	settings                map[string]string
+	config                  *trigger.Config
 	destinationToActionURI  map[string]string
 	destinationToActionType map[string]string
 }
@@ -45,13 +44,13 @@ func (t *MyTrigger) Metadata() *trigger.Metadata {
 
 // Start implements trigger.Trigger.Start
 func (t *MyTrigger) Start() error {
-	// start the trigger	
+	// start the trigger
 	wsHost := t.settings["server"]
 	wsChannel := t.settings["channel"]
 	wsUser := t.settings["user"]
 	wsPassword := t.settings["password"]
 
-// Read Actions from trigger endpoints 
+	// Read Actions from trigger endpoints
 	t.destinationToActionType = make(map[string]string)
 	t.destinationToActionURI = make(map[string]string)
 
@@ -59,9 +58,9 @@ func (t *MyTrigger) Start() error {
 		t.destinationToActionURI[endpoint.Settings["destination"]] = endpoint.ActionURI
 		t.destinationToActionType[endpoint.Settings["destination"]] = endpoint.ActionType
 	}
-	
+
 	// Connect to eFTL server
-//	var eftlConn eftl.Connection
+	//	var eftlConn eftl.Connection
 
 	eftlConn, err := eftl.Connect(wsHost, wsChannel, "")
 	if err != nil {
@@ -70,7 +69,7 @@ func (t *MyTrigger) Start() error {
 	}
 
 	// Login to eFTL
-	err = eftlConn.Login (wsUser, wsPassword)
+	err = eftlConn.Login(wsUser, wsPassword)
 	if err != nil {
 		log.Debugf("Error while Loggin in: [%s]", err)
 	}
@@ -79,7 +78,7 @@ func (t *MyTrigger) Start() error {
 	//Subscribe to destination in endpoints
 	for _, endpoint := range t.config.Endpoints {
 		destination := "{\"_dest\":\"" + endpoint.Settings["destination"] + "\"}"
-		wsSubscriptionID, err := eftlConn.Subscribe (destination, "")
+		wsSubscriptionID, err := eftlConn.Subscribe(destination, "")
 		if err != nil {
 			log.Debugf("Error while subscribing in: [%s]", err)
 		}
@@ -107,6 +106,7 @@ func (t *MyTrigger) Stop() error {
 	// stop the trigger
 	return nil
 }
+
 // RunAction starts a new Process Instance
 func (t *MyTrigger) RunAction(actionType string, actionURI string, payload string, destination string) {
 

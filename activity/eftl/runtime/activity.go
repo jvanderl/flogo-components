@@ -10,12 +10,12 @@ import (
 var log = logging.MustGetLogger("activity-eftl")
 
 type eftlLoginMessage struct {
-	Operator int  `json:"op"`
-	ClientType string `json:"client_type"`
-	ClientVersion string `json:"client_version"`
-	User string `json:"user"`
-	Password string `json:"password"`
-	LoginOptions map[string]string `json:"login_options"`
+	Operator      int               `json:"op"`
+	ClientType    string            `json:"client_type"`
+	ClientVersion string            `json:"client_version"`
+	User          string            `json:"user"`
+	Password      string            `json:"password"`
+	LoginOptions  map[string]string `json:"login_options"`
 }
 
 // MyActivity is a stub for your Activity implementation
@@ -54,7 +54,7 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	}
 
 	// Login to eFTL
-	err = eftlConn.Login (wsUser, wsPassword)
+	err = eftlConn.Login(wsUser, wsPassword)
 	if err != nil {
 		log.Debugf("Error while Loggin in: [%s]", err)
 		context.SetOutput("result", "ERR_EFTL_LOGIN")
