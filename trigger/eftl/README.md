@@ -33,6 +33,16 @@ Settings, Outputs and Endpoint:
       "name": "password",
       "type": "string",
       "value": ""
+    },
+    {
+      "name": "secure",
+      "type": "boolean",
+      "value": "false"
+    },
+    {
+      "name": "certificate",
+      "type": "string",
+      "value": ""
     }
   ],
   "outputs": [
@@ -57,8 +67,10 @@ Settings, Outputs and Endpoint:
 | server    | the eFTL server [hostname]:[port]|
 | channel     | The channel to send the message to (e.g. `/channel`)   |
 | message     | The actual message to send |
-| user    | The username to connect to the WebSocket server (e.g. `user`) |
+| user        | The username to connect to the WebSocket server (e.g. `user`) |
 | password    | The password to connect to the WebSocket server (e.g. `password`) |
+| secure      | Determines to use secure web sockets (wss) |
+| cert        | The eFTL server certificate data in PEM format (only used if secure is true) |
 
 ## Ouputs
 | Output   | Description    |

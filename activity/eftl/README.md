@@ -46,6 +46,16 @@ Inputs and Outputs:
       "name": "password",
       "type": "string",
       "value": ""
+    },
+    {
+      "name": "secure",
+      "type": "boolean",
+      "value": "false"
+    },
+    {
+      "name": "certificate",
+      "type": "string",
+      "value": ""
     }
   ],
   "outputs": [
@@ -65,6 +75,8 @@ Inputs and Outputs:
 | message     | The actual message to send |
 | username    | The username to connect to the WebSocket server (e.g. `user`) |
 | password    | The password to connect to the WebSocket server (e.g. `password`) |
+| secure      | Determines to use secure web sockets (wss) |
+| cert        | The eFTL server certificate data in PEM format (only used if secure is true) |
 
 ## Configuration Examples
 The below configuration would connect to a WebSocket server based on TIBCO eFTL and send a message saying `Hello World`

@@ -7,6 +7,7 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/flow/support"
 	"github.com/jvanderl/go-eftl"
 	"github.com/op/go-logging"
+	"strconv"
 )
 
 var dat map[string]interface{}
@@ -49,6 +50,11 @@ func (t *MyTrigger) Start() error {
 	wsChannel := t.settings["channel"]
 	wsUser := t.settings["user"]
 	wsPassword := t.settings["password"]
+	wsSecure, err := strconv.ParseBool(t.settings["secure"])
+		if err != nil {
+			return err
+		}
+	wsCert := t.settings["certificate"]
 
 	// Read Actions from trigger endpoints
 	t.destinationToActionType = make(map[string]string)
@@ -60,9 +66,7 @@ func (t *MyTrigger) Start() error {
 	}
 
 	// Connect to eFTL server
-	//	var eftlConn eftl.Connection
-
-	eftlConn, err := eftl.Connect(wsHost, wsChannel, "")
+	eftlConn, err := eftl.Connect(wsHost, wsChannel, wsSecure, wsCert, "")
 	if err != nil {
 		log.Debugf("Error while connecting to wsHost: [%s]", err)
 		return err

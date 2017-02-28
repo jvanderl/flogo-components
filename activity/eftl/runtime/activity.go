@@ -44,9 +44,11 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	wsMessage := context.GetInput("message").(string)
 	wsUser := context.GetInput("user").(string)
 	wsPassword := context.GetInput("password").(string)
+	wsSecure := context.GetInput("secure").(bool)
+	wsCert := context.GetInput("certificate").(string)
 
 	// Connect to eFTL server
-	eftlConn, err := eftl.Connect(wsHost, wsChannel, "")
+	eftlConn, err := eftl.Connect(wsHost, wsChannel, wsSecure, wsCert, "")
 	if err != nil {
 		log.Debugf("Error while connecting to wsHost: [%s]", err)
 		context.SetOutput("result", "ERR_CONNECT_HOST")

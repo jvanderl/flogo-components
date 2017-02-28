@@ -25,6 +25,16 @@ var jsonMetadata = `{
       "name": "password",
       "type": "string",
       "value": ""
+    },
+    {
+      "name": "secure",
+      "type": "boolean",
+      "value": "false"
+    },
+    {
+      "name": "certificate",
+      "type": "string",
+      "value": ""
     }
   ],
   "outputs": [
