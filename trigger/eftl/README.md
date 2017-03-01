@@ -70,7 +70,7 @@ Settings, Outputs and Endpoint:
 | user        | The username to connect to the WebSocket server (e.g. `user`) |
 | password    | The password to connect to the WebSocket server (e.g. `password`) |
 | secure      | Determines to use secure web sockets (wss) |
-| cert        | The eFTL server certificate data in PEM format (only used if secure is true) |
+| cert        | The eFTL server certificate data in base64 encoded PEM format (only used if secure is true) |
 
 ## Ouputs
 | Output   | Description    |
