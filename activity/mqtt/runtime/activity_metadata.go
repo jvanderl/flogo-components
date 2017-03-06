@@ -9,8 +9,7 @@ var jsonMetadata = `{
   "inputs":[
    {
       "name": "broker",
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     {
       "name": "id",
@@ -26,19 +25,16 @@ var jsonMetadata = `{
     },
     {
       "name": "topic",
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     {
       "name": "qos",
       "type": "integer",
-      "required": true,
       "allowed" : ["0", "1", "2"]
     },
     {
       "name": "message",
-      "type": "string",
-      "required": true
+      "type": "string"
     }
   ],
   "outputs": [
