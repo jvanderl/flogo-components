@@ -4,6 +4,7 @@ Collection custom built flogo components
 ## Components
 
 ### Activities
+* [combine](activity/combine): Combine separate parts into a single string
 * [eftl](activity/eftl): Send message to eFTL
 * [filter](activity/filter): Filter out unwanted data
 * [getjson](activity/getjson): Retrieve specific elements from a JSON structure
@@ -20,6 +21,12 @@ Collection custom built flogo components
 * [mqtt2](trigger/mqtt2): Receive MQTT Message
 
 ## Installation
+
+#### Install Combine Activity
+```bash
+flogo add activity github.com/jvanderl/flogo-components/activity/combine
+```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/combine
 
 #### Install eFTL Activity
 ```bash
