@@ -36,10 +36,6 @@ Settings, Outputs and Endpoint:
       "type": "string"
     },
     {
-      "name": "topic",
-      "type": "string"
-    },
-    {
       "name": "qos",
       "type": "number"
     },
@@ -76,7 +72,6 @@ Settings, Outputs and Endpoint:
 | user      | The UserID used when connecting to the MQTT broker |
 | password  | The Password used when connecting to the MQTT broker |
 | store     | MQTT store for message persistence when QoS=1 or QoS=2
-| topic     | Topic on which the message is published |
 | qos       | MQTT Quality of Service |
 | cleansess | Determines if the trigger should start with a clean session |
 
@@ -97,7 +92,7 @@ Settings, Outputs and Endpoint:
 Triggers are configured via the triggers.json of your application. The following are some example configuration of the MQTT Trigger.
 
 ### Start a flow
-Configure the Trigger to start "myflow". "settings" "topic" is not used. So in this case the "endpoints" "settings" "topic" is "flogo/#" will start "myflow" flow when a message arrives on a topic staring with "flogo" in this case. The actualtopic output will hold the actucal topic used for further processing. 
+Configure the Trigger to start "myflow". In this case the "endpoints" "settings" "topic" is "flogo/#" will start "myflow" flow when a message arrives on a topic staring with "flogo" in this case. The actualtopic output will hold the actucal topic used for further processing. 
 
 ```json
 {
@@ -105,7 +100,6 @@ Configure the Trigger to start "myflow". "settings" "topic" is not used. So in t
     {
       "name": "mqtt2",
       "settings": {
-        "topic": "",
         "broker": "tcp://192.168.1.12:1883",
         "id": "flogo",
         "user": "",

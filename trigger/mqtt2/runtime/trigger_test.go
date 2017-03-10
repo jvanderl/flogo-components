@@ -12,7 +12,6 @@ import (
 const testConfig string = `{
   "name": "mqtt2",
   "settings": {
-    "topic": "flogo/#",
     "broker": "tcp://127.0.0.1:1883",
     "id": "flogoEngine",
     "user": "",
@@ -25,7 +24,7 @@ const testConfig string = `{
     {
       "flowURI": "local://testFlow",
       "settings": {
-        "topic": "test_start"
+        "topic": "flogo/#"
       }
     }
   ]

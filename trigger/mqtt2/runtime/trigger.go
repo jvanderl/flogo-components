@@ -129,9 +129,9 @@ func (t *MqttTrigger) Start() error {
 
 // Stop implements ext.Trigger.Stop
 func (t *MqttTrigger) Stop() error {
-	//unsubscribe from topic
-	log.Debug("Unsubcribing from topic: ", t.settings["topic"])
+	//unsubscribe from topics
 	for _, endpoint := range t.config.Endpoints {
+		log.Debugf("Unsubcribing from topic: %s ", endpoint.Settings["topic"])
 		if token := t.client.Unsubscribe(endpoint.Settings["topic"]); token.Wait() && token.Error() != nil {
 			log.Errorf("Error unsubscribing from topic %s: %s", endpoint.Settings["topic"], token.Error())
 		}

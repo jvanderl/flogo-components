@@ -26,10 +26,6 @@ var jsonMetadata = `{
       "type": "string"
     },
     {
-      "name": "topic",
-      "type": "string"
-    },
-    {
       "name": "qos",
       "type": "number"
     },
