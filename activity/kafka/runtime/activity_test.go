@@ -32,7 +32,7 @@ func TestEval(t *testing.T) {
 	tc := test.NewTestActivityContext(md)
 
 	//setup attrs
-	tc.SetInput(server, "192.168.178.41:9092")
+	tc.SetInput(server, "10.10.1.50:9092")
 	tc.SetInput(configid, "flogo-test")
 	tc.SetInput(topic, "test")
 	tc.SetInput(partition, "0")
