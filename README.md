@@ -12,6 +12,7 @@ Collection custom built flogo components
 * [mqtt](activity/mqtt): Publish MQTT Message
 * [splitjson](activity/splitjson): Splits JSON structure into separate name-value pairs
 * [splitpath](activity/splitpath): Splits a path into separate parts
+* [statechange](activity/statechange): Detects state change for up to eight inputs
 * [systeminfo](activity/systeminfo): Retrieve System Information
 * [throttle](activity/throttle): Throttle data based on interval
 
@@ -69,6 +70,12 @@ Link for flogo web: https://github.com/jvanderl/flogo-components/activity/splitj
 flogo add activity github.com/jvanderl/flogo-components/activity/splitpath
 ```
 Link for flogo web: https://github.com/jvanderl/flogo-components/activity/splitpath
+
+#### Install State Change Activity
+```bash
+flogo add activity github.com/jvanderl/flogo-components/activity/statechange
+```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/statechange
 
 #### Install SystemInfo Activity
 ```bash

@@ -1,0 +1,5 @@
+{
+  "name": "statechange",
+  "version": "0.0.1",
+  "description": "Detects state change for up to eight inputs"
+}
