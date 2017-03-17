@@ -1,11 +1,11 @@
-# Throttle by Interval
-This activity provides your flogo application the ability to throttle data by interval.
+# State Change
+This activity provides your flogo application the ability to detect state change for up to eight inputs.
 
 
 ## Installation
 
 ```bash
-flogo add activity github.com/jvanderl/flogo-components/activity/throttle
+flogo add activity github.com/jvanderl/flogo-components/activity/statechange
 ```
 
 ## Schema
@@ -87,7 +87,7 @@ Configure a task in flow to only pass data only once per 10 seconds:
 
 ```json
 {
-  "name": "testfilter",
+  "name": "teststatechange",
   "model": "tibco-simple",
   "type": 1,
   "attributes": [],
@@ -99,9 +99,9 @@ Configure a task in flow to only pass data only once per 10 seconds:
     "tasks": [
       {
         "id": 2,
-        "name": "Throttle",
+        "name": "State Change",
         "type": 1,
-        "activityType": "throttle",
+        "activityType": "statechange",
         "attributes": [
           {
             "name": "datasource",
@@ -109,14 +109,9 @@ Configure a task in flow to only pass data only once per 10 seconds:
             "type": "string"
           },
           {
-            "name": "interval",
+            "name": "input1",
             "value": "10",
             "type": "integer"
-          },
-          {
-            "name": "intervaltype",
-            "value": "seconds",
-            "type": "string"
           }
         ]
       },
@@ -145,7 +140,7 @@ Configure a task in flow to only pass data only once per 10 seconds:
         "inputMappings": [
           {
             "type": 1,
-            "value": "{A2.reason}",
+            "value": "{A2.result}",
             "mapTo": "message"
           }
         ]
