@@ -2,17 +2,17 @@ package kafka
 
 import (
 	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
-	"github.com/TIBCOSoftware/flogo-lib/logger"
+	"github.com/op/go-logging"
 	"github.com/optiopay/kafka"
 	"github.com/optiopay/kafka/proto"
 )
 
 // log is the default package logger
-var log, _ = logger.GetLogger("activity-kafka")
+var log = logging.MustGetLogger("activity-kafka")
 
 const (
 	server	    = "server"
-	configid	  = "configid"
+	configid	= "configid"
 	topic       = "topic"
 	message     = "message"
 	partition   = "partition"
@@ -39,7 +39,7 @@ func (a *KafkaActivity) Metadata() *activity.Metadata {
 func (a *KafkaActivity) Eval(context activity.Context) (done bool, err error) {
 
 	ifServers := []string{context.GetInput(server).(string)}
-	log.Debugf("ifServers: %s", ifServers)
+	log.Debug("ifServers: ", ifServers)
 
 	ifConfigID := context.GetInput(configid).(string)
 	ifTopic := context.GetInput(topic).(string)
@@ -58,7 +58,7 @@ func (a *KafkaActivity) Eval(context activity.Context) (done bool, err error) {
 	log.Debug("Connecting to Kafka server")
 	broker, err := kafka.Dial(ifServers, conf)
 	if err != nil {
-		log.Errorf("cannot connect to kafka cluster: %s", err)
+		log.Fatalf("cannot connect to kafka cluster: %s", err)
     	context.SetOutput("result", "ERROR_KAFKA_CONNECT")
     	return true, nil
 	}
@@ -78,7 +78,10 @@ func (a *KafkaActivity) Eval(context activity.Context) (done bool, err error) {
     	return true, nil
 	}
 
-	log.Debugf("Message sent succesfully, Response: %s", resp)
+	if log.IsEnabledFor(logging.DEBUG) {
+		log.Debug("Response:", resp)
+	}
+	log.Debug("Message sent succesfully")
 
 	context.SetOutput("result", resp)
 	return true, nil
