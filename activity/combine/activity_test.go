@@ -22,13 +22,15 @@ func getActivityMetadata() *activity.Metadata {
 }
 
 func TestCreate(t *testing.T) {
+
 	act := NewActivity(getActivityMetadata())
+
 	if act == nil {
 		t.Error("Activity Not Created")
- 		t.Fail()
+		t.Fail()
 		return
- 	}
- }
+	}
+}
 
 func TestEval(t *testing.T) {
 
