@@ -1,8 +1,8 @@
 package combine
 
 import (
-	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
-	"github.com/op/go-logging"
+	"github.com/TIBCOSoftware/flogo-lib/core/activity"
+	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"strings"
 )
 
@@ -22,17 +22,16 @@ const (
 )
 
 // log is the default package logger
-var log = logging.MustGetLogger("activity-combine")
+var log = logger.GetLogger("activity-jvanderl-combine”)
 
 // MyActivity is a stub for your Activity implementation
 type MyActivity struct {
 	metadata *activity.Metadata
 }
 
-// init create & register activity
-func init() {
-	md := activity.NewMetadata(jsonMetadata)
-	activity.Register(&MyActivity{metadata: md})
+// NewActivity creates a new AppActivity
+func NewActivity(metadata *activity.Metadata) activity.Activity {
+	return &AppActivity{metadata: metadata}
 }
 
 // Metadata implements activity.Activity.Metadata
