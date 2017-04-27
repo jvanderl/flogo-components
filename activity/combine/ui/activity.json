@@ -1,8 +1,10 @@
 {
   "name": "combine",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/combine",
   "version": "0.0.1",
-  "description": "Combines separate parts into a single string",
   "title": "Combine",
+  "description": "Combines separate parts into a single string",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/activity/combine",
   "inputs":[
