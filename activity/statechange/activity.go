@@ -1,9 +1,9 @@
 package statechange
 
 import (
+	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-lib/core/data"
-	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
-	"github.com/op/go-logging"
+	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"strconv"
 	"sync"
 )
@@ -18,7 +18,7 @@ const (
 )
 
 // log is the default package logger
-var log = logging.MustGetLogger("activity-tibco-statechange")
+var log = logger.GetLogger("activity-jvanderl-statechange")
 
 // MyActivity is a stub for your Activity implementation
 type MyActivity struct {
@@ -26,10 +26,9 @@ type MyActivity struct {
 	metadata *activity.Metadata
 }
 
-// init create & register activity
-func init() {
-	md := activity.NewMetadata(jsonMetadata)
-	activity.Register(&MyActivity{metadata: md})
+// NewActivity creates a new AppActivity
+func NewActivity(metadata *activity.Metadata) activity.Activity {
+	return &MyActivity{metadata: metadata}
 }
 
 // Metadata implements activity.Activity.Metadata

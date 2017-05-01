@@ -1,10 +1,12 @@
 {
   "name": "statechange",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/statechange",
   "version": "0.0.1",
-  "description": "Detects state change for up to eight inputs",
   "title": "State Change",
+  "description": "Detects state change for up to eight inputs",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "homepage": "https://github.com/jvanderl/flogo-components/activity/statechange",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/statechange",
   "inputs":[
     {
       "name": "datasource",
@@ -41,7 +43,7 @@
     {
       "name": "input8",
       "type": "string"
-    }   
+    }
   ],
   "outputs": [
     {
