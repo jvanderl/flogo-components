@@ -1,7 +1,7 @@
 {
   "name": "eftl",
   "type": "flogo:activity",
-  "ref": "github.com/TIBCOSoftware/flogo-contrib/activity/eftl",
+  "ref": "github.com/jvanderl/flogo-components/activity/eftl",
   "version": "0.0.1",
   "title": "Send eFTL Message",
   "description": "Sends a message to TIBCO eFTL",

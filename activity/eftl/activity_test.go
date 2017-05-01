@@ -74,10 +74,9 @@ func TestEvalSecure(t *testing.T) {
 		}
 	}()
 
-	md := activity.NewMetadata(jsonMetadata)
-	act := &MyActivity{metadata: md}
-
-	tc := test.NewTestActivityContext(md)
+	//md := getActivityMetadata()
+	act := NewActivity(getActivityMetadata())
+	tc := test.NewTestActivityContext(getActivityMetadata())
 	//setup attrs
 
 	fmt.Println("Publishing a flogo test message to destination 'sample' on channel '/channel' on eFTL Server '10.10.1.50:9291'")
