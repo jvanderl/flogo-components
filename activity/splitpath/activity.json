@@ -1,10 +1,12 @@
 {
   "name": "splitpath",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/splitpath",
   "version": "0.0.1",
-  "description": "Splits a path into separate parts",
   "title": "Split Path",
+  "description": "Splits a path into separate parts",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "homepage": "https://github.com/jvanderl/flogo-components/activity/splitpath",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/splitpath",
   "inputs":[
     {
       "name": "input",
