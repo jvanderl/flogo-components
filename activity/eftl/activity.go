@@ -2,8 +2,8 @@ package eftl
 
 import (
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
-	"github.com/jvanderl/go-eftl"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
+	"github.com/jvanderl/go-eftl"
 )
 
 // log is the default package logger
