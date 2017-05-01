@@ -1,10 +1,12 @@
 {
   "name": "splitjson",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/splitjson",
   "version": "0.0.1",
-  "description": "Splits JSON structure into separate name-value pairs",
   "title": "Split JSON",
+  "description": "Splits JSON structure into separate name-value pairs",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "homepage": "https://github.com/jvanderl/flogo-components/activity/splitjson",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/splitjson",
   "inputs":[
     {
       "name": "input",
