@@ -22,7 +22,7 @@ const (
 )
 
 // log is the default package logger
-var log = logger.GetLogger("activity-jvanderl-combine”)
+var log = logger.GetLogger("activity-jvanderl-combine")
 
 // MyActivity is a stub for your Activity implementation
 type MyActivity struct {
@@ -31,7 +31,7 @@ type MyActivity struct {
 
 // NewActivity creates a new AppActivity
 func NewActivity(metadata *activity.Metadata) activity.Activity {
-	return &AppActivity{metadata: metadata}
+	return &MyActivity{metadata: metadata}
 }
 
 // Metadata implements activity.Activity.Metadata
