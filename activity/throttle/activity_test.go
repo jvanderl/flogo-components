@@ -2,17 +2,30 @@ package throttle
 
 import (
 	"fmt"
-	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
+	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-lib/flow/test"
+	"io/ioutil"
 	"testing"
 	"time"
 )
 
-func TestRegistered(t *testing.T) {
-	act := activity.Get("throttle")
+var activityMetadata *activity.Metadata
 
+func getActivityMetadata() *activity.Metadata {
+	if activityMetadata == nil {
+		jsonMetadataBytes, err := ioutil.ReadFile("activity.json")
+		if err != nil {
+			panic("No Json Metadata found for activity.json path")
+		}
+		activityMetadata = activity.NewMetadata(string(jsonMetadataBytes))
+	}
+	return activityMetadata
+}
+
+func TestCreate(t *testing.T) {
+	act := NewActivity(getActivityMetadata())
 	if act == nil {
-		t.Error("Activity Not Registered")
+		t.Error("Activity Not Created")
 		t.Fail()
 		return
 	}
@@ -27,10 +40,9 @@ func TestEval(t *testing.T) {
 		}
 	}()
 
-	md := activity.NewMetadata(jsonMetadata)
-	act := &MyActivity{metadata: md}
+	act := NewActivity(getActivityMetadata())
+	tc := test.NewTestActivityContext(getActivityMetadata())
 
-	tc := test.NewTestActivityContext(md)
 	//setup attrs
 
 	fmt.Println("Setting up Throttle for 'UID123123' with interval 5 seconds")

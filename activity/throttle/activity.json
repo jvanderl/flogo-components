@@ -1,10 +1,12 @@
 {
   "name": "throttle",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/throttle",
   "version": "0.0.1",
-  "description": "Trottles output based on unique data source and time interval",
   "title": "Throttle Output",
+  "description": "Trottles output based on unique data source and time interval",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "homepage": "https://github.com/jvanderl/flogo-components/activity/throttle",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/throttle",
   "inputs":[
     {
       "name": "datasource",
@@ -17,8 +19,8 @@
     {
       "name": "intervaltype",
       "type": "string",
-      "allowed" : ["hours", "minutes", "seconds", "milliseconds"]      
-    }    
+      "allowed" : ["hours", "minutes", "seconds", "milliseconds"]
+    }
   ],
   "outputs": [
     {
