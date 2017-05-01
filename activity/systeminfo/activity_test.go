@@ -1,11 +1,11 @@
 package systeminfo
 
 import (
+	"fmt"
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-lib/flow/test"
-	"testing"
 	"io/ioutil"
-	"fmt"
+	"testing"
 )
 
 var activityMetadata *activity.Metadata
