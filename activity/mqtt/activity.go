@@ -2,13 +2,13 @@ package mqtt
 
 import (
 	"fmt"
-	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
+	"github.com/TIBCOSoftware/flogo-lib/core/activity"
+	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/eclipse/paho.mqtt.golang"
-	"github.com/op/go-logging"
 )
 
 // log is the default package logger
-var log = logging.MustGetLogger("activity-tibco-rest")
+var log = logger.GetLogger("activity-jvanderl-mqtt")
 
 const (
 	broker   = "broker"
@@ -25,10 +25,9 @@ type MyActivity struct {
 	metadata *activity.Metadata
 }
 
-// init create & register activity
-func init() {
-	md := activity.NewMetadata(jsonMetadata)
-	activity.Register(&MyActivity{metadata: md})
+// NewActivity creates a new AppActivity
+func NewActivity(metadata *activity.Metadata) activity.Activity {
+	return &MyActivity{metadata: metadata}
 }
 
 // Metadata implements activity.Activity.Metadata
