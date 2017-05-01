@@ -1,8 +1,12 @@
 {
   "name": "systeminfo",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/systeminfo",
   "version": "0.0.1",
+  "title": "System Info",
   "description": "Returns system information",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/systeminfo" ,
   "inputs":[],
   "outputs": [
     {
