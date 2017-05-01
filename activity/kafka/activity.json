@@ -1,9 +1,11 @@
 {
   "name": "kafka",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/kafka",
   "version": "0.0.1",
   "title": "Send to Kafka",
   "description": "Send message to Kafka",
-  "homepage": "https://github.com/TIBCOSoftware/jvanderl/activity/kafka",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/kafka",
   "inputs":[
     {
       "name": "server",

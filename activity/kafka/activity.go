@@ -1,42 +1,41 @@
 package kafka
 
 import (
-	"github.com/TIBCOSoftware/flogo-lib/flow/activity"
-	"github.com/op/go-logging"
+	"github.com/TIBCOSoftware/flogo-lib/core/activity"
+	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/optiopay/kafka"
 	"github.com/optiopay/kafka/proto"
 )
 
 // log is the default package logger
-var log = logging.MustGetLogger("activity-kafka")
+var log = logger.GetLogger("activity-jvanderl-kafka")
 
 const (
-	server	    = "server"
-	configid	= "configid"
-	topic       = "topic"
-	message     = "message"
-	partition   = "partition"
-	result      = "result"
+	server    = "server"
+	configid  = "configid"
+	topic     = "topic"
+	message   = "message"
+	partition = "partition"
+	result    = "result"
 )
 
-// KafkaActivity is a Kafka Activity implementation
-type KafkaActivity struct {
+// MyActivity is a stub for your Activity implementation
+type MyActivity struct {
 	metadata *activity.Metadata
 }
 
-// init create & register activity
-func init() {
-	md := activity.NewMetadata(jsonMetadata)
-	activity.Register(&KafkaActivity{metadata: md})
+// NewActivity creates a new AppActivity
+func NewActivity(metadata *activity.Metadata) activity.Activity {
+	return &MyActivity{metadata: metadata}
 }
 
 // Metadata implements activity.Activity.Metadata
-func (a *KafkaActivity) Metadata() *activity.Metadata {
+func (a *MyActivity) Metadata() *activity.Metadata {
 	return a.metadata
 }
 
 // Eval implements activity.Activity.Eval
-func (a *KafkaActivity) Eval(context activity.Context) (done bool, err error) {
+func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 
 	ifServers := []string{context.GetInput(server).(string)}
 	log.Debug("ifServers: ", ifServers)
@@ -58,9 +57,9 @@ func (a *KafkaActivity) Eval(context activity.Context) (done bool, err error) {
 	log.Debug("Connecting to Kafka server")
 	broker, err := kafka.Dial(ifServers, conf)
 	if err != nil {
-		log.Fatalf("cannot connect to kafka cluster: %s", err)
-    	context.SetOutput("result", "ERROR_KAFKA_CONNECT")
-    	return true, nil
+		log.Errorf("cannot connect to kafka cluster: %s", err)
+		context.SetOutput("result", "ERROR_KAFKA_CONNECT")
+		return true, nil
 	}
 	defer broker.Close()
 	log.Debug("Connected to Kafka server")
@@ -74,13 +73,11 @@ func (a *KafkaActivity) Eval(context activity.Context) (done bool, err error) {
 
 	if err != nil {
 		log.Error("Error sending message to Kafka broker:", err)
-    	context.SetOutput("result", "ERROR_KAFKA_SEND")
-    	return true, nil
+		context.SetOutput("result", "ERROR_KAFKA_SEND")
+		return true, nil
 	}
 
-	if log.IsEnabledFor(logging.DEBUG) {
-		log.Debug("Response:", resp)
-	}
+	log.Debug("Response:", resp)
 	log.Debug("Message sent succesfully")
 
 	context.SetOutput("result", resp)
