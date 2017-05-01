@@ -43,7 +43,6 @@ func TestEval(t *testing.T) {
 
 	//md := getActivityMetadata()
 	act := NewActivity(getActivityMetadata())
-
 	tc := test.NewTestActivityContext(getActivityMetadata())
 
 	///////////////////

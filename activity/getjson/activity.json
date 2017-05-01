@@ -1,10 +1,12 @@
 {
   "name": "getjson",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/getjson",
   "version": "0.0.1",
   "description": "Retrieves specific elements from a JSON structure",
   "title": "Get JSON",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "homepage": "https://github.com/jvanderl/flogo-components/activity/getjson",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/getjson",
   "inputs":[
     {
       "name": "input",
