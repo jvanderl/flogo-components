@@ -1,10 +1,12 @@
 {
   "name": "eftl",
+  "type": "flogo:activity",
+  "ref": "github.com/TIBCOSoftware/flogo-contrib/activity/eftl",
   "version": "0.0.1",
-  "description": "Sends a message to TIBCO eFTL",
   "title": "Send eFTL Message",
+  "description": "Sends a message to TIBCO eFTL",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "homepage": "https://github.com/jvanderl/flogo-components/activity/eftl" ,
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/eftl" ,
   "inputs":[
     {
       "name": "server",
