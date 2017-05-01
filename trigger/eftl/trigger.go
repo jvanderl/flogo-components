@@ -5,8 +5,8 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/flow/support"
+	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/jvanderl/go-eftl"
-	"github.com/op/go-logging"
 	"strconv"
 )
 
@@ -14,28 +14,30 @@ var dat map[string]interface{}
 
 // log is the default package logger
 
-var log = logging.MustGetLogger("trigger-eftl")
+var log = logger.GetLogger("trigger-jvanderl-eftl")
 
 // MyTrigger is a stub for your Trigger implementation
 type MyTrigger struct {
 	metadata                *trigger.Metadata
 	runner                  action.Runner
-	settings                map[string]string
 	config                  *trigger.Config
 	destinationToActionURI  map[string]string
 	destinationToActionType map[string]string
 }
 
-func init() {
-	md := trigger.NewMetadata(jsonMetadata)
-	trigger.Register(&MyTrigger{metadata: md})
+//NewFactory create a new Trigger factory
+func NewFactory(md *trigger.Metadata) trigger.Factory {
+	return &MyFactory{metadata: md}
 }
 
-// Init implements trigger.Trigger.Init
-func (t *MyTrigger) Init(config *trigger.Config, runner action.Runner) {
-	t.config = config
-	t.settings = config.Settings
-	t.runner = runner
+// MyFactory Trigger factory
+type MyFactory struct {
+	metadata *trigger.Metadata
+}
+
+//New Creates a new trigger instance for a given id
+func (t *MyFactory) New(config *trigger.Config) trigger.Trigger {
+	return &MyTrigger{metadata: t.metadata, config: config}
 }
 
 // Metadata implements trigger.Trigger.Metadata
@@ -43,18 +45,23 @@ func (t *MyTrigger) Metadata() *trigger.Metadata {
 	return t.metadata
 }
 
+// Init implements trigger.Trigger.Init
+func (t *MyTrigger) Init(runner action.Runner) {
+	t.runner = runner
+}
+
 // Start implements trigger.Trigger.Start
 func (t *MyTrigger) Start() error {
 	// start the trigger
-	wsHost := t.settings["server"]
-	wsChannel := t.settings["channel"]
-	wsUser := t.settings["user"]
-	wsPassword := t.settings["password"]
-	wsSecure, err := strconv.ParseBool(t.settings["secure"])
-		if err != nil {
-			return err
-		}
-	wsCert := t.settings["certificate"]
+	wsHost := t.config.GetSetting("server")
+	wsChannel := t.config.GetSetting("channel")
+	wsUser := t.config.GetSetting("user")
+	wsPassword := t.config.GetSetting("password")
+	wsSecure, err := strconv.ParseBool(t.config.GetSetting("secure"))
+	if err != nil {
+		return err
+	}
+	wsCert := t.config.GetSetting("certificate")
 
 	// Read Actions from trigger endpoints
 	t.destinationToActionType = make(map[string]string)
