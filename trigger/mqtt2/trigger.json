@@ -9,31 +9,38 @@
   "settings":[
     {
       "name": "broker",
-      "type": "string"
+      "type": "string",
+      "value": "tcp://127.0.0.1:1883"
     },
     {
       "name": "id",
-      "type": "string"
+      "type": "string",
+      "value": "flogo-mqtt2-trigger"
     },
     {
       "name": "user",
-      "type": "string"
+      "type": "string",
+      "value": ""
     },
     {
       "name": "password",
-      "type": "string"
+      "type": "string",
+      "value": ""
     },
     {
       "name": "store",
-      "type": "string"
+      "type": "string",
+      "value": ""
     },
     {
       "name": "qos",
-      "type": "number"
+      "type": "number",
+      "value": "1"
     },
     {
       "name": "cleansess",
-      "type": "boolean"
+      "type": "boolean",
+      "value": "false"
     }
   ],
   "outputs": [
