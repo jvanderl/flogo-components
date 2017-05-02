@@ -165,6 +165,7 @@ func (t *Mqtt2Trigger) RunAction(actionId string, payload string, topic string) 
 	//}
 
 	//todo handle error
+	log.Infof("Got data: %s", req.Data)
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
 	action := action.Get(actionId)
 	context := trigger.NewContext(context.Background(), startAttrs)
