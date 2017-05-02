@@ -1,57 +1,83 @@
 package eftl
 
 import (
-	"context"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/flow/support"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/jvanderl/go-eftl"
+	"context"
 	"strconv"
+//	"encoding/json"
+//	"strings"
 )
 
-var dat map[string]interface{}
+//var dat map[string]interface{}
 
 // log is the default package logger
 
 var log = logger.GetLogger("trigger-jvanderl-eftl")
 
-// MyTrigger is a stub for your Trigger implementation
-type MyTrigger struct {
-	metadata                *trigger.Metadata
-	runner                  action.Runner
-	config                  *trigger.Config
-	destinationToActionURI  map[string]string
-	destinationToActionType map[string]string
+// eftlTrigger is a stub for your Trigger implementation
+type eftlTrigger struct {
+	metadata          *trigger.Metadata
+	runner            action.Runner
+	config            *trigger.Config
+	destinationToActionId  map[string]string
 }
 
 //NewFactory create a new Trigger factory
 func NewFactory(md *trigger.Metadata) trigger.Factory {
-	return &MyFactory{metadata: md}
+	return &eftlFactory{metadata: md}
 }
 
-// MyFactory Trigger factory
-type MyFactory struct {
+// eftlFactory Trigger factory
+type eftlFactory struct {
 	metadata *trigger.Metadata
 }
 
 //New Creates a new trigger instance for a given id
-func (t *MyFactory) New(config *trigger.Config) trigger.Trigger {
-	return &MyTrigger{metadata: t.metadata, config: config}
+func (t *eftlFactory) New(config *trigger.Config) trigger.Trigger {
+	return &eftlTrigger{metadata: t.metadata, config: config}
 }
 
 // Metadata implements trigger.Trigger.Metadata
-func (t *MyTrigger) Metadata() *trigger.Metadata {
+func (t *eftlTrigger) Metadata() *trigger.Metadata {
+	return t.metadata
+}
+
+// Init implements ext.Trigger.Init
+func (t *eftlTrigger) Init(runner action.Runner) {
+	t.runner = runner
+}
+
+/*//NewFactory create a new Trigger factory
+func NewFactory(md *trigger.Metadata) trigger.Factory {
+	return &eftlFactory{metadata: md}
+}
+
+// eftlFactory Trigger factory
+type eftlFactory struct {
+	metadata *trigger.Metadata
+}
+
+//New Creates a new trigger instance for a given id
+func (t *eftlFactory) New(config *trigger.Config) trigger.Trigger {
+	return &eftlTrigger{metadata: t.metadata, config: config}
+}
+
+// Metadata implements trigger.Trigger.Metadata
+func (t *eftlTrigger) Metadata() *trigger.Metadata {
 	return t.metadata
 }
 
 // Init implements trigger.Trigger.Init
-func (t *MyTrigger) Init(runner action.Runner) {
+func (t *eftlTrigger) Init(runner action.Runner) {
 	t.runner = runner
 }
-
+*/
 // Start implements trigger.Trigger.Start
-func (t *MyTrigger) Start() error {
+func (t *eftlTrigger) Start() error {
 
 	// start the trigger
 	wsHost := t.config.GetSetting("server")
@@ -68,17 +94,18 @@ func (t *MyTrigger) Start() error {
 	}
 
 	// Read Actions from trigger endpoints
-	t.destinationToActionType = make(map[string]string)
-	t.destinationToActionURI = make(map[string]string)
+	t.destinationToActionId = make(map[string]string)
 
 
-	for _, handler := range t.config.Handlers {
-		log.Infof("handlers: [%s]", handler.ActionId)
-		t.destinationToActionURI[handler.GetSetting("destination")] = handler.ActionId
-		t.destinationToActionType[handler.GetSetting("destination")] = "flow"
+	for _, handlerCfg := range t.config.Handlers {
+		log.Infof("handlers: [%s]", handlerCfg.ActionId)
+		epdestination := handlerCfg.GetSetting("destination")
+		log.Infof("destination: [%s]", epdestination)
+		t.destinationToActionId[epdestination] = handlerCfg.ActionId
 	}
 
 	// Connect to eFTL server
+	log.Infof("Connecting to eFTL server: [%s]", wsHost)
 	eftlConn, err := eftl.Connect(wsHost, wsChannel, wsSecure, wsCert, "")
 	if err != nil {
 		log.Debugf("Error while connecting to wsHost: [%s]", err)
@@ -107,48 +134,48 @@ func (t *MyTrigger) Start() error {
 		if err != nil {
 			return err
 		}
-		actionType, found := t.destinationToActionType[destination]
-		actionURI, _ := t.destinationToActionURI[destination]
+		//actionType, found := t.destinationToActionType[destination]
+		actionId, found := t.destinationToActionId[destination]
 		if found {
-			log.Infof ("About to run action for type [%s], uri [%s]", actionType, actionURI)
-			t.RunAction(actionType, actionURI, message, destination)
+			log.Infof ("About to run action for Id [%s]", actionId)
+			t.RunAction(actionId, message, destination)
 		} else {
-			log.Debug("actionType and URI not found")
+			log.Debug("actionId not found")
 		}
 	}
 	return nil
 }
 
 // Stop implements trigger.Trigger.Start
-func (t *MyTrigger) Stop() error {
+func (t *eftlTrigger) Stop() error {
 	// stop the trigger
 	return nil
 }
 
 // RunAction starts a new Process Instance
-func (t *MyTrigger) RunAction(actionType string, actionURI string, payload string, destination string) {
+func (t *eftlTrigger) RunAction(actionId string, payload string, destination string) {
 
 	log.Info("Starting new Process Instance")
-	log.Info("Action Type: ", actionType)
-	log.Info("Action URI: ", actionURI)
+	log.Info("Action Id: ", actionId)
 	log.Info("Payload: ", payload)
 	log.Info("Destination: ", destination)
 
 	log.Info("Construct Request")
-	req := t.constructStartRequest(payload, destination)
+	//	req := t.constructStartRequest(payload, destination)
+	req := t.constructStartRequest(payload)
 	log.Infof("Request data: [%s]", req.Data)
 
 	log.Info("Set Start Attributes")
-//	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
+	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
 
 	log.Info("Get Action to perform")
-	action := action.Get(actionURI)
+	action := action.Get(actionId)
 
 	log.Info("Set Trigger context")
 	context := trigger.NewContext(context.Background(), startAttrs)
 
 	log.Info("Call the runner")
-	_, replyData, err := t.runner.Run(context, action, actionURI, nil)
+	_, replyData, err := t.runner.Run(context, action, actionId, nil)
 	if err != nil {
 		log.Error(err)
 	}
@@ -165,12 +192,17 @@ func (t *MyTrigger) RunAction(actionType string, actionURI string, payload strin
 	}*/
 }
 
-func (t *MyTrigger) constructStartRequest(message string, destination string) *StartRequest {
+//func (t *eftlTrigger) constructStartRequest(message string, destination string) *StartRequest {
+func (t *eftlTrigger) constructStartRequest(message string) *StartRequest {
+
+//	log.Infof("Received contstruct start request for message [%s], destination [%s]", message, destination)
+	log.Infof("Received contstruct start request for message [%s]", message)
 
 	//TODO how to handle reply to, reply feature
 	req := &StartRequest{}
 	data := make(map[string]interface{})
 	data["message"] = message
+//	data["destination"] = destination
 	req.Data = data
 	return req
 }

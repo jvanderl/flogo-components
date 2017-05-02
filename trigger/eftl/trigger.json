@@ -4,39 +4,32 @@
   "ref": "github.com/jvanderl/flogo-components/trigger/eftl",
   "version": "0.0.1",
   "title": "Receive eFTL Message",
-  "description": "eFTL Subscriber",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/eftl",
+  "description": "eFTL Subscriber",
   "settings":[
     {
       "name": "server",
-      "type": "string",
-      "value": ""
+      "type": "string"
     },
     {
       "name": "channel",
-      "type": "string",
-      "value": ""
+      "type": "string"
     },
     {
       "name": "user",
-      "type": "string",
-      "value": ""
+      "type": "string"
     },
     {
       "name": "password",
-      "type": "string",
-      "value": ""
+      "type": "string"
     },
     {
       "name": "secure",
-      "type": "boolean",
-      "value": "false"
+      "type": "boolean"
     },
     {
       "name": "certificate",
-      "type": "string",
-      "value": ""
+      "type": "string"
     }
   ],
   "outputs": [
