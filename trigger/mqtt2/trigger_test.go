@@ -43,7 +43,7 @@ func TestInit(t *testing.T) {
 
 	log.Info("Testing Init")
 	config := trigger.Config{}
-	json.Unmarshal([]byte(testConfig), config)
+	json.Unmarshal([]byte(testConfig), &config)
 
 	f := &MQTT2Factory{}
 	tgr := f.New(&config)

@@ -2,7 +2,7 @@ package mqtt2
 
 import (
 	"context"
-	"encoding/json"
+//	"encoding/json"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/flow/support"
@@ -130,6 +130,9 @@ func (t *Mqtt2Trigger) Start() error {
 		}
 	}
 
+	//stay here
+	for {
+	}
 	return nil
 }
 
@@ -177,7 +180,9 @@ func (t *Mqtt2Trigger) RunAction(actionId string, payload string, topic string) 
 	}
 
 	log.Debugf("Ran action: [%s]", actionId)
+	log.Infof("Reply data: [%s]", replyData)
 
+/*
 	if replyData != nil {
 		data, err := json.Marshal(replyData)
 		if err != nil {
@@ -185,7 +190,7 @@ func (t *Mqtt2Trigger) RunAction(actionId string, payload string, topic string) 
 		} else {
 			t.publishMessage(req.ReplyTo, string(data))
 		}
-	}
+	} */
 }
 
 func (t *Mqtt2Trigger) publishMessage(topic string, message string) {
