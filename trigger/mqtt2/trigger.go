@@ -54,9 +54,7 @@ func (t *Mqtt2Trigger) Init(runner action.Runner) {
 // Start implements ext.Trigger.Start
 func (t *Mqtt2Trigger) Start() error {
 
-	log.Info("Now in Trigger Start")
 	opts := mqtt.NewClientOptions()
-	log.Info("Got new Client Opts")
 	opts.AddBroker(t.config.GetSetting("broker"))
 	opts.SetClientID(t.config.GetSetting("id"))
 	opts.SetUsername(t.config.GetSetting("user"))
@@ -70,7 +68,6 @@ func (t *Mqtt2Trigger) Start() error {
 	if storeType := t.config.Settings["store"]; storeType != ":memory:" {
 		opts.SetStore(mqtt.NewFileStore(t.config.GetSetting("store")))
 	}
-	log.Info("Completed Setting Client Opts")
 
 	opts.SetDefaultPublishHandler(func(client mqtt.Client, msg mqtt.Message) {
 
@@ -81,7 +78,6 @@ func (t *Mqtt2Trigger) Start() error {
 		log.Infof("Actual topic: %s", topic)
 
 		// try topic without wildcards
-//		actionType, found := t.topicToActionType[topic]
 		actionId, found := t.topicToActionId[topic]
 
 		if found {
@@ -109,9 +105,11 @@ func (t *Mqtt2Trigger) Start() error {
 
 	client := mqtt.NewClient(opts)
 	t.client = client
+	log.Infof("Connecting to broker [%s]", t.config.GetSetting("broker"))
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
 		panic(token.Error())
 	}
+	log.Info( "Connected to broker")
 
 	i, err := strconv.Atoi(t.config.GetSetting("qos"))
 	if err != nil {
@@ -122,10 +120,7 @@ func (t *Mqtt2Trigger) Start() error {
 //	t.topicToActionType = make(map[string]string)
 	t.topicToActionId = make(map[string]string)
 
-	log.Info("Start subscribing")
-
 	for _, handlerCfg := range t.config.Handlers {
-		log.Infof("Checking Handler %s", handlerCfg.GetSetting("topic"))
 		if token := t.client.Subscribe(handlerCfg.GetSetting("topic"), byte(i), nil); token.Wait() && token.Error() != nil {
 			log.Errorf("Error subscribing to topic %s: %s", handlerCfg.Settings["topic"], token.Error())
 			panic(token.Error())
@@ -142,9 +137,9 @@ func (t *Mqtt2Trigger) Start() error {
 func (t *Mqtt2Trigger) Stop() error {
 	//unsubscribe from topics
 	for _, handlerCfg := range t.config.Handlers {
-		log.Debugf("Unsubcribing from topic: %s ", t.config.Settings["topic"])
+		log.Infof("Unsubcribing from topic: %s ", handlerCfg.GetSetting("topic"))
 		if token := t.client.Unsubscribe(handlerCfg.GetSetting("topic")); token.Wait() && token.Error() != nil {
-			log.Errorf("Error unsubscribing from topic %s: %s", handlerCfg.Settings["topic"], token.Error())
+			log.Errorf("Error unsubscribing from topic %s: %s", handlerCfg.GetSetting("topic"), token.Error())
 		}
 	}
 
