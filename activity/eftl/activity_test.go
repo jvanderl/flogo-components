@@ -45,14 +45,15 @@ func TestEval(t *testing.T) {
 
 	fmt.Println("Publishing a flogo test message to destination 'sample' on channel '/channel' on eFTL Server '10.10.1.50:19191'")
 
-	tc.SetInput("server", "10.10.1.50:19191")
+	tc.SetInput("server", "localhost:19191")
 	tc.SetInput("channel", "/channel")
 	tc.SetInput("destination", "flogo")
 	tc.SetInput("user", "user")
 	tc.SetInput("password", "password")
-	tc.SetInput("message", "{\"deviceID\":\"5CCF7F942BCB\",\"distance\":9,\"distState\":\"Safe\"}")
+//	tc.SetInput("message", "{\"deviceID\":\"5CCF7F942BCB\",\"distance\":9,\"distState\":\"Safe\"}")
+	tc.SetInput("message", "Simple Message")
 	tc.SetInput("secure", false)
-	tc.SetInput("certificate", "")
+	tc.SetInput("certificate", "DummyCert")
 
 	act.Eval(tc)
 

@@ -1,5 +1,5 @@
 {
-  "name": "jvanderl-eftl",
+  "name": "eftl",
   "type": "flogo:trigger",
   "ref": "github.com/jvanderl/flogo-components/trigger/eftl",
   "version": "0.0.1",

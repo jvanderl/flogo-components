@@ -22,7 +22,7 @@ func getJSONMetadata() string {
 const testConfig string = `{
 	"name": "jvanderl-eftl",
   "settings": {
-    "server": "10.10.1.50:19191",
+    "server": "localhost:19191",
     "channel": "/channel",
     "user": "user",
     "password": "password",

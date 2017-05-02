@@ -1,5 +1,7 @@
 {
   "name": "mqtt2",
+  "type": "flogo:trigger",
+  "ref": "github.com/jvanderl/flogo-components/trigger/mqtt2",
   "version": "0.0.1",
   "title": "Receive MQTT Message 2",
   "author": "Michael Register <mregiste@tibco.com>",
@@ -44,7 +46,7 @@
       "type": "string"
     }
   ],
-  "endpoint": {
+  "handler": {
     "settings": [
       {
         "name": "topic",

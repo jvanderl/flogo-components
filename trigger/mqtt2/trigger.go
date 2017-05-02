@@ -6,62 +6,69 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/flow/support"
+	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/eclipse/paho.mqtt.golang"
-	"github.com/op/go-logging"
 	"strconv"
 	"strings"
 )
 
 // log is the default package logger
-var log = logging.MustGetLogger("trigger-tibco-mqtt")
+var log = logger.GetLogger("trigger-jvanderl-mqtt2")
 
 // todo: switch to use endpoint registration
 
-// MqttTrigger is simple MQTT trigger
-type MqttTrigger struct {
+// Mqtt2Trigger is simple MQTT trigger
+type  Mqtt2Trigger struct {
 	metadata          *trigger.Metadata
 	runner            action.Runner
 	client            mqtt.Client
-	settings          map[string]string
 	config            *trigger.Config
 	topicToActionURI  map[string]string
 	topicToActionType map[string]string
 }
 
-func init() {
-	md := trigger.NewMetadata(jsonMetadata)
-	trigger.Register(&MqttTrigger{metadata: md})
+//NewFactory create a new Trigger factory
+func NewFactory(md *trigger.Metadata) trigger.Factory {
+	return &MQTT2Factory{metadata: md}
+}
+
+// MQTT2Factory Trigger factory
+type MQTT2Factory struct {
+	metadata *trigger.Metadata
+}
+
+//New Creates a new trigger instance for a given id
+func (t *MQTT2Factory) New(config *trigger.Config) trigger.Trigger {
+	return &Mqtt2Trigger{metadata: t.metadata, config: config}
 }
 
 // Metadata implements trigger.Trigger.Metadata
-func (t *MqttTrigger) Metadata() *trigger.Metadata {
+func (t *Mqtt2Trigger) Metadata() *trigger.Metadata {
 	return t.metadata
 }
 
-// Init implements ext.Trigger.Init
-func (t *MqttTrigger) Init(config *trigger.Config, runner action.Runner) {
 
-	t.config = config
-	t.settings = config.Settings
+// Init implements ext.Trigger.Init
+func (t *Mqtt2Trigger) Init(runner action.Runner) {
 	t.runner = runner
 }
 
 // Start implements ext.Trigger.Start
-func (t *MqttTrigger) Start() error {
+func (t *Mqtt2Trigger) Start() error {
 
 	opts := mqtt.NewClientOptions()
-	opts.AddBroker(t.settings["broker"])
-	opts.SetClientID(t.settings["id"])
-	opts.SetUsername(t.settings["user"])
-	opts.SetPassword(t.settings["password"])
-	b, err := strconv.ParseBool(t.settings["cleansess"])
+	opts.AddBroker(t.config.GetSetting("broker"))
+	opts.SetClientID(t.config.GetSetting("id"))
+	opts.SetUsername(t.config.GetSetting("user"))
+	opts.SetPassword(t.config.GetSetting("password"))
+	b, err := strconv.ParseBool(t.config.GetSetting("cleansess"))
 	if err != nil {
 		log.Error("Error converting \"cleansess\" to a boolean ", err.Error())
 		return err
 	}
 	opts.SetCleanSession(b)
-	if t.settings["store"] != ":memory:" {
-		opts.SetStore(mqtt.NewFileStore(t.settings["store"]))
+	if storeType := t.config.Settings["store"]; storeType != ":memory:" {
+		opts.SetStore(mqtt.NewFileStore(t.config.GetSetting("store")))
 	}
 
 	opts.SetDefaultPublishHandler(func(client mqtt.Client, msg mqtt.Message) {
@@ -81,8 +88,8 @@ func (t *MqttTrigger) Start() error {
 		} else {
 			// search for wildcards
 
-			for _, endpoint := range t.config.Endpoints {
-				eptopic := endpoint.Settings["topic"]
+			for _, handlerCfg := range t.config.Handlers {
+				eptopic := handlerCfg.GetSetting("topic")
 				if strings.HasSuffix(eptopic, "/#") {
 					// is wildcard, now check actual topic starts with wildcard
 					if strings.HasPrefix(topic, strings.TrimSuffix(eptopic, "/#")) {
@@ -105,7 +112,7 @@ func (t *MqttTrigger) Start() error {
 		panic(token.Error())
 	}
 
-	i, err := strconv.Atoi(t.settings["qos"])
+	i, err := strconv.Atoi(t.config.GetSetting("qos"))
 	if err != nil {
 		log.Error("Error converting \"qos\" to an integer ", err.Error())
 		return err
@@ -114,13 +121,12 @@ func (t *MqttTrigger) Start() error {
 	t.topicToActionType = make(map[string]string)
 	t.topicToActionURI = make(map[string]string)
 
-	for _, endpoint := range t.config.Endpoints {
-		if token := t.client.Subscribe(endpoint.Settings["topic"], byte(i), nil); token.Wait() && token.Error() != nil {
-			log.Errorf("Error subscribing to topic %s: %s", endpoint.Settings["topic"], token.Error())
+	for _, handlerCfg := range t.config.Handlers {
+		if token := t.client.Subscribe(handlerCfg.GetSetting("topic"), byte(i), nil); token.Wait() && token.Error() != nil {
+			log.Errorf("Error subscribing to topic %s: %s", handlerCfg.Settings["topic"], token.Error())
 			panic(token.Error())
 		} else {
-			t.topicToActionURI[endpoint.Settings["topic"]] = endpoint.ActionURI
-			t.topicToActionType[endpoint.Settings["topic"]] = endpoint.ActionType
+			t.topicToActionURI[handlerCfg.GetSetting("topic")] = handlerCfg.ActionId
 		}
 	}
 
@@ -128,12 +134,12 @@ func (t *MqttTrigger) Start() error {
 }
 
 // Stop implements ext.Trigger.Stop
-func (t *MqttTrigger) Stop() error {
+func (t *Mqtt2Trigger) Stop() error {
 	//unsubscribe from topics
-	for _, endpoint := range t.config.Endpoints {
-		log.Debugf("Unsubcribing from topic: %s ", endpoint.Settings["topic"])
-		if token := t.client.Unsubscribe(endpoint.Settings["topic"]); token.Wait() && token.Error() != nil {
-			log.Errorf("Error unsubscribing from topic %s: %s", endpoint.Settings["topic"], token.Error())
+	for _, handlerCfg := range t.config.Handlers {
+		log.Debugf("Unsubcribing from topic: %s ", t.config.Settings["topic"])
+		if token := t.client.Unsubscribe(handlerCfg.GetSetting("topic")); token.Wait() && token.Error() != nil {
+			log.Errorf("Error unsubscribing from topic %s: %s", handlerCfg.Settings["topic"], token.Error())
 		}
 	}
 
@@ -143,7 +149,7 @@ func (t *MqttTrigger) Stop() error {
 }
 
 // RunAction starts a new Process Instance
-func (t *MqttTrigger) RunAction(actionType string, actionURI string, payload string, topic string) {
+func (t *Mqtt2Trigger) RunAction(actionType string, actionURI string, payload string, topic string) {
 
 	log.Debug("Starting new Process Instance")
 	log.Debug("Action Type: ", actionType)
@@ -161,9 +167,7 @@ func (t *MqttTrigger) RunAction(actionType string, actionURI string, payload str
 
 	//todo handle error
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
-
-	action := action.Get(actionType)
-
+	action := action.Get(actionURI)
 	context := trigger.NewContext(context.Background(), startAttrs)
 
 	//todo handle error
@@ -172,7 +176,7 @@ func (t *MqttTrigger) RunAction(actionType string, actionURI string, payload str
 		log.Error(err)
 	}
 
-	log.Debugf("Ran action: [%s-%s]", actionType, actionURI)
+	log.Debugf("Ran action: [%s]", actionURI)
 
 	if replyData != nil {
 		data, err := json.Marshal(replyData)
@@ -184,12 +188,12 @@ func (t *MqttTrigger) RunAction(actionType string, actionURI string, payload str
 	}
 }
 
-func (t *MqttTrigger) publishMessage(topic string, message string) {
+func (t *Mqtt2Trigger) publishMessage(topic string, message string) {
 
 	log.Debug("ReplyTo topic: ", topic)
 	log.Debug("Publishing message: ", message)
 
-	qos, err := strconv.Atoi(t.settings["qos"])
+	qos, err := strconv.Atoi(t.config.GetSetting("qos"))
 	if err != nil {
 		log.Error("Error converting \"qos\" to an integer ", err.Error())
 		return
@@ -198,7 +202,7 @@ func (t *MqttTrigger) publishMessage(topic string, message string) {
 	token.Wait()
 }
 
-func (t *MqttTrigger) constructStartRequest(message string, topic string) *StartRequest {
+func (t *Mqtt2Trigger) constructStartRequest(message string, topic string) *StartRequest {
 
 	log.Debug("Received contstruct start request")
 

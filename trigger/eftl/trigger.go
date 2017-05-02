@@ -139,11 +139,7 @@ func (t *MyTrigger) RunAction(actionType string, actionURI string, payload strin
 	log.Infof("Request data: [%s]", req.Data)
 
 	log.Info("Set Start Attributes")
-	startAttrs, err := t.metadata.OutputsToAttrs(req.Data, true)
-	if err != nil {
-		log.Info ("HIERRRRRRRRR")
-		log.Info (err)
-	}
+//	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
 
 	log.Info("Get Action to perform")
 	action := action.Get(actionURI)
