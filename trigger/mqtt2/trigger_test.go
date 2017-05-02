@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
-//	"github.com/eclipse/paho.mqtt.golang"
+	"github.com/eclipse/paho.mqtt.golang"
 	"testing"
 )
 
@@ -20,9 +20,9 @@ const testConfig string = `{
     "qos": "0",
     "cleansess": "false"
   },
-  "endpoints": [
+  "handlers": [
     {
-      "flowURI": "local://testFlow",
+      "actionId": "local://testFlow",
       "settings": {
         "topic": "flogo/#"
       }
@@ -35,14 +35,15 @@ type TestRunner struct {
 
 // Run implements action.Runner.Run
 func (tr *TestRunner) Run(context context.Context, action action.Action, uri string, options interface{}) (code int, data interface{}, err error) {
-	log.Debugf("Ran Action: %v", uri)
+	log.Infof("Ran Action: %v", uri)
 	return 0, nil, nil
 }
 
 func TestInit(t *testing.T) {
+
+	log.Info("Testing Init")
 	config := trigger.Config{}
 	json.Unmarshal([]byte(testConfig), config)
-
 
 	f := &MQTT2Factory{}
 	tgr := f.New(&config)
@@ -54,6 +55,7 @@ func TestInit(t *testing.T) {
 }
 
 func TestEndpoint(t *testing.T) {
+	log.Info("Testing Endpoint")
 
 	config := trigger.Config{}
 	json.Unmarshal([]byte(testConfig), &config)
@@ -68,8 +70,8 @@ func TestEndpoint(t *testing.T) {
 	tgr.Start()
 	defer tgr.Stop()
 
-/*	opts := mqtt.NewClientOptions()
-	opts.AddBroker("tcp://localhost:1883")
+	opts := mqtt.NewClientOptions()
+	opts.AddBroker("tcp://127.0.0.1:1883")
 	opts.SetClientID("flogoEngine")
 	opts.SetUsername("")
 	opts.SetPassword("")
@@ -84,5 +86,5 @@ func TestEndpoint(t *testing.T) {
 	token.Wait()
 
 	client.Disconnect(250)
-	log.Debug("Sample Publisher Disconnected") */
+	log.Debug("Sample Publisher Disconnected")
 }

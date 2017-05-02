@@ -18,7 +18,7 @@ var log = logger.GetLogger("trigger-jvanderl-mqtt2")
 // todo: switch to use endpoint registration
 
 // Mqtt2Trigger is simple MQTT trigger
-type  Mqtt2Trigger struct {
+type Mqtt2Trigger struct {
 	metadata          *trigger.Metadata
 	runner            action.Runner
 	client            mqtt.Client
@@ -47,7 +47,6 @@ func (t *Mqtt2Trigger) Metadata() *trigger.Metadata {
 	return t.metadata
 }
 
-
 // Init implements ext.Trigger.Init
 func (t *Mqtt2Trigger) Init(runner action.Runner) {
 	t.runner = runner
@@ -56,7 +55,9 @@ func (t *Mqtt2Trigger) Init(runner action.Runner) {
 // Start implements ext.Trigger.Start
 func (t *Mqtt2Trigger) Start() error {
 
+	log.Info("Now in Trigger Start")
 	opts := mqtt.NewClientOptions()
+	log.Info("Got new Client Opts")
 	opts.AddBroker(t.config.GetSetting("broker"))
 	opts.SetClientID(t.config.GetSetting("id"))
 	opts.SetUsername(t.config.GetSetting("user"))
@@ -70,14 +71,15 @@ func (t *Mqtt2Trigger) Start() error {
 	if storeType := t.config.Settings["store"]; storeType != ":memory:" {
 		opts.SetStore(mqtt.NewFileStore(t.config.GetSetting("store")))
 	}
+	log.Info("Completed Setting Client Opts")
 
 	opts.SetDefaultPublishHandler(func(client mqtt.Client, msg mqtt.Message) {
 
 		topic := msg.Topic()
 		//TODO we should handle other types, since mqtt message format are data-agnostic
 		payload := string(msg.Payload())
-		log.Debug("Received msg:", payload)
-		log.Debug("Actual topic: ", topic)
+		log.Infof("Received msg: %s", payload)
+		log.Infof("Actual topic: %s", topic)
 
 		// try topic without wildcards
 		actionType, found := t.topicToActionType[topic]
@@ -121,11 +123,15 @@ func (t *Mqtt2Trigger) Start() error {
 	t.topicToActionType = make(map[string]string)
 	t.topicToActionURI = make(map[string]string)
 
+	log.Info("Start subscribing")
+
 	for _, handlerCfg := range t.config.Handlers {
+		log.Infof("Checking Handler %s", handlerCfg.GetSetting("topic"))
 		if token := t.client.Subscribe(handlerCfg.GetSetting("topic"), byte(i), nil); token.Wait() && token.Error() != nil {
 			log.Errorf("Error subscribing to topic %s: %s", handlerCfg.Settings["topic"], token.Error())
 			panic(token.Error())
 		} else {
+			log.Infof("Subscribed to topic %s for action %s", handlerCfg.GetSetting("topic"), handlerCfg.ActionId)
 			t.topicToActionURI[handlerCfg.GetSetting("topic")] = handlerCfg.ActionId
 		}
 	}
@@ -151,11 +157,11 @@ func (t *Mqtt2Trigger) Stop() error {
 // RunAction starts a new Process Instance
 func (t *Mqtt2Trigger) RunAction(actionType string, actionURI string, payload string, topic string) {
 
-	log.Debug("Starting new Process Instance")
-	log.Debug("Action Type: ", actionType)
-	log.Debug("Action URI: ", actionURI)
-	log.Debug("Payload: ", payload)
-	log.Debug("Actual Topic: ", topic)
+	log.Info("Starting new Process Instance")
+	log.Infof("Action Type: %s", actionType)
+	log.Infof("Action URI: %s", actionURI)
+	log.Infof("Payload: %s", payload)
+	log.Infof("Actual Topic: %s", topic)
 
 	req := t.constructStartRequest(payload, topic)
 	//err := json.NewDecoder(strings.NewReader(payload)).Decode(req)
