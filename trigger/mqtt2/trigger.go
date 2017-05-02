@@ -23,8 +23,7 @@ type Mqtt2Trigger struct {
 	runner            action.Runner
 	client            mqtt.Client
 	config            *trigger.Config
-	topicToActionURI  map[string]string
-	topicToActionType map[string]string
+	topicToActionId  map[string]string
 }
 
 //NewFactory create a new Trigger factory
@@ -82,11 +81,11 @@ func (t *Mqtt2Trigger) Start() error {
 		log.Infof("Actual topic: %s", topic)
 
 		// try topic without wildcards
-		actionType, found := t.topicToActionType[topic]
-		actionURI, _ := t.topicToActionURI[topic]
+//		actionType, found := t.topicToActionType[topic]
+		actionId, found := t.topicToActionId[topic]
 
 		if found {
-			t.RunAction(actionType, actionURI, payload, topic)
+			t.RunAction(actionId, payload, topic)
 		} else {
 			// search for wildcards
 
@@ -96,10 +95,10 @@ func (t *Mqtt2Trigger) Start() error {
 					// is wildcard, now check actual topic starts with wildcard
 					if strings.HasPrefix(topic, strings.TrimSuffix(eptopic, "/#")) {
 						// Got a match, now get the action for the wildcard topic
-						actionType, found := t.topicToActionType[eptopic]
-						actionURI, _ := t.topicToActionURI[eptopic]
+						//actionType, found := t.topicToActionType[eptopic]
+						actionId, found := t.topicToActionId[eptopic]
 						if found {
-							t.RunAction(actionType, actionURI, payload, topic)
+							t.RunAction(actionId, payload, topic)
 						}
 					}
 				}
@@ -120,8 +119,8 @@ func (t *Mqtt2Trigger) Start() error {
 		return err
 	}
 
-	t.topicToActionType = make(map[string]string)
-	t.topicToActionURI = make(map[string]string)
+//	t.topicToActionType = make(map[string]string)
+	t.topicToActionId = make(map[string]string)
 
 	log.Info("Start subscribing")
 
@@ -132,7 +131,7 @@ func (t *Mqtt2Trigger) Start() error {
 			panic(token.Error())
 		} else {
 			log.Infof("Subscribed to topic %s for action %s", handlerCfg.GetSetting("topic"), handlerCfg.ActionId)
-			t.topicToActionURI[handlerCfg.GetSetting("topic")] = handlerCfg.ActionId
+			t.topicToActionId[handlerCfg.GetSetting("topic")] = handlerCfg.ActionId
 		}
 	}
 
@@ -155,11 +154,10 @@ func (t *Mqtt2Trigger) Stop() error {
 }
 
 // RunAction starts a new Process Instance
-func (t *Mqtt2Trigger) RunAction(actionType string, actionURI string, payload string, topic string) {
+func (t *Mqtt2Trigger) RunAction(actionId string, payload string, topic string) {
 
 	log.Info("Starting new Process Instance")
-	log.Infof("Action Type: %s", actionType)
-	log.Infof("Action URI: %s", actionURI)
+	log.Infof("Action Id: %s", actionId)
 	log.Infof("Payload: %s", payload)
 	log.Infof("Actual Topic: %s", topic)
 
@@ -173,16 +171,16 @@ func (t *Mqtt2Trigger) RunAction(actionType string, actionURI string, payload st
 
 	//todo handle error
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
-	action := action.Get(actionURI)
+	action := action.Get(actionId)
 	context := trigger.NewContext(context.Background(), startAttrs)
 
 	//todo handle error
-	_, replyData, err := t.runner.Run(context, action, actionURI, nil)
+	_, replyData, err := t.runner.Run(context, action, actionId, nil)
 	if err != nil {
 		log.Error(err)
 	}
 
-	log.Debugf("Ran action: [%s]", actionURI)
+	log.Debugf("Ran action: [%s]", actionId)
 
 	if replyData != nil {
 		data, err := json.Marshal(replyData)
