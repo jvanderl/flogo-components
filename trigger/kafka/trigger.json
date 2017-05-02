@@ -1,9 +1,12 @@
 {
   "name": "kafka",
+  "type": "flogo:trigger",
+  "ref": "github.com/jvanderl/flogo-components/trigger/kafka",
   "version": "0.0.1",
   "title": "Receive Kafka Message",
-  "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "description": "Kafka Topic Subscriber",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/kafka",
   "settings":[
     {
       "name": "server",
@@ -28,7 +31,7 @@
       "type": "string"
     }
   ],
-  "endpoint": {
+  "handler": {
     "settings": [
       {
         "name": "topic",
