@@ -29,9 +29,9 @@ const testConfig string = `{
     "secure" : "false",
     "certificate" : ""
   },
-  "endpoints": [
+  "handlers": [
     {
-      "flowURI": "local://testFlow",
+      "actionId": "local://testFlow",
       "settings": {
         "destination": "flogo"
       }
@@ -66,7 +66,7 @@ type TestRunner struct {
 
 // Run implements action.Runner.Run
 func (tr *TestRunner) Run(context context.Context, action action.Action, uri string, options interface{}) (code int, data interface{}, err error) {
-	log.Debugf("Ran Action: %v", uri)
+	log.Infof("Ran Action: %v", uri)
 	return 0, nil, nil
 }
 

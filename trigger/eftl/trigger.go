@@ -52,6 +52,7 @@ func (t *MyTrigger) Init(runner action.Runner) {
 
 // Start implements trigger.Trigger.Start
 func (t *MyTrigger) Start() error {
+
 	// start the trigger
 	wsHost := t.config.GetSetting("server")
 	wsChannel := t.config.GetSetting("channel")
@@ -61,15 +62,20 @@ func (t *MyTrigger) Start() error {
 	if err != nil {
 		return err
 	}
-	wsCert := t.config.GetSetting("certificate")
+	wsCert := "DummyCert"
+	if wsSecure {
+			wsCert = t.config.GetSetting("certificate")
+	}
 
 	// Read Actions from trigger endpoints
 	t.destinationToActionType = make(map[string]string)
 	t.destinationToActionURI = make(map[string]string)
 
-	for _, endpoint := range t.config.Endpoints {
-		t.destinationToActionURI[endpoint.Settings["destination"]] = endpoint.ActionURI
-		t.destinationToActionType[endpoint.Settings["destination"]] = endpoint.ActionType
+
+	for _, handler := range t.config.Handlers {
+		log.Infof("handlers: [%s]", handler.ActionId)
+		t.destinationToActionURI[handler.GetSetting("destination")] = handler.ActionId
+		t.destinationToActionType[handler.GetSetting("destination")] = "flow"
 	}
 
 	// Connect to eFTL server
@@ -87,8 +93,8 @@ func (t *MyTrigger) Start() error {
 	log.Debugf("Login succesful. client_id: [%s], id_token: [%s]", eftlConn.ClientID, eftlConn.ReconnectToken)
 
 	//Subscribe to destination in endpoints
-	for _, endpoint := range t.config.Endpoints {
-		destination := "{\"_dest\":\"" + endpoint.Settings["destination"] + "\"}"
+	for _, handler := range t.config.Handlers {
+		destination := "{\"_dest\":\"" + handler.GetSetting("destination") + "\"}"
 		wsSubscriptionID, err := eftlConn.Subscribe(destination, "")
 		if err != nil {
 			log.Debugf("Error while subscribing in: [%s]", err)
@@ -104,6 +110,7 @@ func (t *MyTrigger) Start() error {
 		actionType, found := t.destinationToActionType[destination]
 		actionURI, _ := t.destinationToActionURI[destination]
 		if found {
+			log.Infof ("About to run action for type [%s], uri [%s]", actionType, actionURI)
 			t.RunAction(actionType, actionURI, message, destination)
 		} else {
 			log.Debug("actionType and URI not found")
@@ -121,20 +128,30 @@ func (t *MyTrigger) Stop() error {
 // RunAction starts a new Process Instance
 func (t *MyTrigger) RunAction(actionType string, actionURI string, payload string, destination string) {
 
-	log.Debug("Starting new Process Instance")
-	log.Debug("Action Type: ", actionType)
-	log.Debug("Action URI: ", actionURI)
-	log.Debug("Payload: ", payload)
-	log.Debug("Destination: ", destination)
+	log.Info("Starting new Process Instance")
+	log.Info("Action Type: ", actionType)
+	log.Info("Action URI: ", actionURI)
+	log.Info("Payload: ", payload)
+	log.Info("Destination: ", destination)
 
+	log.Info("Construct Request")
 	req := t.constructStartRequest(payload, destination)
+	log.Infof("Request data: [%s]", req.Data)
 
-	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
+	log.Info("Set Start Attributes")
+	startAttrs, err := t.metadata.OutputsToAttrs(req.Data, true)
+	if err != nil {
+		log.Info ("HIERRRRRRRRR")
+		log.Info (err)
+	}
 
-	action := action.Get(actionType)
+	log.Info("Get Action to perform")
+	action := action.Get(actionURI)
 
+	log.Info("Set Trigger context")
 	context := trigger.NewContext(context.Background(), startAttrs)
 
+	log.Info("Call the runner")
 	_, replyData, err := t.runner.Run(context, action, actionURI, nil)
 	if err != nil {
 		log.Error(err)
