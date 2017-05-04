@@ -4,8 +4,9 @@
   "ref": "github.com/jvanderl/flogo-components/trigger/eftl",
   "version": "0.0.1",
   "title": "Receive eFTL Message",
-  "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "description": "eFTL Subscriber",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/eftl",
   "settings":[
     {
       "name": "server",

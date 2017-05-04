@@ -38,6 +38,7 @@ const testConfig string = `{
     }
   ]
 }`
+
 /*
 const testConfigSecure string = `{
   "name": "eftl",
@@ -69,13 +70,14 @@ func (tr *TestRunner) Run(context context.Context, action action.Action, uri str
 	return 0, nil, nil
 }
 
-func TestInit(t *testing.T) {
+/*func TestInit(t *testing.T) {
 	log.Info("Testing Init")
 	config := trigger.Config{}
 	json.Unmarshal([]byte(testConfig), &config)
 
 	// New  factory
 	f := &eftlFactory{}
+	f.metadata = trigger.NewMetadata(jsonMetadata)
 	tgr := f.New(&config)
 
 	runner := &TestRunner{}
@@ -83,20 +85,47 @@ func TestInit(t *testing.T) {
 	tgr.Init(runner)
 }
 
-/*func TestInitSecure(t *testing.T) {
-	tgr := trigger.Get("eftl")
-	runner := &TestRunner{}
-	config := &trigger.Config{}
-	json.Unmarshal([]byte(testConfigSecure), config)
-	tgr.Init(config, runner)
+func TestInitSecure(t *testing.T) {
+log.Info("Testing Init")
+config := trigger.Config{}
+json.Unmarshal([]byte(testConfigSecure), &config)
+
+// New  factory
+f := &eftlFactory{}
+f.metadata = trigger.NewMetadata(jsonMetadata)
+tgr := f.New(&config)
+
+runner := &TestRunner{}
+
+tgr.Init(runner)
 }
 */
+
 func TestEndpoint(t *testing.T) {
 	log.Info("Testing Endpoint")
 	config := trigger.Config{}
 	json.Unmarshal([]byte(testConfig), &config)
 	// New  factory
 	f := &eftlFactory{}
+	f.metadata = trigger.NewMetadata(jsonMetadata)
+	tgr := f.New(&config)
+
+	runner := &TestRunner{}
+
+	tgr.Init(runner)
+
+	tgr.Start()
+	defer tgr.Stop()
+
+}
+
+/*func TestEndpointSecure(t *testing.T) {
+	log.Info("Testing Endpoint")
+	config := trigger.Config{}
+	json.Unmarshal([]byte(testConfigSecure), &config)
+	// New  factory
+	f := &eftlFactory{}
+	f.metadata = trigger.NewMetadata(jsonMetadata)
 	tgr := f.New(&config)
 
 	runner := &TestRunner{}
@@ -108,4 +137,4 @@ func TestEndpoint(t *testing.T) {
 	tgr.Start()
 	defer tgr.Stop()
 
-}
+} */

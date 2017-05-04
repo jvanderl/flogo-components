@@ -1,15 +1,15 @@
 package eftl
 
 import (
+	"context"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/flow/support"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/jvanderl/go-eftl"
-	"context"
 	"strconv"
-//	"encoding/json"
-//	"strings"
+	//	"encoding/json"
+	//	"strings"
 )
 
 //var dat map[string]interface{}
@@ -20,10 +20,10 @@ var log = logger.GetLogger("trigger-jvanderl-eftl")
 
 // eftlTrigger is a stub for your Trigger implementation
 type eftlTrigger struct {
-	metadata          *trigger.Metadata
-	runner            action.Runner
-	config            *trigger.Config
-	destinationToActionId  map[string]string
+	metadata              *trigger.Metadata
+	runner                action.Runner
+	config                *trigger.Config
+	destinationToActionId map[string]string
 }
 
 //NewFactory create a new Trigger factory
@@ -90,17 +90,16 @@ func (t *eftlTrigger) Start() error {
 	}
 	wsCert := "DummyCert"
 	if wsSecure {
-			wsCert = t.config.GetSetting("certificate")
+		wsCert = t.config.GetSetting("certificate")
 	}
 
 	// Read Actions from trigger endpoints
 	t.destinationToActionId = make(map[string]string)
 
-
 	for _, handlerCfg := range t.config.Handlers {
-		log.Infof("handlers: [%s]", handlerCfg.ActionId)
+		log.Debugf("handlers: [%s]", handlerCfg.ActionId)
 		epdestination := handlerCfg.GetSetting("destination")
-		log.Infof("destination: [%s]", epdestination)
+		log.Debugf("destination: [%s]", epdestination)
 		t.destinationToActionId[epdestination] = handlerCfg.ActionId
 	}
 
@@ -121,6 +120,7 @@ func (t *eftlTrigger) Start() error {
 
 	//Subscribe to destination in endpoints
 	for _, handler := range t.config.Handlers {
+		log.Infof("Subscribing to destination: [%s]", handler.GetSetting("destination"))
 		destination := "{\"_dest\":\"" + handler.GetSetting("destination") + "\"}"
 		wsSubscriptionID, err := eftlConn.Subscribe(destination, "")
 		if err != nil {
@@ -137,7 +137,7 @@ func (t *eftlTrigger) Start() error {
 		//actionType, found := t.destinationToActionType[destination]
 		actionId, found := t.destinationToActionId[destination]
 		if found {
-			log.Infof ("About to run action for Id [%s]", actionId)
+			log.Debugf("About to run action for Id [%s]", actionId)
 			t.RunAction(actionId, message, destination)
 		} else {
 			log.Debug("actionId not found")
@@ -155,26 +155,15 @@ func (t *eftlTrigger) Stop() error {
 // RunAction starts a new Process Instance
 func (t *eftlTrigger) RunAction(actionId string, payload string, destination string) {
 
-	log.Info("Starting new Process Instance")
-	log.Info("Action Id: ", actionId)
-	log.Info("Payload: ", payload)
-	log.Info("Destination: ", destination)
+	log.Debug("Starting new Process Instance")
+	log.Debugf("Action Id: ", actionId)
+	log.Debugf("Payload: ", payload)
+	log.Debugf("Destination: ", destination)
 
-	log.Info("Construct Request")
-	//	req := t.constructStartRequest(payload, destination)
 	req := t.constructStartRequest(payload)
-	log.Infof("Request data: [%s]", req.Data)
-
-	log.Info("Set Start Attributes")
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
-
-	log.Info("Get Action to perform")
 	action := action.Get(actionId)
-
-	log.Info("Set Trigger context")
 	context := trigger.NewContext(context.Background(), startAttrs)
-
-	log.Info("Call the runner")
 	_, replyData, err := t.runner.Run(context, action, actionId, nil)
 	if err != nil {
 		log.Error(err)
@@ -195,14 +184,11 @@ func (t *eftlTrigger) RunAction(actionId string, payload string, destination str
 //func (t *eftlTrigger) constructStartRequest(message string, destination string) *StartRequest {
 func (t *eftlTrigger) constructStartRequest(message string) *StartRequest {
 
-//	log.Infof("Received contstruct start request for message [%s], destination [%s]", message, destination)
-	log.Infof("Received contstruct start request for message [%s]", message)
-
 	//TODO how to handle reply to, reply feature
 	req := &StartRequest{}
 	data := make(map[string]interface{})
 	data["message"] = message
-//	data["destination"] = destination
+	//	data["destination"] = destination
 	req.Data = data
 	return req
 }
