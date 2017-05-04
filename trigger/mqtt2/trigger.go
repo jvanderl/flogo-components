@@ -2,7 +2,7 @@ package mqtt2
 
 import (
 	"context"
-//	"encoding/json"
+	//	"encoding/json"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/flow/support"
@@ -19,11 +19,11 @@ var log = logger.GetLogger("trigger-jvanderl-mqtt2")
 
 // Mqtt2Trigger is simple MQTT trigger
 type Mqtt2Trigger struct {
-	metadata          *trigger.Metadata
-	runner            action.Runner
-	client            mqtt.Client
-	config            *trigger.Config
-	topicToActionId  map[string]string
+	metadata        *trigger.Metadata
+	runner          action.Runner
+	client          mqtt.Client
+	config          *trigger.Config
+	topicToActionId map[string]string
 }
 
 //NewFactory create a new Trigger factory
@@ -109,7 +109,7 @@ func (t *Mqtt2Trigger) Start() error {
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
 		panic(token.Error())
 	}
-	log.Info( "Connected to broker")
+	log.Info("Connected to broker")
 
 	i, err := strconv.Atoi(t.config.GetSetting("qos"))
 	if err != nil {
@@ -117,7 +117,7 @@ func (t *Mqtt2Trigger) Start() error {
 		return err
 	}
 
-//	t.topicToActionType = make(map[string]string)
+	//	t.topicToActionType = make(map[string]string)
 	t.topicToActionId = make(map[string]string)
 
 	for _, handlerCfg := range t.config.Handlers {
@@ -129,10 +129,10 @@ func (t *Mqtt2Trigger) Start() error {
 			t.topicToActionId[handlerCfg.GetSetting("topic")] = handlerCfg.ActionId
 		}
 	}
-
-	//stay here
-	for {
-	}
+	/*
+		//stay here
+		for {
+		} */
 	return nil
 }
 
@@ -182,15 +182,15 @@ func (t *Mqtt2Trigger) RunAction(actionId string, payload string, topic string) 
 	log.Debugf("Ran action: [%s]", actionId)
 	log.Infof("Reply data: [%s]", replyData)
 
-/*
-	if replyData != nil {
-		data, err := json.Marshal(replyData)
-		if err != nil {
-			log.Error(err)
-		} else {
-			t.publishMessage(req.ReplyTo, string(data))
-		}
-	} */
+	/*
+		if replyData != nil {
+			data, err := json.Marshal(replyData)
+			if err != nil {
+				log.Error(err)
+			} else {
+				t.publishMessage(req.ReplyTo, string(data))
+			}
+		} */
 }
 
 func (t *Mqtt2Trigger) publishMessage(topic string, message string) {
