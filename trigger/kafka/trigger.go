@@ -125,10 +125,10 @@ func (t *kafkaTrigger) Stop() error {
 // RunAction starts a new Process Instance
 func (t *kafkaTrigger) RunAction(actionId string, payload string, topic string, partition int32) {
 
-	log.Info("Starting new Process Instance")
-	log.Infof("Action Id: %s", actionId)
-	log.Infof("Payload: %s", payload)
-	log.Infof("Actual Topic: %s ", topic)
+	log.Debug("Starting new Process Instance")
+	log.Debugf("Action Id: %s", actionId)
+	log.Debugf("Payload: %s", payload)
+	log.Debugf("Actual Topic: %s ", topic)
 
 	req := t.constructStartRequest(payload, topic)
 
@@ -143,8 +143,8 @@ func (t *kafkaTrigger) RunAction(actionId string, payload string, topic string, 
 		log.Error(err)
 	}
 
-	log.Infof("Ran action: [%s]", actionId)
-	log.Infof("Reply data: [%s]", replyData)
+	log.Debugf("Ran action: [%s]", actionId)
+	log.Debugf("Reply data: [%s]", replyData)
 
 }
 
@@ -164,13 +164,11 @@ func (t *kafkaTrigger) publishMessage(topic string, partition int32, message str
 		log.Errorf("Error sending message to Kafka broker: %s", err)
 	}
 
-	log.Infof("Response: %s", resp)
-	log.Info("Message sent succesfully")
+	log.Debugf("Response: %s", resp)
+	log.Debug("Message sent succesfully")
 }
 
 func (t *kafkaTrigger) constructStartRequest(message string, topic string) *StartRequest {
-
-	log.Info("Received contstruct start request")
 
 	//TODO how to handle reply to, reply feature
 	req := &StartRequest{}
