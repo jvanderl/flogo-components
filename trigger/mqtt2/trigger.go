@@ -154,10 +154,10 @@ func (t *Mqtt2Trigger) Stop() error {
 // RunAction starts a new Process Instance
 func (t *Mqtt2Trigger) RunAction(actionId string, payload string, topic string) {
 
-	log.Info("Starting new Process Instance")
-	log.Infof("Action Id: %s", actionId)
-	log.Infof("Payload: %s", payload)
-	log.Infof("Actual Topic: %s", topic)
+	/*	log.Info("Starting new Process Instance")
+		log.Infof("Action Id: %s", actionId)
+		log.Infof("Payload: %s", payload)
+		log.Infof("Actual Topic: %s", topic) */
 
 	req := t.constructStartRequest(payload, topic)
 	//err := json.NewDecoder(strings.NewReader(payload)).Decode(req)
@@ -168,7 +168,7 @@ func (t *Mqtt2Trigger) RunAction(actionId string, payload string, topic string) 
 	//}
 
 	//todo handle error
-	log.Infof("Got data: %s", req.Data)
+	//	log.Infof("Got data: %s", req.Data)
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
 	action := action.Get(actionId)
 	context := trigger.NewContext(context.Background(), startAttrs)
@@ -180,7 +180,7 @@ func (t *Mqtt2Trigger) RunAction(actionId string, payload string, topic string) 
 	}
 
 	log.Debugf("Ran action: [%s]", actionId)
-	log.Infof("Reply data: [%s]", replyData)
+	log.Debugf("Reply data: [%s]", replyData)
 
 	/*
 		if replyData != nil {
