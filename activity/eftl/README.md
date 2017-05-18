@@ -10,6 +10,7 @@ Code is based on the WSMessage activity created by Leon Stigter
 ```bash
 flogo add activity github.com/jvanderl/flogo-components/activity/eftl
 ```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/eftl
 
 ## Schema
 Inputs and Outputs:

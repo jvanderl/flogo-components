@@ -7,42 +7,45 @@ This trigger provides your flogo application the ability to start a flow via eFT
 ```bash
 flogo add trigger github.com/jvanderl/flogo-components/trigger/eftl
 ```
+Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/eftl
 
 ## Schema
 Settings, Outputs and Endpoint:
 
 ```json
 {
+  "name": "eftl",
+  "type": "flogo:trigger",
+  "ref": "github.com/jvanderl/flogo-components/trigger/eftl",
+  "version": "0.0.1",
+  "title": "Receive eFTL Message",
+  "description": "eFTL Subscriber",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/eftl",
   "settings":[
     {
       "name": "server",
-      "type": "string",
-      "value": ""
+      "type": "string"
     },
     {
       "name": "channel",
-      "type": "string",
-      "value": ""
+      "type": "string"
     },
     {
-      "name": "username",
-      "type": "string",
-      "value": ""
+      "name": "user",
+      "type": "string"
     },
     {
       "name": "password",
-      "type": "string",
-      "value": ""
+      "type": "string"
     },
     {
       "name": "secure",
-      "type": "boolean",
-      "value": "false"
+      "type": "boolean"
     },
     {
       "name": "certificate",
-      "type": "string",
-      "value": ""
+      "type": "string"
     }
   ],
   "outputs": [
@@ -51,7 +54,7 @@ Settings, Outputs and Endpoint:
       "type": "string"
     }
   ],
-  "endpoint": {
+  "handler": {
     "settings": [
       {
         "name": "destination",
@@ -77,10 +80,10 @@ Settings, Outputs and Endpoint:
 |:----------|:---------------|
 | message    | The message payload |
 
-## Endpoints
-| Endpoint   | Description    |
+## Handlers
+| Setting   | Description    |
 |:----------|:---------------|
-| destination | The destination to send the message to (e.g. `default`) |
+| destination | The destination to subscribe to (e.g. 'Default') |
 
 
 ## Example Configurations
@@ -88,21 +91,22 @@ Settings, Outputs and Endpoint:
 Triggers are configured via the triggers.json of your application. The following are some example configuration of the eFTL Trigger.
 
 ### Start a flow
-Configure the Trigger to start "myflow". So in this case the "endpoints" "settings" "destination" is "flogo" will start "myflow" flow when a message arrives on a destination called "flogo" in this case.
+Configure the Trigger to start "testFlow". So in this case the "endpoints" "settings" "destination" is "flogo" will start "testFlow" flow when a message arrives on a destination called "flogo" in this case.
 
 ```json
 {
   "name": "eftl",
   "settings": {
-    "server": "192.168.178.41:9191",
+    "server": "localhost:19191",
     "channel": "/channel",
-    "user": "user",
-    "password": "password"
+    "user": "",
+    "password": "",
+    "secure": "false",
+    "certificate": "*** Base64 encoded PEM cert data here ***"
   },
-  "endpoints": [
+  "handlers": [
     {
-      "actionType": "flow",
-      "actionURI": "local://testFlow",
+      "actionId": "local://testFlow",
       "settings": {
         "destination": "flogo"
       }

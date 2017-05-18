@@ -6,6 +6,7 @@ This activity provides your flogo application the ability to retrieve data from 
 ```bash
 flogo add activity github.com/jvanderl/flogo-components/activity/getjson
 ```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/getjson
 
 ## Schema
 Inputs and Outputs:

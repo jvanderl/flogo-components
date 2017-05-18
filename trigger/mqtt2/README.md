@@ -1,6 +1,6 @@
 # MQTT Topic Subscriber
 This trigger provides your flogo application the ability to start a flow via MQTT
-It is different from the original one by Michael Register <mregiste@tibco.com> in the sense that it takes wildcards per endpoint and returns the actual topic that is used in a spearate output.
+It is different from the original one by Michael Register <mregiste@tibco.com> in the sense that it takes wildcards per endpoint and returns the actual topic that is used in a separate output.
 
 
 ## Installation
@@ -8,6 +8,7 @@ It is different from the original one by Michael Register <mregiste@tibco.com> i
 ```bash
 flogo add trigger github.com/jvanderl/flogo-components/trigger/mqtt2
 ```
+Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/mqtt2
 
 ## Schema
 Settings, Outputs and Endpoint:
@@ -54,7 +55,7 @@ Settings, Outputs and Endpoint:
       "type": "string"
     }
   ],
-  "endpoint": {
+  "handler": {
     "settings": [
       {
         "name": "topic",
@@ -81,8 +82,8 @@ Settings, Outputs and Endpoint:
 | message    | The message payload |
 | actualtopic | The actual topic that was used to publish the message on) |
 
-## Endpoints
-| Endpoint   | Description    |
+## Handlers
+| Setting   | Description    |
 |:----------|:---------------|
 | topic    | The trigger will subscribe to this topic. May contain wildcards |
 
@@ -92,31 +93,26 @@ Settings, Outputs and Endpoint:
 Triggers are configured via the triggers.json of your application. The following are some example configuration of the MQTT Trigger.
 
 ### Start a flow
-Configure the Trigger to start "myflow". In this case the "endpoints" "settings" "topic" is "flogo/#" will start "myflow" flow when a message arrives on a topic staring with "flogo" in this case. The actualtopic output will hold the actucal topic used for further processing. 
+Configure the Trigger to start "myflow". In this case the "endpoints" "settings" "topic" is "flogo/#" will start "testFlow" flow when a message arrives on a topic staring with "flogo" in this case. The actualtopic output will hold the actual topic used for further processing.
 
 ```json
 {
-  "triggers": [
+  "name": "mqtt2",
+  "settings": {
+    "broker": "tcp://127.0.0.1:1883",
+    "id": "flogoEngine",
+    "user": "",
+    "password": "",
+    "store": "",
+    "qos": "0",
+    "cleansess": "false"
+  },
+  "handlers": [
     {
-      "name": "mqtt2",
+      "actionId": "local://testFlow",
       "settings": {
-        "broker": "tcp://192.168.1.12:1883",
-        "id": "flogo",
-        "user": "",
-        "password": "",
-        "store": "",
-        "qos": "0",
-        "cleansess": "false"
-      },
-      "endpoints": [
-        {
-          "actionType": "flow",
-          "actionURI": "embedded://myflow",
-          "settings": {
-            "topic": "flogo/#"
-          }
-        }
-      ]
+        "topic": "flogo/#"
+      }
     }
   ]
 }

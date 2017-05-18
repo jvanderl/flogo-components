@@ -7,6 +7,7 @@ This trigger provides your flogo application the ability to start a flow via Kaf
 ```bash
 flogo add trigger github.com/jvanderl/flogo-components/trigger/kafka
 ```
+Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/kafka
 
 ## Schema
 Settings, Outputs and Endpoint:
@@ -69,21 +70,20 @@ Configure the Trigger to start "myflow". So in this case the "handlers" "setting
 
 ```json
 {
-  {
-    "name": "kafka",
-    "settings": {
-      "server": "127.0.0.1:9092",
-      "configid": "test-flogo-trigger"
-    },
-    "handlers": [
-  		{
-        "actionId": "local://testFlow",
-        "settings": {
-          "topic": "flogo",
-  				"partition": "0"
-        }
+  "name": "kafka",
+  "settings": {
+    "server": "127.0.0.1:9092",
+    "configid": "test-flogo-trigger"
+  },
+  "handlers": [
+		{
+      "actionId": "local://testFlow",
+      "settings": {
+        "topic": "flogo",
+				"partition": "0"
       }
-    ]
-  }
+    }
+  ]
 }
+
 ```

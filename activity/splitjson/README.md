@@ -7,6 +7,7 @@ This activity provides your flogo application the ability to split a simple JSON
 ```bash
 flogo add activity github.com/jvanderl/flogo-components/activity/splitjson
 ```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/splitjson
 
 ## Schema
 Inputs and Outputs:

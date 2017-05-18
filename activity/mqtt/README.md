@@ -7,6 +7,7 @@ This activity provides your flogo application the ability to publish a message o
 ```bash
 flogo add activity github.com/jvanderl/flogo-components/activity/mqtt
 ```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/mqtt
 
 ## Schema
 Inputs and Outputs:

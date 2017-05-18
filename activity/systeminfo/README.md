@@ -7,6 +7,7 @@ This activity provides your flogo application the ability retreive Hostname and 
 ```bash
 flogo add activity github.com/jvanderl/flogo-components/activity/systeminfo
 ```
+Link for flogo web: https://github.com/jvanderl/flogo-components/activity/systeminfo
 
 ## Schema
 Inputs and Outputs:
