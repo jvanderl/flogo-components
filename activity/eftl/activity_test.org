@@ -30,7 +30,7 @@ func TestCreate(t *testing.T) {
 	}
 }
 
-func TestEval(t *testing.T) {
+/*func TestEval(t *testing.T) {
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -42,9 +42,9 @@ func TestEval(t *testing.T) {
 	tc := test.NewTestActivityContext(getActivityMetadata())
 	//setup attrs
 
-	fmt.Println("Publishing a flogo test message to destination 'flogo' on channel '/channel' on eFTL Server 'localhost:19191'")
+	fmt.Println("Publishing a flogo test message to destination 'flogo' on channel '/channel' on eFTL Server '127.0.0.1:19191'")
 
-	tc.SetInput("server", "localhost:19191")
+	tc.SetInput("server", "10.10.1.50:19191")
 	tc.SetInput("channel", "/channel")
 	tc.SetInput("destination", "flogo")
 	tc.SetInput("user", "user")
@@ -63,7 +63,7 @@ func TestEval(t *testing.T) {
 	}
 
 }
-/*
+*/
 func TestEvalSecure(t *testing.T) {
 
 	defer func() {
@@ -99,4 +99,4 @@ func TestEvalSecure(t *testing.T) {
 		t.Fail()
 	}
 
-} */
+}

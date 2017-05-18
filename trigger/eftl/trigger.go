@@ -128,12 +128,14 @@ func (t *eftlTrigger) Start() error {
 		}
 		log.Debugf("Subscribe succesful. subscription_id: [%s]", wsSubscriptionID)
 	}
-
+	go RunReceiver(t, eftlConn)
+/*
 	for {
 		message, destination, err := eftlConn.ReceiveMessage()
 		if err != nil {
 			return err
 		}
+		log.Infof("Received Message [%s] on destination [%s]", message, destination)
 		//actionType, found := t.destinationToActionType[destination]
 		actionId, found := t.destinationToActionId[destination]
 		if found {
@@ -142,9 +144,10 @@ func (t *eftlTrigger) Start() error {
 		} else {
 			log.Debug("actionId not found")
 		}
-	}
+	} */
 	return nil
 }
+
 
 // Stop implements trigger.Trigger.Start
 func (t *eftlTrigger) Stop() error {
@@ -205,4 +208,22 @@ type StartRequest struct {
 func convert(b []byte) string {
 	n := len(b)
 	return string(b[:n])
+}
+
+func RunReceiver(t *eftlTrigger, eftlConn eftl.Connection) error {
+	for {
+		message, destination, err := eftlConn.ReceiveMessage()
+		if err != nil {
+			return err
+		}
+		log.Infof("Received Message [%s] on destination [%s]", message, destination)
+		//actionType, found := t.destinationToActionType[destination]
+		actionId, found := t.destinationToActionId[destination]
+		if found {
+			log.Debugf("About to run action for Id [%s]", actionId)
+			t.RunAction(actionId, message, destination)
+		} else {
+			log.Debug("actionId not found")
+		}
+	}
 }
