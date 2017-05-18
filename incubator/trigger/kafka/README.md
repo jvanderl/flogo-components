@@ -21,6 +21,14 @@ Settings, Outputs and Endpoint:
     {
       "name": "configid",
       "type": "string"
+    },
+    {
+      "name": "topic",
+      "type": "string"
+    },
+    {
+      "name": "partition",
+      "type": "int"
     }
   ],
   "outputs": [
@@ -29,15 +37,11 @@ Settings, Outputs and Endpoint:
       "type": "string"
     }
   ],
-  "handler": {
+  "endpoint": {
     "settings": [
       {
         "name": "topic",
         "type": "string"
-      },
-      {
-        "name": "partition",
-        "type": "int"
       }
     ]
   }
@@ -48,42 +52,48 @@ Settings, Outputs and Endpoint:
 |:----------|:---------------|
 | server    | the Kafka server(s) [hostname]:[port]|
 | configid       | The Kafka client configuration ID |         
+| topic     | Topic on which the message is published |
+| partition  | Partition to use |
 
 ## Ouputs
 | Output   | Description    |
 |:----------|:---------------|
 | message    | The message payload |
 
-## Handlers
-| Setting   | Description    |
+## Endpoints
+| Endpoint   | Description    |
 |:----------|:---------------|
 | topic    | The trigger will subscribe to this topic. |
-| partition  | Partition to use for the subscription |
+
 
 ## Example Configurations
 
 Triggers are configured via the triggers.json of your application. The following are some example configuration of the Kafka Trigger.
 
 ### Start a flow
-Configure the Trigger to start "myflow". So in this case the "handlers" "settings" "topic" is "flogo" will start "testFlow" flow when a message arrives on a topic staring with "flogo" in this case.
+Configure the Trigger to start "myflow". "settings" "topic" is not used. So in this case the "endpoints" "settings" "topic" is "flogo/#" will start "myflow" flow when a message arrives on a topic staring with "flogo" in this case. The actualtopic output will hold the actucal topic used for further processing. 
 
 ```json
 {
-  {
-    "name": "kafka",
-    "settings": {
-      "server": "127.0.0.1:9092",
-      "configid": "test-flogo-trigger"
-    },
-    "handlers": [
-  		{
-        "actionId": "local://testFlow",
-        "settings": {
-          "topic": "flogo",
-  				"partition": "0"
+  "triggers": [
+    {
+      "name": "kafka",
+      "settings": {
+        "server": "tcp://192.168.1.12:1883",
+        "configid": "flogo-test",
+        "topic": "test",
+        "partition": "0"
+      },
+      "endpoints": [
+        {
+          "actionType": "flow",
+          "actionURI": "embedded://myflow",
+          "settings": {
+            "topic": "test"
+          }
         }
-      }
-    ]
-  }
+      ]
+    }
+  ]
 }
 ```
