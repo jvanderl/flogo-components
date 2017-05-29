@@ -1,9 +1,12 @@
 {
   "name": "blemaster",
-  "version": "0.0.1",
   "type": "flogo:trigger",
-  "description": "Bluetooth Low Energy Master",
+  "ref": "github.com/jvanderl/flogo-components/trigger/blemaster",
+  "version": "0.0.1",
+  "title": "Receive BLE data (Master)",
+  "description": "BLE Subscriber",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/blemaster",
   "settings":[
     {
       "name": "devicename",

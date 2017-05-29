@@ -17,6 +17,7 @@ Collection custom built flogo components
 * [throttle](activity/throttle): Throttle data based on interval
 
 ### Triggers
+* [blemaster](trigger/blemaster):Receive BLE Data (Master)
 * [eftl](trigger/eftl): Receive eFTL Message
 * [kafka](trigger/kafka): Receive Kafka Message
 * [mqtt2](trigger/mqtt2): Receive MQTT Message
