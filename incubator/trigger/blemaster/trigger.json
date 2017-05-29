@@ -1,0 +1,52 @@
+{
+  "name": "blemaster",
+  "version": "0.0.1",
+  "type": "flogo:trigger",
+  "description": "Bluetooth Low Energy Master",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "settings":[
+    {
+      "name": "devicename",
+      "type": "string"
+    },
+    {
+      "name": "autoreconnect",
+      "type": "boolean"
+    },
+    {
+      "name": "reconnectinterval",
+      "type": "integer"
+    },
+    {
+      "name": "intervaltype",
+      "type": "string",
+      "allowed" : ["hours", "minutes", "seconds", "milliseconds"]
+    }
+  ],
+  "outputs": [
+    {
+      "name": "notification",
+      "type": "string"
+    },
+    {
+      "name": "deviceid",
+      "type": "string"
+    },
+    {
+      "name": "localname",
+      "type": "string"
+    }
+  ],
+  "handler": {
+    "settings": [
+      {
+        "name": "service",
+        "type": "string"
+      },
+      {
+        "name": "characteristic",
+        "type": "string"
+      }
+    ]
+  }
+}
