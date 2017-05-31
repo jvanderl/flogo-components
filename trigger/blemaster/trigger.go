@@ -69,7 +69,6 @@ func (t *MyTrigger) Init(runner action.Runner) {
 // Start implements trigger.Trigger.Start
 func (t *MyTrigger) Start() error {
 	// start the trigger
-	log.Info ("Hierrr..")
 
 	devcheck, err := strconv.ParseBool(t.config.GetSetting("devicecheck"))
 	if err != nil {
