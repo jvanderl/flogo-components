@@ -68,7 +68,7 @@ func (t *MyTrigger) Init(runner action.Runner) {
 // Start implements trigger.Trigger.Start
 func (t *MyTrigger) Start() error {
 	// start the trigger
-	t.bletarget.devicename = t.config.GetSetting("devicename")
+	t.bletarget.devicename = "" + t.config.GetSetting("devicename")
 
 	for _, handlerCfg := range t.config.Handlers {
 		log.Infof("Adding BLE Service: [%s.%s]", strings.ToUpper(handlerCfg.GetSetting("service")),strings.ToUpper(handlerCfg.GetSetting("characteristic")))
