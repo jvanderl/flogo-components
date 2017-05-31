@@ -5,8 +5,8 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/flow/support"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
-	"github.com/paypal/gatt"
-	"github.com/paypal/gatt/examples/option"
+	"github.com/jvanderl/go-gatt"
+	"github.com/jvanderl/go-gatt/examples/option"
 	"strings"
 	"strconv"
 	"context"
@@ -77,7 +77,7 @@ func (t *MyTrigger) Start() error {
 		return err
 		}
 	t.bletarget.devicecheck = devcheck
-
+ÔÔ
 	if t.bletarget.devicecheck {
 		t.bletarget.devicename = t.config.GetSetting("devicename")
 	} else {
