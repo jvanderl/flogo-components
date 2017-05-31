@@ -69,6 +69,7 @@ func (t *MyTrigger) Init(runner action.Runner) {
 func (t *MyTrigger) Start() error {
 	// start the trigger
 	t.bletarget.devicename = t.config.GetSetting("devicename")
+
 	for _, handlerCfg := range t.config.Handlers {
 		log.Infof("Adding BLE Service: [%s.%s]", strings.ToUpper(handlerCfg.GetSetting("service")),strings.ToUpper(handlerCfg.GetSetting("characteristic")))
 		t.bletarget.bleservices = append(t.bletarget.bleservices, BleService{strings.ToUpper(handlerCfg.GetSetting("service")), strings.ToUpper(handlerCfg.GetSetting("characteristic")), handlerCfg.ActionId})
