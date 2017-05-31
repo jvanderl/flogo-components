@@ -25,6 +25,7 @@ type BleService struct {
 }
 type  BleTarget struct {
 	devicename string
+	devicecheck bool
 	deviceid string
 	localname string
 	bleservices []BleService
@@ -68,7 +69,21 @@ func (t *MyTrigger) Init(runner action.Runner) {
 // Start implements trigger.Trigger.Start
 func (t *MyTrigger) Start() error {
 	// start the trigger
-	t.bletarget.devicename = "" + t.config.GetSetting("devicename")
+	log.Info ("Hierrr..")
+
+	devcheck, err := strconv.ParseBool(t.config.GetSetting("devicecheck"))
+	if err != nil {
+		// Invalid Auto Reconnect Switch
+		log.Errorf ("Invalid Device Check Switch [%s]", t.config.GetSetting("devicecheck"))
+		return err
+		}
+	t.bletarget.devicecheck = devcheck
+
+	if t.bletarget.devicecheck {
+		t.bletarget.devicename = t.config.GetSetting("devicename")
+	} else {
+		t.bletarget.devicename = ""
+	}
 
 	for _, handlerCfg := range t.config.Handlers {
 		log.Infof("Adding BLE Service: [%s.%s]", strings.ToUpper(handlerCfg.GetSetting("service")),strings.ToUpper(handlerCfg.GetSetting("characteristic")))
@@ -119,7 +134,7 @@ func (t *MyTrigger) onPeriphDiscovered(p gatt.Peripheral, a *gatt.Advertisement,
 	log.Info ("In onPeriphDiscovered")
 
 	//check against localname
-	if t.bletarget.devicename != "" {
+	if t.bletarget.devicecheck {
 		if strings.ToUpper(a.LocalName) != strings.ToUpper(t.bletarget.devicename) {
 			return
 		}

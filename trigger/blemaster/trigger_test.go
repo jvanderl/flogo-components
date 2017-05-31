@@ -24,7 +24,8 @@ func getJSONMetadata() string {
 const testConfig string = `{
   "name": "blemaster",
   "settings": {
-    "devicename": "",
+		"devicename": "",
+		"devicecheck": "false",
 		"autoreconnect": "true",
 		"reconnectinterval": "5",
 		"intervaltype": "seconds"
