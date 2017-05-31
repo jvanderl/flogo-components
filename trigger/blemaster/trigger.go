@@ -77,7 +77,6 @@ func (t *MyTrigger) Start() error {
 		return err
 		}
 	t.bletarget.devicecheck = devcheck
-ÔÔ
 	if t.bletarget.devicecheck {
 		t.bletarget.devicename = t.config.GetSetting("devicename")
 	} else {
