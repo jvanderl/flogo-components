@@ -25,6 +25,10 @@ Settings, Outputs and Endpoint:
       "type": "string"
     },
     {
+      "name": "deviceid",
+      "type": "string"
+    },
+    {
       "name": "autodisconnect",
       "type": "boolean"
     },    {

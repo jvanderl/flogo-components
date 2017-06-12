@@ -46,10 +46,11 @@ func TestEval(t *testing.T) {
 	fmt.Println("Sending data to device IOTDEVICE on service FFE0, characteristic FFE1")
 
 	tc.SetInput("devicename", "IOTDEVICE")
-	tc.SetInput("deviceid", "A4:D5:78:6D:57:6C")
+	tc.SetInput("deviceid", "00:15:83:00:97:DF")
 	tc.SetInput("serviceid", "ffe0")
 	tc.SetInput("characteristic", "ffe1")
-	tc.SetInput("bledata", "1.5")
+	tc.SetInput("bledata", "1.0")
+	tc.SetInput("disconnectdelay", "1000")
 
 	act.Eval(tc)
 

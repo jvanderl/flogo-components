@@ -28,7 +28,7 @@ const testConfig string = `{
   "name": "blemaster",
   "settings": {
 		"devicename": "IOTDEVICE",
-		"deviceid": "A4:D5:78:6D:57:6C",
+		"deviceid": "00:15:83:00:97:DF",
 		"autodisconnect": "true",
 		"autoreconnect": "true",
 		"reconnectinterval": "5",

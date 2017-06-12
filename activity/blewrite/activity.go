@@ -7,7 +7,7 @@ import (
 	"github.com/jvanderl/go-gatt"
 	"github.com/jvanderl/go-gatt/examples/option"
 	"strings"
-//	"strconv"
+	"strconv"
 //	"context"
 	"time"
 	"errors"
@@ -29,6 +29,7 @@ const (
 	serviceid				= "serviceid"
 	characteristic 	= "characteristic"
 	bledata 				=	"bledata"
+	disconnectdelay			= "disconnectdelay"
 )
 
 // MyActivity is a stub for your Activity implementation
@@ -39,6 +40,7 @@ type MyActivity struct {
 	ServiceID gatt.UUID
 	Characteristic gatt.UUID
 	BLEdata string
+	DisconnectDelay time.Duration
 }
 
 // NewActivity creates a new AppActivity
@@ -70,6 +72,15 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 
 	a.BLEdata = context.GetInput(bledata).(string)
 	log.Infof ("BLEdata: [%s]", a.BLEdata)
+
+	var tmp int64
+	tmp, err = strconv.ParseInt(context.GetInput(disconnectdelay).(string),10,32)
+	if err != nil {
+		log.Errorf ("Error converting AddNewLine to input to integer")
+		a.DisconnectDelay = time.Duration(400)
+	} else {
+		a.DisconnectDelay = time.Duration(tmp)
+	}
 
 	//attempt to open own local bt device
 	d, err := gatt.NewDevice(option.DefaultClientOptions...)
@@ -161,7 +172,7 @@ func (a *MyActivity) onPeriphConnected(p gatt.Peripheral, err error) {
 				resp.result = "OK"
 				resp.err = nil
 				log.Info ("BLE data write successful")
-				time.Sleep(400 * time.Millisecond)
+				time.Sleep(a.DisconnectDelay * time.Millisecond)
 				return
 			}
 		}

@@ -17,10 +17,6 @@
       "type": "string"
     },
     {
-      "name": "devicecheck",
-      "type": "boolean"
-    },
-    {
       "name": "autodisconnect",
       "type": "boolean"
     },

@@ -7,7 +7,7 @@
   "description": "Writes data to a BLE device",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "inputs":[
-   {
+    {
       "name": "devicename",
       "type": "string"
     },
@@ -26,6 +26,10 @@
     {
       "name": "bledata",
       "type": "string"
+    },
+    {
+      "name": "disconnectdelay",
+      "type": "integer"
     }
   ],
   "outputs": [

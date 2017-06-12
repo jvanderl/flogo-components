@@ -4,6 +4,7 @@ Collection custom built flogo components
 ## Components
 
 ### Activities
+* [blewrite](activity/blewrite): Write data to a Bluetooth BLE Device
 * [combine](activity/combine): Combine separate parts into a single string
 * [eftl](activity/eftl): Send message to eFTL
 * [filter](activity/filter): Filter out unwanted data
