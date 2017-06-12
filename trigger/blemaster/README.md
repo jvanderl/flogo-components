@@ -25,6 +25,9 @@ Settings, Outputs and Endpoint:
       "type": "string"
     },
     {
+      "name": "autodisconnect",
+      "type": "boolean"
+    },    {
       "name": "autoreconnect",
       "type": "boolean"
     },
@@ -70,6 +73,7 @@ Settings, Outputs and Endpoint:
 | Setting   | Description    |
 |:----------|:---------------|
 | devicename    | The Local Name of the BLE device. Leave empty to discover just the services in the handler section |
+| autodisconnect     | Automatically disconnect after data from all characteristics is received   |
 | autoreconnect     | Automatically reconnect after device is disconnected   |
 | reconnectinterval | How long to wait before attempting to reconnect |
 | intervaltype      | Unit of time used by reconnectinterval |

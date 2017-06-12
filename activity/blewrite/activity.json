@@ -1,0 +1,37 @@
+{
+  "name": "blewrite",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/blewrite",
+  "version": "0.0.1",
+  "title": "Write BLE data",
+  "description": "Writes data to a BLE device",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "inputs":[
+   {
+      "name": "devicename",
+      "type": "string"
+    },
+    {
+      "name": "deviceid",
+      "type": "string"
+    },
+    {
+      "name": "serviceid",
+      "type": "string"
+    },
+    {
+      "name": "characteristic",
+      "type": "string"
+    },
+    {
+      "name": "bledata",
+      "type": "string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string"
+    }
+  ]
+}

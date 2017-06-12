@@ -7,6 +7,8 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/jvanderl/go-gatt"
 	"github.com/jvanderl/go-gatt/examples/option"
+//	"github.com/paypal/gatt"
+//	"github.com/paypal/gatt/examples/option"
 	"strings"
 	"strconv"
 	"context"
@@ -19,13 +21,17 @@ var log = logger.GetLogger("trigger-jvanderl-blemaster")
 var done = make(chan struct{})
 
 type BleService struct {
-	serviceID string
-	characteristic string
+	serviceID gatt.UUID
+	characteristic gatt.UUID
 	actionID	string
+	gotData bool
 }
 type  BleTarget struct {
 	devicename string
 	devicecheck bool
+	autodisconnect bool
+	autoreconnect bool
+	sleeptime time.Duration
 	deviceid string
 	localname string
 	bleservices []BleService
@@ -37,9 +43,7 @@ type MyTrigger struct {
 	runner   action.Runner
 	config   *trigger.Config
 	bletarget BleTarget
-//	destinationToactionID map[string]string
 }
-
 
 //NewFactory create a new Trigger factory
 func NewFactory(md *trigger.Metadata) trigger.Factory {
@@ -69,23 +73,59 @@ func (t *MyTrigger) Init(runner action.Runner) {
 // Start implements trigger.Trigger.Start
 func (t *MyTrigger) Start() error {
 	// start the trigger
+	t.bletarget.devicename = t.config.GetSetting("devicename")
+	t.bletarget.deviceid = t.config.GetSetting("deviceid")
+	autodisconnect, err := strconv.ParseBool(t.config.GetSetting("autodisconnect"))
 
-	devcheck, err := strconv.ParseBool(t.config.GetSetting("devicecheck"))
 	if err != nil {
 		// Invalid Auto Reconnect Switch
-		log.Errorf ("Invalid Device Check Switch [%s]", t.config.GetSetting("devicecheck"))
+		log.Errorf ("Invalid Auto Reconnect Switch [%s]", t.config.GetSetting("autodisconnect"))
 		return err
+	}
+	t.bletarget.autodisconnect = autodisconnect
+	log.Infof ("Auto Disconnect [%v]", t.bletarget.autodisconnect)
+
+	autoreconnect, err := strconv.ParseBool(t.config.GetSetting("autoreconnect"))
+	if err != nil {
+		// Invalid Auto Reconnect Switch
+		log.Errorf ("Invalid Auto Reconnect Switch [%s]", t.config.GetSetting("autoreconnect"))
+		return err
+	}
+	t.bletarget.autoreconnect = autoreconnect
+	log.Infof ("Auto Reconnect [%v]", t.bletarget.autoreconnect)
+
+	i, err := strconv.ParseInt(t.config.GetSetting("reconnectinterval"), 10, 64)
+	if err != nil {
+		{
+			// Invalid Reconnect Interval
+			log.Errorf ("Invalid Reconnect Interval [%s]", t.config.GetSetting("reconnectinterval"))
+			return err
 		}
-	t.bletarget.devicecheck = devcheck
-	if t.bletarget.devicecheck {
-		t.bletarget.devicename = t.config.GetSetting("devicename")
-	} else {
-		t.bletarget.devicename = ""
+	}
+	intervalDuration := time.Duration(i)
+	log.Infof("Waiting to reconnect for %d %s", i, t.config.GetSetting("intervaltype"))
+	switch t.config.GetSetting("intervaltype") {
+	case "hours":
+		t.bletarget.sleeptime = intervalDuration * time.Hour
+	case "minutes":
+		t.bletarget.sleeptime = intervalDuration * time.Minute
+	case "seconds":
+		t.bletarget.sleeptime = intervalDuration * time.Second
+	case "milliseconds":
+		t.bletarget.sleeptime = intervalDuration * time.Millisecond
+	default:
+		{
+			// Invalid Interval Type
+			log.Errorf ("Invalid Interval Type [%s]", t.config.GetSetting("intervaltype"))
+			return err
+		}
 	}
 
+	log.Infof ("Auto Reconnect Interval [%v] [%s]", t.bletarget.autoreconnect, t.config.GetSetting("intervaltype"))
+
 	for _, handlerCfg := range t.config.Handlers {
-		log.Infof("Adding BLE Service: [%s.%s]", strings.ToUpper(handlerCfg.GetSetting("service")),strings.ToUpper(handlerCfg.GetSetting("characteristic")))
-		t.bletarget.bleservices = append(t.bletarget.bleservices, BleService{strings.ToUpper(handlerCfg.GetSetting("service")), strings.ToUpper(handlerCfg.GetSetting("characteristic")), handlerCfg.ActionId})
+		log.Infof("Adding BLE Service: [%s.%s]", handlerCfg.GetSetting("service"),handlerCfg.GetSetting("characteristic"))
+		t.bletarget.bleservices = append(t.bletarget.bleservices, BleService{gatt.MustParseUUID(handlerCfg.GetSetting("service")), gatt.MustParseUUID(handlerCfg.GetSetting("characteristic")), handlerCfg.ActionId, false})
 	}
 
 	//attempt to open own local bt device
@@ -103,8 +143,8 @@ func (t *MyTrigger) Start() error {
 	)
 
 	d.Init(onStateChanged)
-	<-done
 	log.Info ("*** At end of MyTrigger Start ***")
+	<-done
 	return nil
 }
 
@@ -128,47 +168,31 @@ func onStateChanged(d gatt.Device, s gatt.State) {
 }
 
 func (t *MyTrigger) onPeriphDiscovered(p gatt.Peripheral, a *gatt.Advertisement, rssi int) {
-	var found bool = false
+	//var found bool = false
 	log.Info ("In onPeriphDiscovered")
+	log.Infof ("a.LocalName [%s]", a.LocalName)
+	log.Infof ("p.Name [%v]", p.Name())
+	log.Infof ("p.ID [%v]", p.ID())
 
 	//check against localname
-	if t.bletarget.devicecheck {
-		if strings.ToUpper(a.LocalName) != strings.ToUpper(t.bletarget.devicename) {
-			return
+	if strings.ToUpper(a.LocalName) == strings.ToUpper(t.bletarget.devicename) || strings.ToUpper(p.ID()) == strings.ToUpper(t.bletarget.deviceid) {
+		if t.bletarget.deviceid == "" {
+			t.bletarget.deviceid = p.ID()
 		}
-	}
-
-
-	// check if service is specified in any handler
-	for _, svc := range a.Services {
-		for _, target := range t.bletarget.bleservices {
-			log.Infof ("checking svc [%s]", svc.String())
-	    if strings.ToUpper(svc.String()) == target.serviceID {
-					log.Infof ("Found service [%s]", target.serviceID)
-					found = true
-	        continue
-	    }
+		if t.bletarget.localname == "" {
+			t.bletarget.localname = a.LocalName
 		}
+		// Stop scanning once we've got the peripheral we're looking for.
+		p.Device().StopScanning()
+		// Now connect to the device
+		p.Device().Connect(p)
 	}
-if !found {
-	return
-	}
-	t.bletarget.deviceid = p.ID()
-	t.bletarget.localname = a.LocalName
-	// Stop scanning once we've got the peripheral we're looking for.
-	p.Device().StopScanning()
-	// Now connect to the device
-	p.Device().Connect(p)
 }
 
 func (t *MyTrigger) onPeriphConnected(p gatt.Peripheral, err error) {
 	log.Info("Device Connected")
 	//defer p.Device().CancelConnection(p)
-	//time.Sleep(100 * time.Millisecond)
-/*	if err := p.SetMTU(500); err != nil {
-		log.Infof("Failed to set MTU, err: %s\n", err)
-	}
-*/
+	time.Sleep(100 * time.Millisecond)
 	// Discovery services
 	ss, err := p.DiscoverServices(nil)
 	if err != nil {
@@ -178,7 +202,7 @@ func (t *MyTrigger) onPeriphConnected(p gatt.Peripheral, err error) {
 
 	for _, s := range ss {
 		for _, target := range t.bletarget.bleservices {
-			if strings.ToUpper(s.UUID().String()) == target.serviceID {
+			if (s.UUID().Equal(target.serviceID)) {
 				log.Infof ("Discovering characteristics for service [%s] ", target.serviceID)
 				// Discovery characteristics
 				cs, err := p.DiscoverCharacteristics(nil, s)
@@ -187,45 +211,16 @@ func (t *MyTrigger) onPeriphConnected(p gatt.Peripheral, err error) {
 					continue
 				}
 				for _, c := range cs {
-
-					if strings.ToUpper(c.UUID().String()) == target.characteristic {
+					if (c.UUID().Equal(target.characteristic)) {
 						log.Infof ("Found characteristic [%s]", target.characteristic)
-
-
-					// Read the characteristic, if possible.
-					if (c.Properties() & gatt.CharRead) != 0 {
-						b, err := p.ReadCharacteristic(c)
-						if err != nil {
-							log.Errorf("Failed to read characteristic, err: %s", err)
-							continue
-						}
-//						fmt.Printf("    value         %x | %q\n", b, b)
-						log.Debugf("    value         %x | %q\n", b, b)
-					}
-
-					// Discovery descriptors
-					ds, err := p.DiscoverDescriptors(nil, c)
-					if err != nil {
-						log.Errorf("Failed to discover descriptors, err: %s\n", err)
-						continue
-					}
-
-					for _, d := range ds {
-						msg := "  Descriptor      " + d.UUID().String()
-						if len(d.Name()) > 0 {
-							msg += " (" + d.Name() + ")"
-						}
-
-//						log.Info(msg)
-					}
-
-
+						// Discovery descriptors
+						p.DiscoverDescriptors(nil, c)
 						// Subscribe to the characteristic
 						log.Info("Subscribing to characteristic...")
 						if (c.Properties() & (gatt.CharNotify | gatt.CharIndicate)) != 0 {
 							f := func(c *gatt.Characteristic, b []byte, err error) {
-								log.Infof("notified on %s.%s: % X | %q\n", target.serviceID, target.characteristic, b, b)
-								t.RunAction (target.actionID, string(b), target.serviceID, target.characteristic)
+								log.Infof("notified on %s.%s: %q", target.serviceID, target.characteristic, b)
+								t.RunAction (p, target, string(b))
 							}
 							if err := p.SetNotifyValue(c, f); err != nil {
 								log.Infof("Failed to subscribe characteristic, err: %s\n", err)
@@ -241,63 +236,49 @@ func (t *MyTrigger) onPeriphConnected(p gatt.Peripheral, err error) {
 
 func (t *MyTrigger) onPeriphDisconnected(p gatt.Peripheral, err error) {
 	log.Info("Device Disconnected")
-//	close(done)
-	reconnect, err := strconv.ParseBool(t.config.GetSetting("autoreconnect"))
-	if err != nil {
-		// Invalid Auto Reconnect Switch
-		log.Errorf ("Invalid Auto Reconnect Switch [%s]", t.config.GetSetting("autoreconnect"))
-		return
-		}
-  if reconnect {
-		i, err := strconv.ParseInt(t.config.GetSetting("reconnectinterval"), 10, 64)
-		if err != nil {
-			{
-				// Invalid Reconnect Interval
-				log.Errorf ("Invalid Reconnect Interval [%s]", t.config.GetSetting("reconnectinterval"))
-				return
-			}
-		}
-		intervalDuration := time.Duration(i)
-		log.Infof("Waiting to reconnect for %d %s", i, t.config.GetSetting("intervaltype"))
-		switch t.config.GetSetting("intervaltype") {
-		case "hours":
-			time.Sleep(intervalDuration * time.Hour)
-		case "minutes":
-			time.Sleep(intervalDuration * time.Minute)
-		case "seconds":
-			time.Sleep(intervalDuration * time.Second)
-		case "milliseconds":
-			time.Sleep(intervalDuration * time.Millisecond)
-		default:
-			{
-				// Invalid Interval Type
-				log.Errorf ("Invalid Interval Type [%s]", t.config.GetSetting("intervaltype"))
-				return
-			}
-		}
+  if t.bletarget.autoreconnect {
+		time.Sleep(t.bletarget.sleeptime)
 		p.Device().Connect(p)
 	}
 }
 
-// RunAction starts a new Process Instance
-func (t *MyTrigger) RunAction(actionID string, payload string, serviceID string, characteristic string) {
+	// RunAction starts a new Process Instance
+func (t *MyTrigger) RunAction(p gatt.Peripheral, bleService BleService, payload string) {
 
 	log.Debug("Starting new Process Instance")
-	log.Debugf("Action ID: ", actionID)
+	log.Debugf("Action ID: ", bleService.actionID)
 	log.Debugf("Payload: ", payload)
-	log.Debugf("Service ID: ", serviceID)
-	log.Debugf("Characteristic ", characteristic)
+	log.Debugf("Service ID: ", bleService.serviceID)
+	log.Debugf("Characteristic ", bleService.characteristic)
+
+	if t.bletarget.autodisconnect == true {
+		log.Info ("Checking if all data was received")
+		var gotItAll bool = true
+		for _, target := range t.bletarget.bleservices {
+			if (target.serviceID.Equal(bleService.serviceID) && target.characteristic.Equal(bleService.characteristic)) {
+				target.gotData = true
+			}
+			if !target.gotData {
+				gotItAll = false
+			}
+		}
+
+		if gotItAll {
+			log.Info ("All data was recieved, disconnecting")
+			p.Device().CancelConnection(p)
+		}
+	}
 
 	req := t.constructStartRequest(payload)
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
-	action := action.Get(actionID)
+	action := action.Get(bleService.actionID)
 	context := trigger.NewContext(context.Background(), startAttrs)
-	_, replyData, err := t.runner.Run(context, action, actionID, nil)
+	_, replyData, err := t.runner.Run(context, action, bleService.actionID, nil)
 	if err != nil {
 		log.Error(err)
 	}
 
-	log.Debug("Reply data: ", replyData)
+	log.Info("Reply data: ", replyData)
 
 	/*	if replyData != nil {
 		data, err := json.Marshal(replyData)
@@ -317,7 +298,6 @@ func (t *MyTrigger) constructStartRequest(payload string) *StartRequest {
 	data["notification"] = payload
 	data["deviceid"] = t.bletarget.deviceid
 	data["localname"] = t.bletarget.localname
-	//	data["destination"] = destination
 	req.Data = data
 	return req
 }
@@ -329,4 +309,15 @@ type StartRequest struct {
 	Interceptor *support.Interceptor   `json:"interceptor"`
 	Patch       *support.Patch         `json:"patch"`
 	ReplyTo     string                 `json:"replyTo"`
+}
+
+func (t *MyTrigger) GotAllData() bool {
+	for _, target := range t.bletarget.bleservices {
+		log.Infof ("Checking target [%s] data was received: [%v]", target.serviceID, target.gotData)
+		if !target.gotData {
+			log.Infof ("Target [%s], gotData [%v]", target.serviceID, target.gotData)
+			return false
+		}
+	}
+	return true
 }
