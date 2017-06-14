@@ -129,7 +129,6 @@ func (t *TimerTrigger) scheduleOnce(handlerCfg *trigger.HandlerConfig) {
 func (t *TimerTrigger) scheduleRepeating(handlerCfg *trigger.HandlerConfig) {
 	log.Info("Scheduling a repeating job")
 
-	seconds := getInitialStartInSeconds(handlerCfg)
 
 	fn2 := func() {
 		log.Debug("-- Starting \"Repeating\" (repeat) timer action")
@@ -148,7 +147,7 @@ func (t *TimerTrigger) scheduleRepeating(handlerCfg *trigger.HandlerConfig) {
 	if handlerCfg.Settings["startImmediate"] == "true" {
 		t.scheduleJobEverySecond(handlerCfg, fn2)
 	} else {
-
+		seconds := getInitialStartInSeconds(handlerCfg)
 		log.Debug("Seconds till trigger fires: ", seconds)
 		timerJob := scheduler.Every(seconds)
 		if timerJob == nil {
