@@ -10,8 +10,8 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
+	"github.com/TIBCOSoftware/flogo-lib/flow/support"
 )
-
 
 // log is the default package logger
 var log = logger.GetLogger("trigger-jvanderl-timer")
@@ -94,10 +94,10 @@ func (t *TimerTrigger) Stop() error {
 	return nil
 }
 
-func (t *TimerTrigger) scheduleOnce(endpoint *trigger.HandlerConfig) {
+func (t *TimerTrigger) scheduleOnce(handlerCfg *trigger.HandlerConfig) {
 	log.Info("Scheduling a run one time job")
 
-	seconds := getInitialStartInSeconds(endpoint)
+	seconds := getInitialStartInSeconds(handlerCfg)
 	log.Debug("Seconds till trigger fires: ", seconds)
 	timerJob := scheduler.Every(int(seconds))
 
@@ -108,11 +108,10 @@ func (t *TimerTrigger) scheduleOnce(endpoint *trigger.HandlerConfig) {
 	fn := func() {
 		log.Debug("-- Starting \"Once\" timer process")
 
-		act := action.Get(endpoint.ActionId)
+		act := action.Get(handlerCfg.ActionId)
 		log.Debugf("Found action: '%+x'", act)
-		log.Debugf("ActionID: '%s'", endpoint.ActionId)
-		_, _, err := t.runner.Run(context.Background(), act, endpoint.ActionId, nil)
-
+		log.Debugf("ActionID: '%s'", handlerCfg.ActionId)
+		_, _, err := t.runner.Run(context.Background(), act, handlerCfg.ActionId, nil)
 		if err != nil {
 			log.Error("Error starting action: ", err.Error())
 		}
@@ -124,29 +123,30 @@ func (t *TimerTrigger) scheduleOnce(endpoint *trigger.HandlerConfig) {
 		log.Error("Error scheduleOnce flo err: ", err.Error())
 	}
 
-	t.timers[endpoint.ActionId] = timerJob
+	t.timers[handlerCfg.ActionId] = timerJob
 }
 
-func (t *TimerTrigger) scheduleRepeating(endpoint *trigger.HandlerConfig) {
+func (t *TimerTrigger) scheduleRepeating(handlerCfg *trigger.HandlerConfig) {
 	log.Info("Scheduling a repeating job")
 
-	seconds := getInitialStartInSeconds(endpoint)
+	seconds := getInitialStartInSeconds(handlerCfg)
 
 	fn2 := func() {
 		log.Debug("-- Starting \"Repeating\" (repeat) timer action")
-
-		action := action.Get(endpoint.ActionId)
+		req := t.constructStartRequest(handlerCfg)
+		startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
+		action := action.Get(handlerCfg.ActionId)
+		context := trigger.NewContext(context.Background(), startAttrs)
 		log.Debugf("Found action: '%+x'", action)
-		log.Debugf("ActionID: '%s'", endpoint.ActionId)
-		_, _, err := t.runner.Run(context.Background(), action, endpoint.ActionId, nil)
-
+		log.Debugf("ActionID: '%s'", handlerCfg.ActionId)
+		_, _, err := t.runner.Run(context, action, handlerCfg.ActionId, nil)
 		if err != nil {
 			log.Error("Error starting flow: ", err.Error())
 		}
 	}
 
-	if endpoint.Settings["startImmediate"] == "true" {
-		t.scheduleJobEverySecond(endpoint, fn2)
+	if handlerCfg.Settings["startImmediate"] == "true" {
+		t.scheduleJobEverySecond(handlerCfg, fn2)
 	} else {
 
 		log.Debug("Seconds till trigger fires: ", seconds)
@@ -155,7 +155,7 @@ func (t *TimerTrigger) scheduleRepeating(endpoint *trigger.HandlerConfig) {
 			log.Error("timerJob is nil")
 		}
 
-		t.scheduleJobEverySecond(endpoint, fn2)
+		t.scheduleJobEverySecond(handlerCfg, fn2)
 
 		timerJob, err := timerJob.Seconds().NotImmediately().Run(fn2)
 		if err != nil {
@@ -165,7 +165,7 @@ func (t *TimerTrigger) scheduleRepeating(endpoint *trigger.HandlerConfig) {
 			log.Error("timerJob is nil")
 		}
 
-		t.timers[endpoint.ActionId] = timerJob
+		t.timers[handlerCfg.ActionId] = timerJob
 	}
 }
 
@@ -241,22 +241,6 @@ func (j *PrintJob) Run() error {
 func (t *TimerTrigger) scheduleJobEverySecond(handlerCfg *trigger.HandlerConfig, fn func()) {
 
 	var interval int = 0
-/*
-	seconds := handlerCfg.GetSetting("seconds")
-	tmpint, err := strconv.Atoi(seconds)
-	if err != nil {
-		interval = interval + tmpint
-	}
-	minutes := handlerCfg.GetSetting("minutes")
-	tmpint, err = strconv.Atoi(minutes)
-	if err != nil {
-		interval = interval + tmpint*60
-	}
-	hours := handlerCfg.GetSetting("hours")
-	tmpint, err = strconv.Atoi(hours)
-	if err != nil {
-		interval = interval + tmpint*3600
-	} */
 
 	if seconds := handlerCfg.GetSetting("seconds"); seconds != "" {
 		seconds, _ := strconv.Atoi(seconds)
@@ -286,13 +270,37 @@ func (t *TimerTrigger) scheduleJobEverySecond(handlerCfg *trigger.HandlerConfig,
 
 func (t *TimerTrigger) RunImmediateOnce(handlerCfg *trigger.HandlerConfig) {
 	log.Debug("Starting Immediate \"Once\" process")
-
-	act := action.Get(handlerCfg.ActionId)
-	log.Debugf("Found action: '%+x'", act)
+	req := t.constructStartRequest(handlerCfg)
+	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
+	action := action.Get(handlerCfg.ActionId)
+	context := trigger.NewContext(context.Background(), startAttrs)
+	log.Debugf("Found action: '%+x'", action)
 	log.Debugf("ActionID: '%s'", handlerCfg.ActionId)
-	_, _, err := t.runner.Run(context.Background(), act, handlerCfg.ActionId, nil)
-
+//	_, _, err := t.runner.Run(context.Background(), act, handlerCfg.ActionId, nil)
+	_, _, err := t.runner.Run(context, action, handlerCfg.ActionId, nil)
 	if err != nil {
 		log.Error("Error starting action: ", err.Error())
 	}
+}
+
+func (t *TimerTrigger) constructStartRequest(handlerCfg *trigger.HandlerConfig) *StartRequest {
+
+	log.Debug("Received contstruct start request")
+
+	//TODO how to handle reply to, reply feature
+	req := &StartRequest{}
+	data := make(map[string]interface{})
+	data["params"] = &handlerCfg
+	data["triggerTime"] = time.Now().UTC()
+	req.Data = data
+	return req
+}
+
+// StartRequest describes a request for starting a ProcessInstance
+type StartRequest struct {
+	ProcessURI  string                 `json:"flowUri"`
+	Data        map[string]interface{} `json:"data"`
+	Interceptor *support.Interceptor   `json:"interceptor"`
+	Patch       *support.Patch         `json:"patch"`
+	ReplyTo     string                 `json:"replyTo"`
 }

@@ -14,8 +14,8 @@
       "type": "params"
     },
     {
-      "name": "content",
-      "type": "object"
+      "name": "triggerTime",
+      "type": "string"
     }
   ],
   "handler": {

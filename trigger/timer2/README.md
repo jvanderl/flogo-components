@@ -1,4 +1,4 @@
-# timer2
+# Timer 2
 This trigger provides your flogo application the ability to schedule a flow via scheduling service
 It's a modified version of the original timer activity on https://github.com/TIBCOSoftware/flogo-contrib
 
@@ -63,6 +63,24 @@ Outputs and Endpoint:
   }
 }
 ```
+## Settings
+- None -
+
+## Ouputs
+| Output   | Description    |
+|:----------|:---------------|
+| params    | The timer parameters used to trigger this flow |
+| triggerTime |  The date and time the trigger fired |
+
+## Handlers
+| Setting   | Description    |
+|:----------|:---------------|
+| repeating    | The trigger will subscribe to this topic. May contain wildcards |
+| startImmediate | When set to true, the trigger will fire directly, otherwise wait for the startDate stated below |
+| startDate    | Start date for first trigger in RFC3339 format ("2006-01-02T15:04:05Z07:00") |
+| hours    | Repeating interval in hours (can be combined with minutes and seconds)|
+| minutes    | Repeating interval in minutes (can be combined with hours and seconds) |
+| seconds    | Repeating interval in seconds (can be combined with hours and minutes)|
 
 ## Example Configurations
 
