@@ -65,14 +65,37 @@ const testConfig3 string = `{
       "actionId": "local://testFlow2",
       "settings": {
         "repeating": "false",
-				"startDate" : "2017-06-14T15:52:00Z02:00"
+				"startImmediate": "false",
+				"startDate" : "2017-06-14T16:56:00Z02:00"
       }
     }
   ]
 }`
 
-// Multiple timer configurations
+
+//Run Every 5 seconds, start Delayed
 const testConfig4 string = `{
+"name": "timer2",
+"settings": {
+},
+"handlers": [
+	{
+		"actionId": "local://testFlow2",
+		"settings": {
+		"repeating": "true",
+			"startImmediate": "false",
+			"startDate" : "2017-06-14T17:18:00Z02:00",
+			"seconds": "5",
+			"minutes": "0",
+			"hours": "0"
+		}
+	}
+]
+}`
+
+
+// Multiple timer configurations
+const testConfig5 string = `{
   "name": "timer2",
   "settings": {
   },
@@ -129,7 +152,7 @@ func (tr *TestRunner) Run(context context.Context, action action.Action, uri str
 func TestTimer(t *testing.T) {
 	log.Info("Testing Timer")
 	config := trigger.Config{}
-	json.Unmarshal([]byte(testConfig2), &config)
+	json.Unmarshal([]byte(testConfig4), &config)
 	f := &Timer2Factory{}
 	f.metadata = trigger.NewMetadata(jsonMetadata)
 	tgr := f.New(&config)
