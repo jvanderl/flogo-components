@@ -108,10 +108,14 @@ func (t *TimerTrigger) scheduleOnce(handlerCfg *trigger.HandlerConfig) {
 	fn := func() {
 		log.Debug("-- Starting \"Once\" timer process")
 
-		act := action.Get(handlerCfg.ActionId)
-		log.Debugf("Found action: '%+x'", act)
+
+		req := t.constructStartRequest(handlerCfg)
+		startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
+		action := action.Get(handlerCfg.ActionId)
+		context := trigger.NewContext(context.Background(), startAttrs)
+		log.Debugf("Found action: '%+x'", action)
 		log.Debugf("ActionID: '%s'", handlerCfg.ActionId)
-		_, _, err := t.runner.Run(context.Background(), act, handlerCfg.ActionId, nil)
+		_, _, err := t.runner.Run(context, action, handlerCfg.ActionId, nil)
 		if err != nil {
 			log.Error("Error starting action: ", err.Error())
 		}
@@ -275,7 +279,6 @@ func (t *TimerTrigger) RunImmediateOnce(handlerCfg *trigger.HandlerConfig) {
 	context := trigger.NewContext(context.Background(), startAttrs)
 	log.Debugf("Found action: '%+x'", action)
 	log.Debugf("ActionID: '%s'", handlerCfg.ActionId)
-//	_, _, err := t.runner.Run(context.Background(), act, handlerCfg.ActionId, nil)
 	_, _, err := t.runner.Run(context, action, handlerCfg.ActionId, nil)
 	if err != nil {
 		log.Error("Error starting action: ", err.Error())
@@ -291,7 +294,6 @@ func (t *TimerTrigger) constructStartRequest(handlerCfg *trigger.HandlerConfig) 
 	data := make(map[string]interface{})
 	data["params"] = &handlerCfg
 	data["triggerTime"] = time.Now().String()
-//	data["triggerTime"] = "test output data"
 	req.Data = data
 	return req
 }
