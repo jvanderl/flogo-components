@@ -291,7 +291,8 @@ func (t *TimerTrigger) constructStartRequest(handlerCfg *trigger.HandlerConfig) 
 	req := &StartRequest{}
 	data := make(map[string]interface{})
 	data["params"] = &handlerCfg
-	data["triggerTime"] = time.Now().UTC()
+//	data["triggerTime"] = time.Now().UTC()
+	data["triggerTime"] = "test output data"
 	req.Data = data
 	return req
 }
