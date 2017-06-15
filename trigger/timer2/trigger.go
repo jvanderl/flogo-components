@@ -108,16 +108,6 @@ func (t *TimerTrigger) scheduleOnce(handlerCfg *trigger.HandlerConfig) {
 	fn := func() {
 		log.Debug("-- Starting \"Once\" timer process")
 		t.RunAction(handlerCfg)
-/*		req := t.constructStartRequest(handlerCfg)
-		startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
-		action := action.Get(handlerCfg.ActionId)
-		context := trigger.NewContext(context.Background(), startAttrs)
-		log.Debugf("Found action: '%+x'", action)
-		log.Debugf("ActionID: '%s'", handlerCfg.ActionId)
-		_, _, err := t.runner.Run(context, action, handlerCfg.ActionId, nil)
-		if err != nil {
-			log.Error("Error starting action: ", err.Error())
-		} */
 		timerJob.Quit <- true
 	}
 
@@ -136,16 +126,6 @@ func (t *TimerTrigger) scheduleRepeating(handlerCfg *trigger.HandlerConfig) {
 		fn2_2 := func() {
 			log.Debug("-- Starting \"Repeating\" (repeat) timer action")
 			t.RunAction(handlerCfg)
-/*			req := t.constructStartRequest(handlerCfg)
-			startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
-			action := action.Get(handlerCfg.ActionId)
-			context := trigger.NewContext(context.Background(), startAttrs)
-			log.Debugf("Found action: '%+x'", action)
-			log.Debugf("ActionID: '%s'", handlerCfg.ActionId)
-			_, _, err := t.runner.Run(context, action, handlerCfg.ActionId, nil)
-			if err != nil {
-				log.Error("Error starting flow: ", err.Error())
-			} */
 		}
 		t.scheduleJobEverySecond(handlerCfg, fn2_2)
 	}
@@ -154,16 +134,6 @@ func (t *TimerTrigger) scheduleRepeating(handlerCfg *trigger.HandlerConfig) {
 		fn2 := func() {
 			log.Debug("-- Starting \"Repeating\" (repeat) timer action")
 			t.RunAction(handlerCfg)
-/*			req := t.constructStartRequest(handlerCfg)
-			startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
-			action := action.Get(handlerCfg.ActionId)
-			context := trigger.NewContext(context.Background(), startAttrs)
-			log.Debugf("Found action: '%+x'", action)
-			log.Debugf("ActionID: '%s'", handlerCfg.ActionId)
-			_, _, err := t.runner.Run(context, action, handlerCfg.ActionId, nil)
-			if err != nil {
-				log.Error("Error starting flow: ", err.Error())
-			} */
 		}
 		t.scheduleJobEverySecond(handlerCfg, fn2)
 	} else {
@@ -258,16 +228,18 @@ func (j *PrintJob) Run() error {
 func (t *TimerTrigger) scheduleJobEverySecond(handlerCfg *trigger.HandlerConfig, fn func()) {
 
 	var interval int = 0
-
-	if seconds := handlerCfg.GetSetting("seconds"); seconds != "" {
+	//if seconds := handlerCfg.GetSetting("seconds"); seconds != "" {
+  if seconds := GetSettingSafe(handlerCfg, "seconds", ""); seconds != "" {
 		seconds, _ := strconv.Atoi(seconds)
 		interval = interval + seconds
 	}
-	if minutes := handlerCfg.GetSetting("minutes"); minutes != "" {
+	if minutes := GetSettingSafe(handlerCfg, "minutes", ""); minutes != "" {
+//	if minutes := handlerCfg.GetSetting("minutes"); minutes != "" {
 		minutes, _ := strconv.Atoi(minutes)
 		interval = interval + minutes*60
 	}
-	if hours := handlerCfg.GetSetting("hours"); hours != "" {
+	if hours := GetSettingSafe(handlerCfg, "hours", ""); hours != "" {
+//	if hours := handlerCfg.GetSetting("hours"); hours != "" {
 		hours, _ := strconv.Atoi(hours)
 		interval = interval + hours*3600
 	}
@@ -319,4 +291,15 @@ type StartRequest struct {
 	Interceptor *support.Interceptor   `json:"interceptor"`
 	Patch       *support.Patch         `json:"patch"`
 	ReplyTo     string                 `json:"replyTo"`
+}
+
+func GetSettingSafe (handlerCfg *trigger.HandlerConfig, setting string, defaultValue string) string {
+var retString string
+	defer func() {
+		if r := recover(); r != nil {
+			retString = defaultValue
+		}
+	}()
+ retString = handlerCfg.GetSetting(setting)
+ return retString
 }

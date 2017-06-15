@@ -46,8 +46,6 @@ const testConfig2 string = `{
 		"settings": {
 			"repeating": "true",
 			"seconds": "5",
-			"minutes": "0",
-			"hours": "0",
 			"startImmediate": "true"
 		}
 	}
@@ -82,8 +80,6 @@ const testConfig4 string = `{
 		"actionId": "local://testFlow2",
 		"settings": {
 			"repeating": "true",
-			"hours": "0",
-			"minutes": "0",
 			"seconds": "5",
 			"startImmediate": "false",
 			"startDate" : "2017-06-15T10:30:00Z02:00"
@@ -118,14 +114,29 @@ const testConfig5 string = `{
       "actionId": "local://testFlow3",
       "settings": {
         "repeating": "true",
-				"hours": "0",
-				"minutes": "0",
 				"seconds": "5",
 				"startImmediate": "false",
         "startDate" : "2017-06-15T10:40:00Z02:00"
       }
     }
   ]
+}`
+
+//Force panic on missing time components
+const testConfig6 string = `{
+"name": "timer2",
+"settings": {
+},
+"handlers": [
+	{
+		"actionId": "local://testFlow2",
+		"settings": {
+			"repeating": "true",
+			"seconds": "5",
+			"startImmediate": "true"
+		}
+	}
+]
 }`
 
 type TestRunner struct {
@@ -140,7 +151,7 @@ func (tr *TestRunner) Run(context context.Context, action action.Action, uri str
 func TestTimer(t *testing.T) {
 	log.Info("Testing Timer")
 	config := trigger.Config{}
-	json.Unmarshal([]byte(testConfig5), &config)
+	json.Unmarshal([]byte(testConfig6), &config)
 	f := &Timer2Factory{}
 	f.metadata = trigger.NewMetadata(jsonMetadata)
 	tgr := f.New(&config)

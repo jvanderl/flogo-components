@@ -7,7 +7,7 @@ It's a modified version of the original timer activity on https://github.com/TIB
 ```bash
 flogo install github.com/jvanderl/flogo-components/trigger/timer2
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/timer2
+  Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/timer2
 ```
 
 ## Schema
@@ -75,7 +75,7 @@ Outputs and Endpoint:
 ## Handlers
 | Setting   | Description    |
 |:----------|:---------------|
-| repeating    | The trigger will subscribe to this topic. May contain wildcards |
+| repeating    | Make trigger fire flows repeatedly. If set to true, fill in any combination of hours, minutes and seconds below |
 | hours    | Repeating interval in hours (can be combined with minutes and seconds)|
 | minutes    | Repeating interval in minutes (can be combined with hours and seconds) |
 | seconds    | Repeating interval in seconds (can be combined with hours and minutes)|
@@ -119,6 +119,7 @@ Configure the Trigger to run a flow at a certain date/time. "startDate" settings
       "actionId": "local://testFlow",
       "settings": {
         "repeating": "false",
+        "startImmediate": "false",
 				"startDate" : "2017-06-14T01:41:00Z02:00"
       }
     }
@@ -138,11 +139,11 @@ Configure the Trigger to run a flow repeating every hours|minutes|seconds. If "s
   	{
   		"actionId": "local://testFlow",
   		"settings": {
-  			"startImmediate": "true",
   			"repeating": "true",
+        "hours": "24",
+        "minutes": "0",
   			"seconds": "0",
-  			"minutes": "0",
-  			"hours": "24"
+        "startImmediate": "true"
   		}
   	}
   ]
@@ -150,7 +151,7 @@ Configure the Trigger to run a flow repeating every hours|minutes|seconds. If "s
 ```
 
 ### Repeating with start date
-Configure the Trigger to run a flow at a certain date/time and repeating every hours|minutes|seconds
+Configure the Trigger to run a flow at a certain date/time and from then repeating every hours|minutes|seconds
 
 ```json
 {
@@ -162,11 +163,11 @@ Configure the Trigger to run a flow at a certain date/time and repeating every h
       "actionId": "local://testFlow",
       "settings": {
         "repeating": "true",
-        "startImmediate": "true",
-        "startDate" : "2017-06-14T2:28:00Z02:00",
+        "hours": "1",
+        "minutes": "10",
 				"seconds": "5",
-				"minutes": "10",
-        "hours": "1"
+        "startImmediate": "false",
+        "startDate" : "2017-06-14T2:28:00Z02:00"
       }
     }
   ]
