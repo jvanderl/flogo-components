@@ -35,16 +35,6 @@ Outputs and Endpoint:
         "required" : true
       },
       {
-        "name": "startImmediate",
-        "type": "boolean",
-        "required" : false
-      },
-      {
-        "name": "startDate",
-        "type": "string",
-        "required" : false
-      },
-      {
         "name": "hours",
         "type": "number",
         "required" : false
@@ -57,6 +47,16 @@ Outputs and Endpoint:
       {
         "name": "seconds",
         "type": "number",
+        "required" : false
+      },
+      {
+        "name": "startImmediate",
+        "type": "boolean",
+        "required" : false
+      },
+      {
+        "name": "startDate",
+        "type": "string",
         "required" : false
       }
     ]
@@ -76,11 +76,11 @@ Outputs and Endpoint:
 | Setting   | Description    |
 |:----------|:---------------|
 | repeating    | The trigger will subscribe to this topic. May contain wildcards |
-| startImmediate | When set to true, the trigger will fire directly, otherwise wait for the startDate stated below |
-| startDate    | Start date for first trigger in RFC3339 format ("2006-01-02T15:04:05Z07:00") |
 | hours    | Repeating interval in hours (can be combined with minutes and seconds)|
 | minutes    | Repeating interval in minutes (can be combined with hours and seconds) |
 | seconds    | Repeating interval in seconds (can be combined with hours and minutes)|
+| startImmediate | When set to true, the trigger will fire directly, otherwise wait for the startDate stated below |
+| startDate    | Start date for first trigger in RFC3339 format ("2006-01-02T15:04:05Z07:00") |
 
 ## Example Configurations
 

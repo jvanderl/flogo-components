@@ -62,7 +62,7 @@ func (t *TimerTrigger) Start() error {
 		log.Debug("Repeating: ", repeating)
 		if repeating == "false" {
 			if handler.Settings["startImmediate"] == "true" {
-				t.RunImmediateOnce(handler)
+				t.RunAction(handler)
 			} else {
 				t.scheduleOnce(handler)
 			}
@@ -107,7 +107,8 @@ func (t *TimerTrigger) scheduleOnce(handlerCfg *trigger.HandlerConfig) {
 
 	fn := func() {
 		log.Debug("-- Starting \"Once\" timer process")
-		req := t.constructStartRequest(handlerCfg)
+		t.RunAction(handlerCfg)
+/*		req := t.constructStartRequest(handlerCfg)
 		startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
 		action := action.Get(handlerCfg.ActionId)
 		context := trigger.NewContext(context.Background(), startAttrs)
@@ -116,7 +117,7 @@ func (t *TimerTrigger) scheduleOnce(handlerCfg *trigger.HandlerConfig) {
 		_, _, err := t.runner.Run(context, action, handlerCfg.ActionId, nil)
 		if err != nil {
 			log.Error("Error starting action: ", err.Error())
-		}
+		} */
 		timerJob.Quit <- true
 	}
 
@@ -134,7 +135,8 @@ func (t *TimerTrigger) scheduleRepeating(handlerCfg *trigger.HandlerConfig) {
 	fn1 := func() {
 		fn2_2 := func() {
 			log.Debug("-- Starting \"Repeating\" (repeat) timer action")
-			req := t.constructStartRequest(handlerCfg)
+			t.RunAction(handlerCfg)
+/*			req := t.constructStartRequest(handlerCfg)
 			startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
 			action := action.Get(handlerCfg.ActionId)
 			context := trigger.NewContext(context.Background(), startAttrs)
@@ -143,7 +145,7 @@ func (t *TimerTrigger) scheduleRepeating(handlerCfg *trigger.HandlerConfig) {
 			_, _, err := t.runner.Run(context, action, handlerCfg.ActionId, nil)
 			if err != nil {
 				log.Error("Error starting flow: ", err.Error())
-			}
+			} */
 		}
 		t.scheduleJobEverySecond(handlerCfg, fn2_2)
 	}
@@ -151,7 +153,8 @@ func (t *TimerTrigger) scheduleRepeating(handlerCfg *trigger.HandlerConfig) {
 	if handlerCfg.Settings["startImmediate"] == "true" {
 		fn2 := func() {
 			log.Debug("-- Starting \"Repeating\" (repeat) timer action")
-			req := t.constructStartRequest(handlerCfg)
+			t.RunAction(handlerCfg)
+/*			req := t.constructStartRequest(handlerCfg)
 			startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
 			action := action.Get(handlerCfg.ActionId)
 			context := trigger.NewContext(context.Background(), startAttrs)
@@ -160,7 +163,7 @@ func (t *TimerTrigger) scheduleRepeating(handlerCfg *trigger.HandlerConfig) {
 			_, _, err := t.runner.Run(context, action, handlerCfg.ActionId, nil)
 			if err != nil {
 				log.Error("Error starting flow: ", err.Error())
-			}
+			} */
 		}
 		t.scheduleJobEverySecond(handlerCfg, fn2)
 	} else {
@@ -282,7 +285,7 @@ func (t *TimerTrigger) scheduleJobEverySecond(handlerCfg *trigger.HandlerConfig,
 	t.timers["r:"+handlerCfg.ActionId] = timerJob
 }
 
-func (t *TimerTrigger) RunImmediateOnce(handlerCfg *trigger.HandlerConfig) {
+func (t *TimerTrigger) RunAction(handlerCfg *trigger.HandlerConfig) {
 	log.Debug("Starting Immediate \"Once\" process")
 	req := t.constructStartRequest(handlerCfg)
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)

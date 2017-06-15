@@ -19,9 +19,8 @@ func getJsonMetadata() string{
 	return string(jsonMetadataBytes)
 }
 
-
 // Run Once, Start Immediately
-const testConfig string = `{
+const testConfig1 string = `{
   "name": "timer2",
   "settings": {
   },
@@ -45,11 +44,11 @@ const testConfig2 string = `{
 	{
 		"actionId": "local://testFlow2",
 		"settings": {
-			"startImmediate": "true",
 			"repeating": "true",
 			"seconds": "5",
 			"minutes": "0",
-			"hours": "0"
+			"hours": "0",
+			"startImmediate": "true"
 		}
 	}
 ]
@@ -66,7 +65,7 @@ const testConfig3 string = `{
       "settings": {
         "repeating": "false",
 				"startImmediate": "false",
-				"startDate" : "2017-06-14T16:56:00Z02:00"
+				"startDate" : "2017-06-15T10:29:00Z02:00"
       }
     }
   ]
@@ -82,12 +81,12 @@ const testConfig4 string = `{
 	{
 		"actionId": "local://testFlow2",
 		"settings": {
-		"repeating": "true",
-			"startImmediate": "false",
-			"startDate" : "2017-06-14T17:18:00Z02:00",
-			"seconds": "5",
+			"repeating": "true",
+			"hours": "0",
 			"minutes": "0",
-			"hours": "0"
+			"seconds": "5",
+			"startImmediate": "false",
+			"startDate" : "2017-06-15T10:30:00Z02:00"
 		}
 	}
 ]
@@ -104,37 +103,26 @@ const testConfig5 string = `{
       "actionId": "local://testFlow",
       "settings": {
         "repeating": "false",
-        "startDate" : "2017-06-14T2:28:00Z02:00"
+				"startImmediate": "true"
       }
     },
-    {
+		{
       "actionId": "local://testFlow2",
       "settings": {
-        "repeating": "true",
-        "startDate" : "2017-06-14T2:28:00Z02:00",
-				"seconds": "0",
-				"minutes": "0",
-        "hours": "24"
+        "repeating": "false",
+				"startImmediate": "false",
+        "startDate" : "2017-06-15T10:40:00Z02:00"
       }
     },
     {
       "actionId": "local://testFlow3",
       "settings": {
         "repeating": "true",
-        "startDate" : "2017-06-14T2:28:00Z02:00",
-				"seconds": "0",
-        "minutes": "60",
-				"hours": "0"
-      }
-    },
-    {
-      "actionId": "local://testFlow4",
-      "settings": {
-        "repeating": "true",
-        "startDate" : "2017-06-14T15:52:00Z02:00",
-        "seconds": "30",
+				"hours": "0",
 				"minutes": "0",
-				"hours": "0"
+				"seconds": "5",
+				"startImmediate": "false",
+        "startDate" : "2017-06-15T10:40:00Z02:00"
       }
     }
   ]
@@ -152,7 +140,7 @@ func (tr *TestRunner) Run(context context.Context, action action.Action, uri str
 func TestTimer(t *testing.T) {
 	log.Info("Testing Timer")
 	config := trigger.Config{}
-	json.Unmarshal([]byte(testConfig4), &config)
+	json.Unmarshal([]byte(testConfig5), &config)
 	f := &Timer2Factory{}
 	f.metadata = trigger.NewMetadata(jsonMetadata)
 	tgr := f.New(&config)
