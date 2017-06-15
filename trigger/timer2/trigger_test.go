@@ -122,23 +122,6 @@ const testConfig5 string = `{
   ]
 }`
 
-//Force panic on missing time components
-const testConfig6 string = `{
-"name": "timer2",
-"settings": {
-},
-"handlers": [
-	{
-		"actionId": "local://testFlow2",
-		"settings": {
-			"repeating": "true",
-			"seconds": "5",
-			"startImmediate": "true"
-		}
-	}
-]
-}`
-
 type TestRunner struct {
 }
 
@@ -151,7 +134,7 @@ func (tr *TestRunner) Run(context context.Context, action action.Action, uri str
 func TestTimer(t *testing.T) {
 	log.Info("Testing Timer")
 	config := trigger.Config{}
-	json.Unmarshal([]byte(testConfig6), &config)
+	json.Unmarshal([]byte(testConfig1), &config)
 	f := &Timer2Factory{}
 	f.metadata = trigger.NewMetadata(jsonMetadata)
 	tgr := f.New(&config)
