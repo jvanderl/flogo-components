@@ -26,16 +26,6 @@
         "required" : true
       },
       {
-        "name": "startImmediate",
-        "type": "boolean",
-        "required" : false
-      },
-      {
-        "name": "startDate",
-        "type": "string",
-        "required" : false
-      },
-      {
         "name": "hours",
         "type": "number",
         "required" : false
@@ -48,6 +38,16 @@
       {
         "name": "seconds",
         "type": "number",
+        "required" : false
+      },
+      {
+        "name": "startImmediate",
+        "type": "boolean",
+        "required" : false
+      },
+      {
+        "name": "startDate",
+        "type": "string",
         "required" : false
       }
     ]
