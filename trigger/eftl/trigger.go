@@ -4,7 +4,6 @@ import (
 	"context"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
-	"github.com/TIBCOSoftware/flogo-lib/flow/support"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/jvanderl/go-eftl"
 	"strconv"
@@ -200,8 +199,6 @@ func (t *eftlTrigger) constructStartRequest(message string) *StartRequest {
 type StartRequest struct {
 	ProcessURI  string                 `json:"flowUri"`
 	Data        map[string]interface{} `json:"data"`
-	Interceptor *support.Interceptor   `json:"interceptor"`
-	Patch       *support.Patch         `json:"patch"`
 	ReplyTo     string                 `json:"replyTo"`
 }
 

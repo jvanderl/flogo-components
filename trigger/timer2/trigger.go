@@ -10,7 +10,6 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
-	"github.com/TIBCOSoftware/flogo-lib/flow/support"
 )
 
 // log is the default package logger
@@ -288,8 +287,6 @@ func (t *TimerTrigger) constructStartRequest(handlerCfg *trigger.HandlerConfig) 
 type StartRequest struct {
 	ProcessURI  string                 `json:"flowUri"`
 	Data        map[string]interface{} `json:"data"`
-	Interceptor *support.Interceptor   `json:"interceptor"`
-	Patch       *support.Patch         `json:"patch"`
 	ReplyTo     string                 `json:"replyTo"`
 }
 

@@ -5,7 +5,6 @@ import (
 	//	"encoding/json"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
-	"github.com/TIBCOSoftware/flogo-lib/flow/support"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/optiopay/kafka"
 	"github.com/optiopay/kafka/proto"
@@ -172,8 +171,6 @@ func (t *kafkaTrigger) constructStartRequest(message string, topic string) *Star
 type StartRequest struct {
 	ProcessURI  string                 `json:"flowUri"`
 	Data        map[string]interface{} `json:"data"`
-	Interceptor *support.Interceptor   `json:"interceptor"`
-	Patch       *support.Patch         `json:"patch"`
 	ReplyTo     string                 `json:"replyTo"`
 }
 

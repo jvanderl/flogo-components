@@ -5,7 +5,6 @@ import (
 	//	"encoding/json"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
-	"github.com/TIBCOSoftware/flogo-lib/flow/support"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/eclipse/paho.mqtt.golang"
 	"strconv"
@@ -224,7 +223,5 @@ func (t *Mqtt2Trigger) constructStartRequest(message string, topic string) *Star
 type StartRequest struct {
 	ProcessURI  string                 `json:"flowUri"`
 	Data        map[string]interface{} `json:"data"`
-	Interceptor *support.Interceptor   `json:"interceptor"`
-	Patch       *support.Patch         `json:"patch"`
 	ReplyTo     string                 `json:"replyTo"`
 }
