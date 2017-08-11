@@ -1,1 +1,16 @@
-<a href="https://github.com/jvanderl/flogo-components/activity/blewrite"><img width="147" alt="example-1" src="https://cloud.githubusercontent.com/assets/398893/10000347/6e16cf8c-6050-11e5-9883-1c5681f9ec45.png"></a>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<p id="p1">https://github.com/jvanderl/flogo-components/activity/blewrite</p>
+
+<button onclick="copyToClipboard('#p1')">Copy to clipboard</button>
+
+<script>function copyToClipboard(element) {
+  var $temp = $("<input>");
+  $("body").append($temp);
+  $temp.val($(element).text()).select();
+  document.execCommand("copy");
+  $temp.remove();
+}
+
+//# sourceURL=pen.js
+</script>
