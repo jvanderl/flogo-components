@@ -5,7 +5,7 @@ This activity provides your flogo application the ability retreive Hostname and 
 ## Installation
 
 ```bash
-flogo add activity github.com/jvanderl/flogo-components/activity/systeminfo
+flogo install github.com/jvanderl/flogo-components/activity/systeminfo
 ```
 Link for flogo web: https://github.com/jvanderl/flogo-components/activity/systeminfo
 

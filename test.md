@@ -1,0 +1,1 @@
+<a href="https://github.com/jvanderl/flogo-components/activity/blewrite"><img width="147" alt="example-1" src="https://cloud.githubusercontent.com/assets/398893/10000347/6e16cf8c-6050-11e5-9883-1c5681f9ec45.png"></a>

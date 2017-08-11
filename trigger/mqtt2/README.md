@@ -6,7 +6,7 @@ It is different from the original one by Michael Register <mregiste@tibco.com> i
 ## Installation
 
 ```bash
-flogo add trigger github.com/jvanderl/flogo-components/trigger/mqtt2
+flogo install github.com/jvanderl/flogo-components/trigger/mqtt2
 ```
 Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/mqtt2
 

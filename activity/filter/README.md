@@ -5,7 +5,7 @@ This activity provides your flogo application the ability to filter out unwanted
 ## Installation
 
 ```bash
-flogo add activity github.com/jvanderl/flogo-components/activity/filter
+flogo install github.com/jvanderl/flogo-components/activity/filter
 ```
 Link for flogo web: https://github.com/jvanderl/flogo-components/activity/filter
 

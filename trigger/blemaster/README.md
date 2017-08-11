@@ -5,7 +5,7 @@ Where Flogo is the BLE master, inititating connection to the BLE device.
 ## Installation
 
 ```bash
-flogo add trigger github.com/jvanderl/flogo-components/trigger/blemaster
+flogo install github.com/jvanderl/flogo-components/trigger/blemaster
 ```
 Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/blemaster
 

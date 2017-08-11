@@ -5,7 +5,7 @@ This activity provides your flogo application the ability to throttle data by in
 ## Installation
 
 ```bash
-flogo add activity github.com/jvanderl/flogo-components/activity/throttle
+flogo install github.com/jvanderl/flogo-components/activity/throttle
 ```
 Link for flogo web: https://github.com/jvanderl/flogo-components/activity/throttle
 

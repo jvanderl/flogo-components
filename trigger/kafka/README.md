@@ -5,7 +5,7 @@ This trigger provides your flogo application the ability to start a flow via Kaf
 ## Installation
 
 ```bash
-flogo add trigger github.com/jvanderl/flogo-components/trigger/kafka
+flogo install github.com/jvanderl/flogo-components/trigger/kafka
 ```
 Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/kafka
 

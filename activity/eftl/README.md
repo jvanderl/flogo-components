@@ -8,7 +8,7 @@ Code is based on the WSMessage activity created by Leon Stigter
 ## Installation
 
 ```bash
-flogo add activity github.com/jvanderl/flogo-components/activity/eftl
+flogo install github.com/jvanderl/flogo-components/activity/eftl
 ```
 Link for flogo web: https://github.com/jvanderl/flogo-components/activity/eftl
 
