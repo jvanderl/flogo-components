@@ -38,91 +38,136 @@ https://github.com/jvanderl/flogo-components/activity/blewrite
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/combine
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/combine
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/combine
+```
 
 #### Install eFTL Activity
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/eftl
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/eftl
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/eftl
+```
 
 #### Install Filter Activity
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/filter
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/filter
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/filter
+```
 
 #### Install Get JSON Activity
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/getjson
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/getjson
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/getjson
+```
 
 #### Install Send Kafka Activity
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/kafka
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/kafka
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/kafka
+```
 
 #### Install MQTT Activity
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/mqtt
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/mqtt
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/mqtt
+```
 
 #### Install Split JSON Activity
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/splitjson
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/splitjson
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/splitjson
+```
 
 #### Install Split Path Activity
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/splitpath
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/splitpath
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/splitpath
+```
 
 #### Install State Change Activity
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/statechange
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/statechange
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/statechange
+```
 
 #### Install SystemInfo Activity
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/systeminfo
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/systeminfo
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/systeminfo
+```
 
 #### Install Throttle Activity
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/throttle
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/throttle
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/throttle
+```
 
 #### Install Receive eFTL Message trigger
 ```bash
 flogo install github.com/jvanderl/flogo-components/trigger/eftl
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/eftl
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/trigger/eftl
+```
 
 #### Install Receive Kafka Message trigger
 ```bash
 flogo install github.com/jvanderl/flogo-components/trigger/kafka
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/kafka
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/trigger/kafka
+```
 
 #### Install Receive MQTT Message trigger
 ```bash
 flogo install github.com/jvanderl/flogo-components/trigger/mqtt2
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/mqtt2
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/trigger/mqtt2
+```
 
 #### Install Timer 2 trigger
 ```bash
 flogo install github.com/jvanderl/flogo-components/trigger/timer2
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/timer2
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/trigger/timer2
+```
 
 ## Related Information
 These components are built for TIBCO flogo.
