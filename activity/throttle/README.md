@@ -7,7 +7,10 @@ This activity provides your flogo application the ability to throttle data by in
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/throttle
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/throttle
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/throttle
+```
 
 ## Schema
 Inputs and Outputs:

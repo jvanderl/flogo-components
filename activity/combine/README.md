@@ -7,7 +7,10 @@ This activity provides your flogo application the ability to combine separate pa
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/combine
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/combine
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/combine
+```
 
 ## Schema
 Inputs and Outputs:

@@ -7,7 +7,10 @@ Code is based on the Kafka activity created by Kai Waehner
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/kafka
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/kafka
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/kafka
+```
 
 ## Schema
 Inputs and Outputs:

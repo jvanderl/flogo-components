@@ -8,7 +8,10 @@ It is different from the original one by Michael Register <mregiste@tibco.com> i
 ```bash
 flogo install github.com/jvanderl/flogo-components/trigger/mqtt2
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/mqtt2
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/trigger/mqtt2
+```
 
 ## Schema
 Settings, Outputs and Endpoint:

@@ -7,7 +7,9 @@ It's a modified version of the original timer activity on https://github.com/TIB
 ```bash
 flogo install github.com/jvanderl/flogo-components/trigger/timer2
 ```
-  Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/timer2
+Link for flogo web:
+```
+  https://github.com/jvanderl/flogo-components/trigger/timer2
 ```
 
 ## Schema

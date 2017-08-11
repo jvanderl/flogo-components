@@ -7,7 +7,10 @@ This activity provides your flogo application the ability to detect state change
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/statechange
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/statechange
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/statechange
+```
 
 ## Schema
 Inputs and Outputs:

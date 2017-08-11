@@ -7,7 +7,10 @@ This activity provides your Flogo application the ability to write data to a Blu
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/blewrite
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/blewrite
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/blewrite
+```
 
 ## Schema
 Inputs and Outputs:

@@ -7,7 +7,10 @@ This activity provides your flogo application the ability to split a path into s
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/splitpath
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/splitpath
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/splitpath
+```
 
 ## Schema
 Inputs and Outputs:

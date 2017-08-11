@@ -7,7 +7,10 @@ This trigger provides your flogo application the ability to start a flow via eFT
 ```bash
 flogo install github.com/jvanderl/flogo-components/trigger/eftl
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/eftl
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/trigger/eftl
+```
 
 ## Schema
 Settings, Outputs and Endpoint:

@@ -7,7 +7,10 @@ This trigger provides your flogo application the ability to start a flow via Kaf
 ```bash
 flogo install github.com/jvanderl/flogo-components/trigger/kafka
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/trigger/kafka
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/trigger/kafka
+```
 
 ## Schema
 Settings, Outputs and Endpoint:
