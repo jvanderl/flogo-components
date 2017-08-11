@@ -30,8 +30,10 @@ Collection custom built flogo components
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/blewrite
 ```
-Link for flogo web: https://github.com/jvanderl/flogo-components/activity/blewrite
-
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/blewrite
+```
 #### Install Combine Activity
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/combine
