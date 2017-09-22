@@ -9,23 +9,28 @@
   "inputs":[
     {
       "name": "server",
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     {
       "name": "configid",
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     {
       "name": "topic",
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     {
       "name": "partition",
-      "type": "int"
+      "type": "int",
+      "required": false
     },
     {
       "name": "message",
-      "type": "string"
+      "type": "string",
+      "required": true
     }
   ],
   "outputs": [
