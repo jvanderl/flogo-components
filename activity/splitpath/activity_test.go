@@ -3,7 +3,7 @@ package splitpath
 import (
 	"fmt"
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
-	"github.com/TIBCOSoftware/flogo-lib/flow/test"
+	"github.com/TIBCOSoftware/flogo-contrib/action/flow/test"
 	"io/ioutil"
 	"testing"
 )
