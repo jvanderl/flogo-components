@@ -5,6 +5,7 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/optiopay/kafka"
 	"github.com/optiopay/kafka/proto"
+	"strconv"
 )
 
 // log is the default package logger
@@ -38,7 +39,7 @@ func (a *MyActivity) Metadata() *activity.Metadata {
 func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 
 	ifServers := []string{context.GetInput(server).(string)}
-	log.Info("ifServers: ", ifServers)
+	log.Debug("ifServers: ", ifServers)
 
 	ifConfigID := context.GetInput(configid).(string)
 	ifTopic := context.GetInput(topic).(string)
@@ -54,7 +55,7 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	conf.AllowTopicCreation = true
 
 	// connect to kafka cluster
-	log.Info("Connecting to Kafka server")
+	log.Debug("Connecting to Kafka server")
 	broker, err := kafka.Dial(ifServers, conf)
 	if err != nil {
 		log.Errorf("cannot connect to kafka cluster: %s", err)
@@ -62,13 +63,13 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 		return true, nil
 	}
 	defer broker.Close()
-	log.Info("Connected to Kafka server")
+	log.Debug("Connected to Kafka server")
 
 	producer := broker.Producer(kafka.NewProducerConf())
 
 	msg := &proto.Message{Value: []byte(ifMessage)}
 
-	log.Info("Sending message to Kafka server")
+	log.Debug("Sending message to Kafka server")
 	resp, err := producer.Produce(ifTopic, ifPartition, msg)
 
 	if err != nil {
@@ -77,9 +78,9 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 		return true, nil
 	}
 
-	log.Info("Response:", resp)
-	log.Info("Message sent succesfully")
+	log.Debug("Response:", resp)
+	log.Debug("Message sent succesfully")
 
-	context.SetOutput("result", resp)
+	context.SetOutput("result", strconv.FormatInt(resp, 10))
 	return true, nil
 }
