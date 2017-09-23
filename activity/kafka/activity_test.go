@@ -43,7 +43,7 @@ func TestEval(t *testing.T) {
 	tc := test.NewTestActivityContext(getActivityMetadata())
 
 	//setup attrs
-	tc.SetInput(server, "localhost:9092")
+	tc.SetInput(server, "10.10.1.50:9092")
 	tc.SetInput(configid, "flogo-test")
 	tc.SetInput(topic, "test")
 	tc.SetInput(partition, "0")
