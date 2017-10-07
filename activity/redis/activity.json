@@ -1,0 +1,44 @@
+{
+  "name": "redis",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/redis",
+  "version": "0.0.1",
+  "title": "Redis",
+  "description": "Interacts with a Redis keyspace",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "inputs":[
+   {
+      "name": "server",
+      "type": "string",
+      "value": "localhost:6379"
+    },
+    {
+      "name": "password",
+      "type": "string"
+    },
+    {
+      "name": "database",
+      "type": "integer"
+    },
+    {
+      "name": "operation",
+      "type": "string",
+      "required": true,
+      "allowed" : ["GET", "PUT", "DEL", "PING"]
+    },
+    {
+      "name": "key",
+      "type": "string"
+    },
+    {
+      "name": "value",
+      "type": "string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string"
+    }
+  ]
+}

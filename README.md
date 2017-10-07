@@ -11,6 +11,7 @@ Collection custom built flogo components
 * [getjson](activity/getjson): Retrieve specific elements from a JSON structure
 * [kafka](activity/kafka): Send message to Kafka
 * [mqtt](activity/mqtt): Publish MQTT Message
+* [redis](activity/redis): Interact with Redis keyspace
 * [splitjson](activity/splitjson): Splits JSON structure into separate name-value pairs
 * [splitpath](activity/splitpath): Splits a path into separate parts
 * [statechange](activity/statechange): Detects state change for up to eight inputs
@@ -86,6 +87,15 @@ flogo install github.com/jvanderl/flogo-components/activity/mqtt
 Link for flogo web:
 ```
 https://github.com/jvanderl/flogo-components/activity/mqtt
+```
+
+#### Install Redis Activity
+```bash
+flogo install github.com/jvanderl/flogo-components/activity/redis
+```
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/redis
 ```
 
 #### Install Split JSON Activity
