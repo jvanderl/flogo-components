@@ -1,14 +1,14 @@
 # Trim
-This activity provides your flogo application the ability to trim data up to 8 strings
+This activity provides your flogo application the ability to find and replace characters in up to 8 strings
 
 ## Installation
 
 ```bash
-flogo install github.com/jvanderl/flogo-components/activity/trim
+flogo install github.com/jvanderl/flogo-components/activity/replace
 ```
 Link for flogo web:
 ```
-https://github.com/jvanderl/flogo-components/activity/trim
+https://github.com/jvanderl/flogo-components/activity/replace
 ```
 
 ## Schema
