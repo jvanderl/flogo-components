@@ -98,6 +98,15 @@ Link for flogo web:
 https://github.com/jvanderl/flogo-components/activity/redis
 ```
 
+#### Install Replace Activity
+```bash
+flogo install github.com/jvanderl/flogo-components/activity/replace
+```
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/replace
+```
+
 #### Install Split JSON Activity
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/splitjson

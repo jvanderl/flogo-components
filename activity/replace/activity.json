@@ -1,0 +1,90 @@
+{
+  "name": "replace",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/replace",
+  "version": "0.0.1",
+  "description": "finds and replaces characters in up to 8 strings",
+  "title": "Replace",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/replace",
+  "inputs":[
+    {
+      "name": "find",
+      "type": "string"
+    },
+    {
+      "name": "replace",
+      "type": "string"
+    },
+    {
+      "name": "input1",
+      "type": "string"
+    },
+    {
+      "name": "input2",
+      "type": "string"
+    },
+    {
+      "name": "input3",
+      "type": "string"
+    },
+    {
+      "name": "input4",
+      "type": "string"
+    },
+    {
+      "name": "input5",
+      "type": "string"
+    },
+    {
+      "name": "input6",
+      "type": "string"
+    },
+    {
+      "name": "input7",
+      "type": "string"
+    },
+    {
+      "name": "input8",
+      "type": "string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string"
+    },
+    {
+      "name": "output1",
+      "type": "string"
+    },
+    {
+      "name": "output2",
+      "type": "string"
+    },
+    {
+      "name": "output3",
+      "type": "string"
+    },
+    {
+      "name": "output4",
+      "type": "string"
+    },
+    {
+      "name": "output5",
+      "type": "string"
+    },
+    {
+      "name": "output6",
+      "type": "string"
+    },
+    {
+      "name": "output7",
+      "type": "string"
+    },
+    {
+      "name": "output8",
+      "type": "string"
+    }
+  ]
+}
