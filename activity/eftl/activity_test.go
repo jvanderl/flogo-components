@@ -53,7 +53,7 @@ func TestEval(t *testing.T) {
 	tc.SetInput("password", "password")
 	tc.SetInput("message", "{\"deviceID\":\"5CCF7F942BCB\",\"distance\":9,\"distState\":\"Safe\"}")
 	tc.SetInput("secure", false)
-	tc.SetInput("certificate", "DummyCert")
+	tc.SetInput("certificate", "")
 
 	act.Eval(tc)
 

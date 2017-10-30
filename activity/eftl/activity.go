@@ -3,20 +3,15 @@ package eftl
 import (
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
-	"github.com/jvanderl/go-eftl"
+	"github.com/jvanderl/tib-eftl"
+	"crypto/x509"
+	"crypto/tls"
+	"encoding/base64"
+	"net/url"
 )
 
 // log is the default package logger
 var log = logger.GetLogger("activity-jvanderl-eftl")
-
-type eftlLoginMessage struct {
-	Operator      int               `json:"op"`
-	ClientType    string            `json:"client_type"`
-	ClientVersion string            `json:"client_version"`
-	User          string            `json:"user"`
-	Password      string            `json:"password"`
-	LoginOptions  map[string]string `json:"login_options"`
-}
 
 // MyActivity is a stub for your Activity implementation
 type MyActivity struct {
@@ -38,6 +33,7 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 
 	// Get the activity data from the context
 	wsHost := context.GetInput("server").(string)
+	wsClientID := context.GetInput("clientid").(string)
 	wsChannel := context.GetInput("channel").(string)
 	wsDestination := context.GetInput("destination").(string)
 	wsMessage := context.GetInput("message").(string)
@@ -46,32 +42,85 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	wsSecure := context.GetInput("secure").(bool)
 	wsCert := context.GetInput("certificate").(string)
 
-	// Connect to eFTL server
-	eftlConn, err := eftl.Connect(wsHost, wsChannel, wsSecure, wsCert, "")
+	wsURL := url.URL{}
+	if wsSecure {
+		wsURL = url.URL{Scheme: "wss", Host: wsHost, Path: wsChannel}
+	} else {
+		wsURL = url.URL{Scheme: "ws", Host: wsHost, Path: wsChannel}
+	}
+	wsConn := wsURL.String()
+
+	var tlsConfig *tls.Config
+
+	if wsCert != "" {
+		// TLS configuration uses CA certificate from a PEM file to
+		// authenticate the server certificate when using wss:// for
+		// a secure connection
+		caCert, err := base64.StdEncoding.DecodeString(wsCert)
+		if err != nil {
+			log.Errorf("unable to decode certificate: %s", err)
+			return false, err
+		}
+		caCertPool := x509.NewCertPool()
+		caCertPool.AppendCertsFromPEM(caCert)
+
+		tlsConfig = &tls.Config{
+			RootCAs: caCertPool,
+		}
+	} else {
+		// TLS configuration accepts all server certificates
+		// when using wss:// for a secure connection
+		tlsConfig = &tls.Config{
+			InsecureSkipVerify: true,
+		}
+	}
+
+	// channel for receiving connection errors
+	errChan := make(chan error, 1)
+
+	// set connection options
+	opts := &eftl.Options{
+		ClientID:  wsClientID,
+		Username:  wsUser,
+		Password:  wsPassword,
+		TLSConfig: tlsConfig,
+	}
+
+	// connect to the server
+	conn, err := eftl.Connect(wsConn, opts, errChan)
 	if err != nil {
-		log.Debugf("Error while connecting to wsHost: [%s]", err)
 		context.SetOutput("result", "ERR_CONNECT_HOST")
 		return false, err
 	}
 
-	// Login to eFTL
-	err = eftlConn.Login(wsUser, wsPassword)
-	if err != nil {
-		log.Debugf("Error while Loggin in: [%s]", err)
-		context.SetOutput("result", "ERR_EFTL_LOGIN")
-		return false, err
+	// close the connection when done
+	defer conn.Disconnect()
+
+	// channel for receiving publish completions
+	compChan := make(chan *eftl.Completion, 1000)
+
+	// publish the message
+	conn.PublishAsync(eftl.Message{
+		"_dest":  wsDestination,
+		"text":   wsMessage,
+	}, compChan)
+
+	for {
+		select {
+		case comp := <-compChan:
+			if comp.Error != nil {
+				log.Errorf("Error while sending message to wsHost: [%s]", comp.Error)
+				context.SetOutput("result", "ERR_SEND_MESSAGE")
+				return false, comp.Error
+			}
+			log.Debugf("published message: %s", comp.Message)
+			context.SetOutput("result", "OK")
+			return true, nil
+		case err := <-errChan:
+			log.Errorf("connection error: %s", err)
+			context.SetOutput("result", "ERR_CONNECT_HOST")
+			return false, err
+		}
 	}
-	log.Debugf("Login succesful. client_id: [%s], id_token: [%s]", eftlConn.ClientID, eftlConn.ReconnectToken)
 
-	// Send the message
-	err = eftlConn.SendMessage(wsMessage, wsDestination)
-	if err != nil {
-		log.Debugf("Error while sending message to wsHost: [%s]", err)
-		context.SetOutput("result", "ERR_SEND_MESSAGE")
-		return false, err
-	}
-
-	context.SetOutput("result", "OK")
-
-	return true, nil
 }
