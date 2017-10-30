@@ -46,6 +46,7 @@ func TestEval(t *testing.T) {
 	fmt.Println("Publishing a flogo test message to destination 'flogo' on channel '/channel' on eFTL Server")
 
 	tc.SetInput("server", "localhost:9191")
+	tc.SetInput("clientid", "flogo_test")
 	tc.SetInput("channel", "/channel")
   tc.SetInput("destination", "flogo")
 	tc.SetInput("user", "user")
