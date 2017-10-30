@@ -5,8 +5,13 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
-	"github.com/jvanderl/go-eftl"
+	"github.com/jvanderl/tib-eftl"
 	"strconv"
+	"crypto/x509"
+	"crypto/tls"
+	"encoding/base64"
+	"net/url"
+	"fmt"
 	//	"encoding/json"
 	//	"strings"
 )
@@ -14,7 +19,6 @@ import (
 //var dat map[string]interface{}
 
 // log is the default package logger
-
 var log = logger.GetLogger("trigger-jvanderl-eftl")
 
 // eftlTrigger is a stub for your Trigger implementation
@@ -37,7 +41,8 @@ type eftlFactory struct {
 
 //New Creates a new trigger instance for a given id
 func (t *eftlFactory) New(config *trigger.Config) trigger.Trigger {
-	return &eftlTrigger{metadata: t.metadata, config: config}
+	eftlTrigger := &eftlTrigger{metadata: t.metadata, config: config}
+	return eftlTrigger
 }
 
 // Metadata implements trigger.Trigger.Metadata
@@ -50,36 +55,12 @@ func (t *eftlTrigger) Init(runner action.Runner) {
 	t.runner = runner
 }
 
-/*//NewFactory create a new Trigger factory
-func NewFactory(md *trigger.Metadata) trigger.Factory {
-	return &eftlFactory{metadata: md}
-}
-
-// eftlFactory Trigger factory
-type eftlFactory struct {
-	metadata *trigger.Metadata
-}
-
-//New Creates a new trigger instance for a given id
-func (t *eftlFactory) New(config *trigger.Config) trigger.Trigger {
-	return &eftlTrigger{metadata: t.metadata, config: config}
-}
-
-// Metadata implements trigger.Trigger.Metadata
-func (t *eftlTrigger) Metadata() *trigger.Metadata {
-	return t.metadata
-}
-
-// Init implements trigger.Trigger.Init
-func (t *eftlTrigger) Init(runner action.Runner) {
-	t.runner = runner
-}
-*/
 // Start implements trigger.Trigger.Start
 func (t *eftlTrigger) Start() error {
 
 	// start the trigger
 	wsHost := t.config.GetSetting("server")
+	wsClientID := t.config.GetSetting("clientid")
 	wsChannel := t.config.GetSetting("channel")
 	wsUser := t.config.GetSetting("user")
 	wsPassword := t.config.GetSetting("password")
@@ -87,7 +68,7 @@ func (t *eftlTrigger) Start() error {
 	if err != nil {
 		return err
 	}
-	wsCert := "DummyCert"
+	wsCert := ""
 	if wsSecure {
 		wsCert = t.config.GetSetting("certificate")
 	}
@@ -102,48 +83,108 @@ func (t *eftlTrigger) Start() error {
 		t.destinationToActionId[epdestination] = handlerCfg.ActionId
 	}
 
-	// Connect to eFTL server
-	log.Infof("Connecting to eFTL server: [%s]", wsHost)
-	eftlConn, err := eftl.Connect(wsHost, wsChannel, wsSecure, wsCert, "")
+	wsURL := url.URL{}
+	if wsSecure {
+		wsURL = url.URL{Scheme: "wss", Host: wsHost, Path: wsChannel}
+	} else {
+		wsURL = url.URL{Scheme: "ws", Host: wsHost, Path: wsChannel}
+	}
+	wsConn := wsURL.String()
+
+	var tlsConfig *tls.Config
+
+	if wsCert != "" {
+		// TLS configuration uses CA certificate from a PEM file to
+		// authenticate the server certificate when using wss:// for
+		// a secure connection
+		caCert, err := base64.StdEncoding.DecodeString(wsCert)
+		if err != nil {
+			log.Errorf("unable to decode certificate: %s", err)
+			return err
+		}
+		caCertPool := x509.NewCertPool()
+		caCertPool.AppendCertsFromPEM(caCert)
+
+		tlsConfig = &tls.Config{
+			RootCAs: caCertPool,
+		}
+	} else {
+		// TLS configuration accepts all server certificates
+		// when using wss:// for a secure connection
+		tlsConfig = &tls.Config{
+			InsecureSkipVerify: true,
+		}
+	}
+
+	// channel for receiving connection errors
+	errChan := make(chan error, 1)
+
+	// set connection options
+	opts := &eftl.Options{
+		ClientID:  wsClientID,
+		Username:  wsUser,
+		Password:  wsPassword,
+		TLSConfig: tlsConfig,
+	}
+
+	// connect to the server
+	conn, err := eftl.Connect(wsConn, opts, errChan)
 	if err != nil {
-		log.Debugf("Error while connecting to wsHost: [%s]", err)
+		log.Errorf("Error connecing to eFTL server: [%s]", err)
 		return err
 	}
 
-	// Login to eFTL
-	err = eftlConn.Login(wsUser, wsPassword)
-	if err != nil {
-		log.Debugf("Error while Loggin in: [%s]", err)
-	}
-	log.Debugf("Login succesful. client_id: [%s], id_token: [%s]", eftlConn.ClientID, eftlConn.ReconnectToken)
+	// close the connection when done
+	defer conn.Disconnect()
+
+	// channel for receiving subscription response
+	subChan := make(chan *eftl.Subscription, 1)
+
+	// channel for receiving published messages
+	msgChan := make(chan eftl.Message, 1000)
+
 
 	//Subscribe to destination in endpoints
 	for _, handler := range t.config.Handlers {
 		log.Infof("Subscribing to destination: [%s]", handler.GetSetting("destination"))
-		destination := "{\"_dest\":\"" + handler.GetSetting("destination") + "\"}"
-		wsSubscriptionID, err := eftlConn.Subscribe(destination, "")
-		if err != nil {
-			log.Debugf("Error while subscribing in: [%s]", err)
-		}
-		log.Debugf("Subscribe succesful. subscription_id: [%s]", wsSubscriptionID)
-	}
-	go RunReceiver(t, eftlConn)
-/*
-	for {
-		message, destination, err := eftlConn.ReceiveMessage()
+		// create the message content matcher
+		matcher := fmt.Sprintf("{\"_dest\":\"%s\"}", handler.GetSetting("destination"))
+		durablename := ""
+		durable, err := strconv.ParseBool(handler.GetSetting("durable"))
 		if err != nil {
 			return err
 		}
-		log.Infof("Received Message [%s] on destination [%s]", message, destination)
-		//actionType, found := t.destinationToActionType[destination]
-		actionId, found := t.destinationToActionId[destination]
-		if found {
-			log.Debugf("About to run action for Id [%s]", actionId)
-			t.RunAction(actionId, message, destination)
-		} else {
-			log.Debug("actionId not found")
+		if durable {
+			durablename = handler.GetSetting("durablename")
 		}
-	} */
+		conn.SubscribeAsync(matcher, durablename, msgChan, subChan)
+	}
+
+	for {
+		select {
+		case sub := <-subChan:
+			if sub.Error != nil {
+				log.Infof("subscribe operation failed: %s", sub.Error)
+				return sub.Error
+			}
+			log.Infof("subscribed with matcher %s", sub.Matcher)
+		case msg := <-msgChan:
+			log.Infof("received message: %s", msg)
+			destination := msg["_dest"].(string)
+			message := msg["text"].(string)
+			actionId, found := t.destinationToActionId[destination]
+			if found {
+				log.Debugf("About to run action for Id [%s]", actionId)
+				t.RunAction(actionId, message, destination)
+			} else {
+				log.Debug("actionId not found")
+			}
+
+		case err := <-errChan:
+			log.Infof("connection error: %s", err)
+			return err
+		}
+	}
 	return nil
 }
 
@@ -156,41 +197,34 @@ func (t *eftlTrigger) Stop() error {
 
 // RunAction starts a new Process Instance
 func (t *eftlTrigger) RunAction(actionId string, payload string, destination string) {
-
 	log.Debug("Starting new Process Instance")
-	log.Debugf("Action Id: ", actionId)
-	log.Debugf("Payload: ", payload)
-	log.Debugf("Destination: ", destination)
+	log.Debugf("Action Id: %s", actionId)
+	log.Debugf("Payload: %s", payload)
 
 	req := t.constructStartRequest(payload)
+
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
+
 	action := action.Get(actionId)
+
 	context := trigger.NewContext(context.Background(), startAttrs)
+
 	_, replyData, err := t.runner.Run(context, action, actionId, nil)
 	if err != nil {
 		log.Error(err)
 	}
 
-	log.Debug("Reply data: ", replyData)
+	log.Debugf("Ran action: [%s]", actionId)
+	log.Debugf("Reply data: [%s]", replyData)
 
-	/*	if replyData != nil {
-		data, err := json.Marshal(replyData)
-		if err != nil {
-			log.Error(err)
-		} else {
-			t.publishMessage(req.ReplyTo, partition, string(data))
-		}
-	}*/
 }
 
-//func (t *eftlTrigger) constructStartRequest(message string, destination string) *StartRequest {
 func (t *eftlTrigger) constructStartRequest(message string) *StartRequest {
 
 	//TODO how to handle reply to, reply feature
 	req := &StartRequest{}
 	data := make(map[string]interface{})
 	data["message"] = message
-	//	data["destination"] = destination
 	req.Data = data
 	return req
 }
@@ -205,22 +239,4 @@ type StartRequest struct {
 func convert(b []byte) string {
 	n := len(b)
 	return string(b[:n])
-}
-
-func RunReceiver(t *eftlTrigger, eftlConn eftl.Connection) error {
-	for {
-		message, destination, err := eftlConn.ReceiveMessage()
-		if err != nil {
-			return err
-		}
-		log.Infof("Received Message [%s] on destination [%s]", message, destination)
-		//actionType, found := t.destinationToActionType[destination]
-		actionId, found := t.destinationToActionId[destination]
-		if found {
-			log.Debugf("About to run action for Id [%s]", actionId)
-			t.RunAction(actionId, message, destination)
-		} else {
-			log.Debug("actionId not found")
-		}
-	}
 }

@@ -14,6 +14,11 @@
       "required" : true
     },
     {
+      "name": "clientid",
+      "type": "string",
+      "required" : true
+    },
+    {
       "name": "channel",
       "type": "string",
       "required" : true
@@ -51,6 +56,16 @@
         "name": "destination",
         "type": "string",
         "required" : true
+      },
+      {
+        "name": "durable",
+        "type": "boolean",
+        "required" : true
+      },
+      {
+        "name": "durablename",
+        "type": "string",
+        "required" : false
       }
     ]
   }

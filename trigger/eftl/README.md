@@ -31,6 +31,10 @@ Settings, Outputs and Endpoint:
       "type": "string"
     },
     {
+      "name": "clientid",
+      "type": "string"
+    },
+    {
       "name": "channel",
       "type": "string"
     },
@@ -71,6 +75,7 @@ Settings, Outputs and Endpoint:
 | Setting   | Description    |
 |:----------|:---------------|
 | server    | the eFTL server [hostname]:[port]|
+| clientid    | the client id to identify the eFTL connection |
 | channel     | The channel to send the message to (e.g. `/channel`)   |
 | message     | The actual message to send |
 | user        | The username to connect to the WebSocket server (e.g. `user`) |
@@ -87,6 +92,8 @@ Settings, Outputs and Endpoint:
 | Setting   | Description    |
 |:----------|:---------------|
 | destination | The destination to subscribe to (e.g. 'Default') |
+| durable | Use durable subscription |
+| durablename | Durable subscription name (only needed when durable is set to 'true') |
 
 
 ## Example Configurations
@@ -100,7 +107,8 @@ Configure the Trigger to start "testFlow". So in this case the "endpoints" "sett
 {
   "name": "eftl",
   "settings": {
-    "server": "localhost:19191",
+    "server": "localhost:9191",
+    "cclientid": "flogo-subscriber",
     "channel": "/channel",
     "user": "",
     "password": "",
@@ -111,7 +119,8 @@ Configure the Trigger to start "testFlow". So in this case the "endpoints" "sett
     {
       "actionId": "local://testFlow",
       "settings": {
-        "destination": "flogo"
+        "destination": "flogo",
+        "durable": "false"
       }
     }
   ]

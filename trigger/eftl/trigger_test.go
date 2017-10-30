@@ -10,7 +10,7 @@ import (
 )
 
 var jsonMetadata = getJSONMetadata()
-var ranAction = make(chan bool, 1)
+var ranAction = make(chan string, 1)
 
 func getJSONMetadata() string {
 	jsonMetadataBytes, err := ioutil.ReadFile("trigger.json")
@@ -24,17 +24,19 @@ const testConfig string = `{
   "name": "eftl",
   "settings": {
     "server": "localhost:9191",
+		"clientid": "flogo-testsubscriber",
     "channel": "/channel",
     "user": "",
     "password": "",
     "secure": "false",
-    "certificate": "DummyCert"
+    "certificate": ""
   },
   "handlers": [
     {
       "actionId": "local://testFlow",
       "settings": {
-        "destination": "flogo"
+        "destination": "flogo",
+				"durable": "false"
       }
     }
   ]
@@ -68,8 +70,7 @@ type TestRunner struct {
 
 // Run implements action.Runner.Run
 func (tr *TestRunner) Run(context context.Context, action action.Action, uri string, options interface{}) (code int, data interface{}, err error) {
-  log.Infof("Ran Action: %v", uri)
-	ranAction <- true
+	ranAction <- uri
 	return 0, nil, nil
 }
 
@@ -91,7 +92,12 @@ func TestEndpoint(t *testing.T) {
 	defer tgr.Stop()
 
 	// just loop
-	for {}
+	for {
+		select {
+		case sub := <-ranAction:
+			log.Infof("Ran Action: %v", sub)
+		}
+	}
 }
 
 /*
