@@ -1,0 +1,30 @@
+{
+  "name": "[package]",
+  "type": "flogo:activity",
+  "ref": "github.com/[git_user]/[git_repo]/activity/[package]",
+  "version": "0.0.1",
+  "description": "[description]",
+  "title": "Replace",
+  "author": "[author_name] <[author_email]>",
+  "homepage": "https://github.com/[git_user]/[git_repo]/tree/master/activity/[package]",
+  "inputs":[
+    {
+      "name": "[input1_name]",
+      "type": "[input1_type]"
+    },
+    {
+      "name": "[input2_name]",
+      "type": "[input2_type]"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "[output1_name]",
+      "type": "[output1_type]"
+    },
+    {
+      "name": "[output2_name]",
+      "type": "[output2_type]"
+    }
+  ]
+}
