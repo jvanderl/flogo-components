@@ -3,7 +3,7 @@ package eftl
 import (
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
-	"github.com/jvanderl/tib-eftl"
+	"tibco.com/eftl"
 	"crypto/x509"
 	"crypto/tls"
 	"encoding/base64"
