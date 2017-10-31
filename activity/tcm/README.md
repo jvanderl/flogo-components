@@ -1,8 +1,6 @@
 
 # Send TCM Message
 This activity sends a message to TIBCO Cloud Messaging.
-Code is based on the WSMessage activity created by Leon Stigter
-
 
 ## Installation
 
@@ -79,16 +77,16 @@ Inputs and Outputs:
 | destinationvalue | The destination to send the message on (can be left empty) |
 | messagename      | The identifier of the message field |
 | messagevalue     | The actual message to send |
-| cert             | The eFTL server certificate data in base64 encoded PEM format (only used if secure is true) |
+| cert             | The TCM server certificate data in base64 encoded PEM format (accepts all when empty) |
 
 ## Configuration Examples
 The below configuration would connect to TIBCO Cloud Messaging and send a message saying `Hello World`
 ```json
       {
         "id": 2,
-        "name": "Send a message to eFTL",
+        "name": "Send a message to TCM",
         "type": 1,
-        "activityType": "eftl",
+        "activityType": "tcm",
         "attributes": [
           {
             "name": "url",
@@ -141,4 +139,5 @@ The below configuration would connect to TIBCO Cloud Messaging and send a messag
 
 ## Contributors
 [Leon Stigter](https://github.com/retgits)
+
 [Jan van der Lugt](https://github.com/jvanderl)

@@ -1,4 +1,4 @@
-# eFTL Subscriber
+# TCM Subscriber
 This trigger provides your flogo application the ability to start a flow via TIBCO Cloud Messaging
 
 
