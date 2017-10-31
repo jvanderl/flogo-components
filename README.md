@@ -190,15 +190,6 @@ Link for flogo web:
 https://github.com/jvanderl/flogo-components/trigger/mqtt2
 ```
 
-#### Install Timer 2 trigger
-```bash
-flogo install github.com/jvanderl/flogo-components/trigger/timer2
-```
-Link for flogo web:
-```
-https://github.com/jvanderl/flogo-components/trigger/timer2
-```
-
 #### Install Receive TCM Message trigger
 ```bash
 flogo install github.com/jvanderl/flogo-components/trigger/tcm
@@ -206,6 +197,15 @@ flogo install github.com/jvanderl/flogo-components/trigger/tcm
 Link for flogo web:
 ```
 https://github.com/jvanderl/flogo-components/trigger/tcm
+```
+
+#### Install Timer 2 trigger
+```bash
+flogo install github.com/jvanderl/flogo-components/trigger/timer2
+```
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/trigger/timer2
 ```
 
 
