@@ -16,14 +16,16 @@ Collection custom built flogo components
 * [splitpath](activity/splitpath): Splits a path into separate parts
 * [statechange](activity/statechange): Detects state change for up to eight inputs
 * [systeminfo](activity/systeminfo): Retrieve System Information
+* [tcm](activity/tcm): Send message to TIBCO Cloud Messaging
 * [throttle](activity/throttle): Throttle data based on interval
 
 ### Triggers
 * [blemaster](trigger/blemaster):Receive BLE Data (Master)
-* [eftl](trigger/eftl): Receive eFTL Message
-* [kafka](trigger/kafka): Receive Kafka Message
-* [mqtt2](trigger/mqtt2): Receive MQTT Message
+* [eftl](trigger/eftl): Receive messages from TIBCO eFTL
+* [kafka](trigger/kafka): Receive messages from Kafka
+* [mqtt2](trigger/mqtt2): Receive messages from MQTT
 * [timer2](trigger/timer2): Start flow from timer
+* [tcm](trigger/tcm): Receive messages from TIBCO Cloud Messaging
 
 ## Installation
 
@@ -143,6 +145,15 @@ Link for flogo web:
 https://github.com/jvanderl/flogo-components/activity/systeminfo
 ```
 
+#### Install Send TCM Activity
+```bash
+flogo install github.com/jvanderl/flogo-components/activity/tcm
+```
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/tcm
+```
+
 #### Install Throttle Activity
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/throttle
@@ -187,6 +198,16 @@ Link for flogo web:
 ```
 https://github.com/jvanderl/flogo-components/trigger/timer2
 ```
+
+#### Install Receive TCM Message trigger
+```bash
+flogo install github.com/jvanderl/flogo-components/trigger/tcm
+```
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/trigger/tcm
+```
+
 
 ## Related Information
 These components are built for TIBCO flogo.

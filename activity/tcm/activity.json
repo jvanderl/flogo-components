@@ -1,0 +1,58 @@
+{
+  "name": "tcm",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/tcm",
+  "version": "0.0.1",
+  "title": "Send TCM Message",
+  "description": "Sends a message to TIBCO Cloud Messaging",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/tcm" ,
+  "inputs":[
+    {
+      "name": "url",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "clientid",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "authkey",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "destinationname",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "destinationvalue",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "messagename",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "messagevalue",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "certificate",
+      "type": "string",
+      "value": ""
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string"
+    }
+  ]
+}
