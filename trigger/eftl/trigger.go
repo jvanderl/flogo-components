@@ -12,11 +12,7 @@ import (
 	"encoding/base64"
 	"net/url"
 	"fmt"
-	//	"encoding/json"
-	//	"strings"
 )
-
-//var dat map[string]interface{}
 
 // log is the default package logger
 var log = logger.GetLogger("trigger-jvanderl-eftl")
@@ -215,7 +211,7 @@ func (t *eftlTrigger) RunAction(actionId string, payload string, destination str
 	}
 
 	log.Debugf("Ran action: [%s]", actionId)
-	log.Debugf("Reply data: [%s]", replyData)
+	log.Debugf("Reply data: [%v]", replyData)
 
 }
 

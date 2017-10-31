@@ -10,7 +10,6 @@ import (
 )
 
 var jsonMetadata = getJSONMetadata()
-var ranAction = make(chan string, 1)
 
 func getJSONMetadata() string {
 	jsonMetadataBytes, err := ioutil.ReadFile("trigger.json")
@@ -70,10 +69,9 @@ type TestRunner struct {
 
 // Run implements action.Runner.Run
 func (tr *TestRunner) Run(context context.Context, action action.Action, uri string, options interface{}) (code int, data interface{}, err error) {
-	ranAction <- uri
+	log.Infof("Ran Action: %v", uri)
 	return 0, nil, nil
 }
-
 
 func TestEndpoint(t *testing.T) {
 	log.Info("Testing Endpoint")
@@ -93,10 +91,6 @@ func TestEndpoint(t *testing.T) {
 
 	// just loop
 	for {
-		select {
-		case sub := <-ranAction:
-			log.Infof("Ran Action: %v", sub)
-		}
 	}
 }
 
