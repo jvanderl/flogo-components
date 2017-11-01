@@ -14,12 +14,12 @@
       "value": ""
     },
     {
-      "name": "clientid",
+      "name": "authkey",
       "type": "string",
       "value": ""
     },
     {
-      "name": "authkey",
+      "name": "clientid",
       "type": "string",
       "value": ""
     },
@@ -40,11 +40,6 @@
     },
     {
       "name": "messagevalue",
-      "type": "string",
-      "value": ""
-    },
-    {
-      "name": "certificate",
       "type": "string",
       "value": ""
     }

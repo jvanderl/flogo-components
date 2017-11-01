@@ -94,18 +94,13 @@ The below configuration would connect to TIBCO Cloud Messaging and send a messag
             "type": "string"
           },
           {
+            "name": "authkey",
+            "value": "XYZXYZXYZXYZXYZXYZ",
+            "type": "string"
+          },
+          {
             "name": "clientid",
             "value": "flogo_app",
-            "type": "string"
-          },
-          {
-            "name": "user",
-            "value": "",
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "value": "XYZXYZXYZXYZXYZXYZ",
             "type": "string"
           },
           {
@@ -127,11 +122,6 @@ The below configuration would connect to TIBCO Cloud Messaging and send a messag
             "name": "messagevalue",
             "value": "Hello World",
             "type": "string"
-          },
-          {
-            "name": "certificate",
-            "type": "string",
-            "value": ""
           }
         ]
       }

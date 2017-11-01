@@ -38,7 +38,8 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	wsDestinationValue, _ := context.GetInput("destinationvalue").(string)
 	wsMessageName, _ := context.GetInput("messagename").(string)
 	wsMessageValue, _ := context.GetInput("messagevalue").(string)
-	wsCert, _ := context.GetInput("certificate").(string)
+//	wsCert, _ := context.GetInput("certificate").(string)
+	wsCert := ""
 
 	var tlsConfig *tls.Config
 

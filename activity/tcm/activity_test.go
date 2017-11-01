@@ -50,7 +50,6 @@ func TestEval(t *testing.T) {
 	tc.SetInput("clientid", "flogo_test")
 	tc.SetInput("messagename", "demo_tcm")
 	tc.SetInput("messagevalue", "Hello TCM from FLOGO")
-	tc.SetInput("certificate", "")
 
 	act.Eval(tc)
 
