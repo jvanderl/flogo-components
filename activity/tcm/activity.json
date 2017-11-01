@@ -1,12 +1,12 @@
 {
-  "name": "tcm",
+  "name": "tcmpub",
   "type": "flogo:activity",
-  "ref": "github.com/jvanderl/flogo-components/activity/tcm",
+  "ref": "github.com/jvanderl/flogo-components/activity/tcmpub",
   "version": "0.0.1",
   "title": "Send TCM Message",
   "description": "Sends a message to TIBCO Cloud Messaging",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/tcm" ,
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/tcmpub" ,
   "inputs":[
     {
       "name": "url",

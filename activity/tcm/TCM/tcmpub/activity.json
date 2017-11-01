@@ -1,0 +1,92 @@
+{
+  "name": "tcmpub",
+  "type": "flogo:activity",
+  "ref": "activity/TCM/tcmpub",
+  "version": "0.0.1",
+  "title": "Send TCM Message",
+  "description": "Sends a message to TIBCO Cloud Messaging",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/tcmpub" ,
+  "display": {
+    "description": "Sends a message to TIBCO Cloud Messaging",
+       "category": "TCM",
+       "visible": true,
+       "smallIcon": "tcmpub-small-icon.png",
+       "largeIcon": "tcmpub-large-icon.png"
+},
+"inputs":[
+    {
+      "name": "url",
+      "type": "string",
+      "value": "",
+      "display": {
+        "name": "TCM URL",
+        "description": "URL to your TIBCO Cloud Messaging Channel"
+      }
+    },
+    {
+      "name": "authkey",
+      "type": "string",
+      "value": "",
+      "display": {
+        "name": "TCM Auth Key",
+        "description": "Your TCM Authentication Key"
+      }
+    },
+    {
+      "name": "clientid",
+      "type": "string",
+      "value": "",
+      "display": {
+        "name": "Client ID",
+        "description": "The unique TCM Client ID you would like to use for this connection"
+      }
+    },
+    {
+      "name": "destinationname",
+      "type": "string",
+      "value": "",
+      "display": {
+        "name": "Desintation Name",
+        "description": "Field name for to use as destination (subject field)"
+      }
+    },
+    {
+      "name": "destinationvalue",
+      "type": "string",
+      "value": "",
+      "display": {
+        "name": "Destination Value",
+        "description": "Value you want to use as destination (subject value)"
+      }
+    },
+    {
+      "name": "messagename",
+      "type": "string",
+      "value": "",
+      "display": {
+        "name": "Message Name",
+        "description": "Field name you want to use for the payload"
+      }
+    },
+    {
+      "name": "messagevalue",
+      "type": "string",
+      "value": "",
+      "display": {
+        "name": "Client ID",
+        "description": "The message payload (content)"
+      }
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string",
+      "display": {
+        "name": "Result",
+        "description": "Response from publish"
+      }
+    }
+  ]
+}

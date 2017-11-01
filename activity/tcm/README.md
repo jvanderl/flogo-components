@@ -5,11 +5,11 @@ This activity sends a message to TIBCO Cloud Messaging.
 ## Installation
 
 ```bash
-flogo install github.com/jvanderl/flogo-components/activity/tcm
+flogo install github.com/jvanderl/flogo-components/activity/tcmpub
 ```
 Link for flogo web:
 ```
-https://github.com/jvanderl/flogo-components/activity/tcm
+https://github.com/jvanderl/flogo-components/activity/tcmpub
 ```
 
 ## Schema
@@ -86,7 +86,7 @@ The below configuration would connect to TIBCO Cloud Messaging and send a messag
         "id": 2,
         "name": "Send a message to TCM",
         "type": 1,
-        "activityType": "tcm",
+        "activityType": "tcmpub",
         "attributes": [
           {
             "name": "url",
