@@ -1,5 +1,5 @@
 import { NgModule } from "@angular/core";
-import { SampleActivityUIContributionHandler } from "./activity";
+import { TcmPubActivityUIContributionHandler } from "./activity";
 import { WiContributionHandler } from "wi-studio/app/contrib/wi-contrib";
 @NgModule(
   {

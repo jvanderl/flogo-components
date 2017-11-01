@@ -6,17 +6,17 @@ import { IValidationResult, ValidationResult } from
 import { Injectable, Inject, Injector } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 @WiContrib({
-  handler: ConcatActivityUIContributionHandler
+  handler: TcmPubActivityUIContributionHandler
 })
 @Injectable()
-export class ConcatActivityUIContributionHandler extends
+export class TcmPubActivityUIContributionHandler extends
   WiContributionHandler {
   constructor( @Inject(Injector) injector) {
     super(injector);
   }
   getValue(fieldName: string, context: IActivityContribution):
     Observable<any> | any {
-    if (fieldName === "separator") {
+    if (fieldName === "destinationname") {
       let list: Array<string> = ["-", "$", "#"];
       return list;
     }
