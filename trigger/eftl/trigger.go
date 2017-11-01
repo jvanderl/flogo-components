@@ -5,7 +5,7 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
-	"tibco.com/eftl"
+	"github.com/jvanderl/tib-eftl"
 	"strconv"
 	"crypto/x509"
 	"crypto/tls"
