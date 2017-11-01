@@ -38,7 +38,7 @@
         "required" : true
       },
       {
-        "name": "destinationnamevalue",
+        "name": "destinationvalue",
         "type": "string",
         "required" : true
       },
