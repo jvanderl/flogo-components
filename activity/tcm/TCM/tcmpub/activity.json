@@ -3,12 +3,12 @@
   "type": "flogo:activity",
   "ref": "activity/TCM/tcmpub",
   "version": "0.0.1",
-  "title": "Send TCM Message",
-  "description": "Sends a message to TIBCO Cloud Messaging",
+  "title": "TCM Publish",
+  "description": "Publishes a message on TIBCO Cloud Messaging",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/tcmpub" ,
   "display": {
-    "description": "Sends a message to TIBCO Cloud Messaging",
+    "description": "Publishes a message on TIBCO Cloud Messaging",
        "category": "TCM",
        "visible": true,
        "smallIcon": "tcmpub-small-icon.png",
@@ -30,7 +30,8 @@
       "value": "",
       "display": {
         "name": "TCM Auth Key",
-        "description": "Your TCM Authentication Key"
+        "description": "Your TCM Authentication Key",
+        "type":"password"
       }
     },
     {
@@ -74,7 +75,7 @@
       "type": "string",
       "value": "",
       "display": {
-        "name": "Client ID",
+        "name": "Message Value",
         "description": "The message payload (content)"
       }
     }
@@ -82,11 +83,7 @@
   "outputs": [
     {
       "name": "result",
-      "type": "string",
-      "display": {
-        "name": "Result",
-        "description": "Response from publish"
-      }
+      "type": "string"
     }
   ]
 }
