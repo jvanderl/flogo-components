@@ -38,7 +38,7 @@
         "required" : true
       },
       {
-        "name": "destinationvalue",
+        "name": "destinationmatch",
         "type": "string",
         "required" : true
       },
