@@ -22,11 +22,6 @@
       "name": "clientid",
       "type": "string",
       "required" : true
-    },
-    {
-      "name": "certificate",
-      "type": "string",
-      "required" : false
     }
   ],
   "outputs": [

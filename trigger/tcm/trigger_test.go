@@ -19,13 +19,13 @@ func getJSONMetadata() string {
 	return string(jsonMetadataBytes)
 }
 
+    //"certificate": "got this"
 const testConfig string = `{
   "name": "tcm",
   "settings": {
     "url": "<Your TCM URL Here>",
 		"authkey": "<Your TCM Auht Key Here>",
-		"clientid": "flogo-testsubscriber",
-    "certificate": ""
+		"clientid": "flogo-testsubscriber"
   },
   "handlers": [
     {

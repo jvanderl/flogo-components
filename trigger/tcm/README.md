@@ -37,10 +37,6 @@ Settings, Outputs and Endpoint:
     {
       "name": "clientid",
       "type": "string"
-    },
-    {
-      "name": "certificate",
-      "type": "string"
     }
   ],
   "outputs": [
@@ -83,7 +79,6 @@ Settings, Outputs and Endpoint:
 | url        | The TIBCO Cloud Messaging URL (wss://nn.messaging.cloud.tibco.com/tcm/xxxxx/channel ) |         
 | authkey    | The TIBCO Cloud Messaging Authorization Key |
 | clientid   | A unique client id used to identify the connection to TCM |         
-| cert       | The TCM server certificate data in base64 encoded PEM format (accepts all when empty) |
 
 
 
@@ -115,8 +110,7 @@ Configure the Trigger to start "testFlow". So in this case the "endpoints" "sett
   "settings": {
     "url": "wss://nn.messaging.cloud.tibco.com/tcm/xxxxx/channel",
     "clientid": "flogo-subscriber",
-    "authkey": "XYZXYZXYZXYZXYZXYZ",
-    "certificate": ""
+    "authkey": "XYZXYZXYZXYZXYZXYZ"
   },
   "handlers": [
     {

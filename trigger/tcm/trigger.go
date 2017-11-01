@@ -11,6 +11,7 @@ import (
 	"crypto/tls"
 	"encoding/base64"
 	"fmt"
+	//"flag"
 )
 
 // log is the default package logger
@@ -53,13 +54,13 @@ func (t *tcmTrigger) Init(runner action.Runner) {
 // Start implements trigger.Trigger.Start
 func (t *tcmTrigger) Start() error {
 
-	wsCert := ""
 
 	// start the trigger
 	wsURL := t.config.GetSetting("url")
 	wsAuthKey := t.config.GetSetting("authkey")
 	wsClientID := t.config.GetSetting("clientid")
-  wsCert = t.config.GetSetting("certificate")
+  //wsCert := t.config.GetSetting("certificate")
+	wsCert := ""
 
 	// Read Actions from trigger endpoints
 	t.destinationToActionId = make(map[string]string)
