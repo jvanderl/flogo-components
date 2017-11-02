@@ -102,6 +102,7 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	// publish the message
 	conn.PublishAsync(eftl.Message{
 		"_dest":  wsDestination,
+		"_cid" : wsClientID,
 		"text":   wsMessage,
 	}, compChan)
 

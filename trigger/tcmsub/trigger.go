@@ -1,4 +1,4 @@
-package tcm
+package tcmsub
 
 import (
 	"context"
@@ -15,10 +15,10 @@ import (
 )
 
 // log is the default package logger
-var log = logger.GetLogger("trigger-jvanderl-tcm")
+var log = logger.GetLogger("trigger-jvanderl-tcmsub")
 
-// tcmTrigger is a stub for your Trigger implementation
-type tcmTrigger struct {
+// tcmsubTrigger is a stub for your Trigger implementation
+type tcmsubTrigger struct {
 	metadata              *trigger.Metadata
 	runner                action.Runner
 	config                *trigger.Config
@@ -27,32 +27,32 @@ type tcmTrigger struct {
 
 //NewFactory create a new Trigger factory
 func NewFactory(md *trigger.Metadata) trigger.Factory {
-	return &tcmFactory{metadata: md}
+	return &tcmsubFactory{metadata: md}
 }
 
-// tcmFactory Trigger factory
-type tcmFactory struct {
+// tcmsubFactory Trigger factory
+type tcmsubFactory struct {
 	metadata *trigger.Metadata
 }
 
 //New Creates a new trigger instance for a given id
-func (t *tcmFactory) New(config *trigger.Config) trigger.Trigger {
-	tcmTrigger := &tcmTrigger{metadata: t.metadata, config: config}
-	return tcmTrigger
+func (t *tcmsubFactory) New(config *trigger.Config) trigger.Trigger {
+	tcmsubTrigger := &tcmsubTrigger{metadata: t.metadata, config: config}
+	return tcmsubTrigger
 }
 
 // Metadata implements trigger.Trigger.Metadata
-func (t *tcmTrigger) Metadata() *trigger.Metadata {
+func (t *tcmsubTrigger) Metadata() *trigger.Metadata {
 	return t.metadata
 }
 
 // Init implements ext.Trigger.Init
-func (t *tcmTrigger) Init(runner action.Runner) {
+func (t *tcmsubTrigger) Init(runner action.Runner) {
 	t.runner = runner
 }
 
 // Start implements trigger.Trigger.Start
-func (t *tcmTrigger) Start() error {
+func (t *tcmsubTrigger) Start() error {
 
 
 	// start the trigger
@@ -189,13 +189,13 @@ func (t *tcmTrigger) Start() error {
 
 
 // Stop implements trigger.Trigger.Start
-func (t *tcmTrigger) Stop() error {
+func (t *tcmsubTrigger) Stop() error {
 	// stop the trigger
 	return nil
 }
 
 // RunAction starts a new Process Instance
-func (t *tcmTrigger) RunAction(actionId string, payload string, destination string) {
+func (t *tcmsubTrigger) RunAction(actionId string, payload string, destination string) {
 	log.Debug("Starting new Process Instance")
 	log.Debugf("Action Id: %s", actionId)
 	log.Debugf("Payload: %s", payload)
@@ -218,7 +218,7 @@ func (t *tcmTrigger) RunAction(actionId string, payload string, destination stri
 
 }
 
-func (t *tcmTrigger) constructStartRequest(message string) *StartRequest {
+func (t *tcmsubTrigger) constructStartRequest(message string) *StartRequest {
 
 	//TODO how to handle reply to, reply feature
 	req := &StartRequest{}

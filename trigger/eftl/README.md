@@ -91,7 +91,7 @@ Settings, Outputs and Endpoint:
 ## Handlers
 | Setting   | Description    |
 |:----------|:---------------|
-| destination | The destination to subscribe to (e.g. 'Default') |
+| destination | The destination to subscribe to (e.g. 'Default'), can also do '{"_dest":"subject"}' |
 | durable | Use durable subscription |
 | durablename | Durable subscription name (only needed when durable is set to 'true') |
 

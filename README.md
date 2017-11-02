@@ -16,7 +16,7 @@ Collection custom built flogo components
 * [splitpath](activity/splitpath): Splits a path into separate parts
 * [statechange](activity/statechange): Detects state change for up to eight inputs
 * [systeminfo](activity/systeminfo): Retrieve System Information
-* [tcm](activity/tcm): Send message to TIBCO Cloud Messaging
+* [tcmpub](activity/tcmpub): Publish message on TIBCO Cloud Messaging
 * [throttle](activity/throttle): Throttle data based on interval
 
 ### Triggers
@@ -25,7 +25,7 @@ Collection custom built flogo components
 * [kafka](trigger/kafka): Receive messages from Kafka
 * [mqtt2](trigger/mqtt2): Receive messages from MQTT
 * [timer2](trigger/timer2): Start flow from timer
-* [tcm](trigger/tcm): Receive messages from TIBCO Cloud Messaging
+* [tcmsub](trigger/tcmsub): Receive messages from TIBCO Cloud Messaging
 
 ## Installation
 
@@ -46,7 +46,7 @@ Link for flogo web:
 https://github.com/jvanderl/flogo-components/activity/combine
 ```
 
-#### Install eFTL Activity
+#### Install Publish eFTL Activity
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/eftl
 ```
@@ -145,13 +145,13 @@ Link for flogo web:
 https://github.com/jvanderl/flogo-components/activity/systeminfo
 ```
 
-#### Install Send TCM Activity
+#### Install Publish TCM Activity
 ```bash
-flogo install github.com/jvanderl/flogo-components/activity/tcm
+flogo install github.com/jvanderl/flogo-components/activity/tcmpub
 ```
 Link for flogo web:
 ```
-https://github.com/jvanderl/flogo-components/activity/tcm
+https://github.com/jvanderl/flogo-components/activity/tcmpub
 ```
 
 #### Install Throttle Activity
@@ -192,11 +192,11 @@ https://github.com/jvanderl/flogo-components/trigger/mqtt2
 
 #### Install Receive TCM Message trigger
 ```bash
-flogo install github.com/jvanderl/flogo-components/trigger/tcm
+flogo install github.com/jvanderl/flogo-components/trigger/tcmsub
 ```
 Link for flogo web:
 ```
-https://github.com/jvanderl/flogo-components/trigger/tcm
+https://github.com/jvanderl/flogo-components/trigger/tcmsub
 ```
 
 #### Install Timer 2 trigger

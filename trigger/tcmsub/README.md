@@ -5,11 +5,11 @@ This trigger provides your flogo application the ability to start a flow via TIB
 ## Installation
 
 ```bash
-flogo install github.com/jvanderl/flogo-components/trigger/tcm
+flogo install github.com/jvanderl/flogo-components/trigger/tcmsub
 ```
 Link for flogo web:
 ```
-https://github.com/jvanderl/flogo-components/trigger/tcm
+https://github.com/jvanderl/flogo-components/trigger/tcmsub
 ```
 
 ## Schema
@@ -17,14 +17,14 @@ Settings, Outputs and Endpoint:
 
 ```json
 {
-  "name": "tcm",
+  "name": "tcmsub",
   "type": "flogo:trigger",
-  "ref": "github.com/jvanderl/flogo-components/trigger/tcm",
+  "ref": "github.com/jvanderl/flogo-components/trigger/tcmsub",
   "version": "0.0.1",
   "title": "Receive TCM Message",
   "description": "TCM Subscriber",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/tcm",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/tcmsub",
   "settings":[
     {
       "name": "url",
@@ -106,7 +106,7 @@ Configure the Trigger to start "testFlow". So in this case the "endpoints" "sett
 
 ```json
 {
-  "name": "tcm",
+  "name": "tcmsub",
   "settings": {
     "url": "wss://nn.messaging.cloud.tibco.com/tcm/xxxxx/channel",
     "clientid": "flogo-subscriber",

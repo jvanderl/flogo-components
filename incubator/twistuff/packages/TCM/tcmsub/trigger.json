@@ -1,27 +1,47 @@
-{
-  "name": "tcm",
-  "type": "flogo:trigger",
-  "ref": "github.com/jvanderl/flogo-components/trigger/tcm",
+tcmsub{
+  "name": "tcmsub",
+  "type": "flogo:conenctor",
+  "ref": "connector/TCP/tcmsub",
   "version": "0.0.1",
   "title": "Receive TCM Message",
   "description": "TCM Subscriber",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/tcm",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/tcmsub",
+  "display": {
+    "description": "Subscribes to TIBCO Cloud Messages",
+       "category": "TCM",
+       "visible": true,
+       "smallIcon": "tcmsub-small-icon.png",
+       "largeIcon": "tcmsub-large-icon.png"
+},
   "settings":[
     {
       "name": "url",
       "type": "string",
-      "required" : true
+      "required" : true,
+      "display": {
+        "name": "TCM URL",
+        "description": "URL to your TIBCO Cloud Messaging Channel"
+      }
     },
     {
       "name": "authkey",
       "type": "string",
-      "required" : true
+      "required" : true,
+      "display": {
+        "name": "TCM Auth Key",
+        "description": "Your TCM Authentication Key",
+        "type":"password"
+      }
     },
     {
       "name": "clientid",
       "type": "string",
-      "required" : true
+      "required" : true,
+      "display": {
+        "name": "Client ID",
+        "description": "The unique TCM Client ID you would like to use for this connection"
+      }
     }
   ],
   "outputs": [
@@ -30,7 +50,7 @@
       "type": "string"
     }
   ],
-  "handler": {
+  "Actions": {
     "settings": [
       {
         "name": "destinationname",

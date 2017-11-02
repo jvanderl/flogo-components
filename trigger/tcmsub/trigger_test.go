@@ -1,4 +1,4 @@
-package tcm
+package tcmsub
 
 import (
 	"context"
@@ -19,9 +19,8 @@ func getJSONMetadata() string {
 	return string(jsonMetadataBytes)
 }
 
-    //"certificate": "got this"
 const testConfig string = `{
-  "name": "tcm",
+  "name": "tcmsub",
   "settings": {
     "url": "<Your TCM URL Here>",
 		"authkey": "<Your TCM Auht Key Here>",
@@ -56,7 +55,7 @@ func TestEndpoint(t *testing.T) {
 	config := trigger.Config{}
 	json.Unmarshal([]byte(testConfig), &config)
 	// New  factory
-	f := &tcmFactory{}
+	f := &tcmsubFactory{}
 	f.metadata = trigger.NewMetadata(jsonMetadata)
 	tgr := f.New(&config)
 

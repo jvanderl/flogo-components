@@ -34,7 +34,7 @@ const testConfig string = `{
     {
       "actionId": "local://testFlow",
       "settings": {
-        "destination": "flogo",
+        "destination": "{\"_dest\":true}",
 				"durable": "false"
       }
     }
