@@ -31,25 +31,26 @@ const testConfig string = `{
     "certificate": ""
   },
   "handlers": [
-    {
-      "actionId": "local://testFlow",
-      "settings": {
-        "destination": "flogo",
+		{
+			"actionId": "local://testFlow",
+			"settings": {
+				"destination": "flogo",
 				"durable": "false"
-      }
-    },
+			}
+		},
 		{
       "actionId": "local://testFlow2",
       "settings": {
-        "destination": "sample",
+        "destination": "{\"_dest\":\"sample\"}",
 				"durable": "false"
       }
     }
   ]
 }`
-// matcher is also possible for subsription:
+// complex matcher is also possible for subsription:
 //"destination": "{\"_dest\":\"flogo\", \"_cid\":\"5CCF7F942BCB\"}",
-
+// or listen to any message that has a destination field:
+// "destination": "{\"_dest\":true}"
 
 /*
 const testConfigSecure string = `{
