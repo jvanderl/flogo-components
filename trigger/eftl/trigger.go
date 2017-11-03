@@ -6,12 +6,13 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/jvanderl/tib-eftl"
+	"encoding/base64"
 	"strconv"
 	"crypto/x509"
 	"crypto/tls"
-	"encoding/base64"
 	"net/url"
 	"fmt"
+	"reflect"
 )
 
 // log is the default package logger
@@ -69,16 +70,6 @@ func (t *eftlTrigger) Start() error {
 		wsCert = t.config.GetSetting("certificate")
 	}
 
-	// Read Actions from trigger endpoints
-	t.destinationToActionId = make(map[string]string)
-
-	for _, handlerCfg := range t.config.Handlers {
-		log.Debugf("handlers: [%s]", handlerCfg.ActionId)
-		epdestination := handlerCfg.GetSetting("destination")
-		log.Debugf("destination: [%s]", epdestination)
-		t.destinationToActionId[epdestination] = handlerCfg.ActionId
-	}
-
 	wsURL := url.URL{}
 	if wsSecure {
 		wsURL = url.URL{Scheme: "wss", Host: wsHost, Path: wsChannel}
@@ -112,8 +103,15 @@ func (t *eftlTrigger) Start() error {
 		}
 	}
 
-	// channel for receiving connection errors
+	// Create array of channels for all handlers
+	msgChans := make([]chan eftl.Message, len(t.config.Handlers))
+
+	// Error channel for receiving connection errors
 	errChan := make(chan error, 1)
+
+	//Create the subsription channel [1]
+	subChan := make(chan *eftl.Subscription, 1)
+
 
 	// set connection options
 	opts := &eftl.Options{
@@ -133,62 +131,75 @@ func (t *eftlTrigger) Start() error {
 	// close the connection when done
 	defer conn.Disconnect()
 
-	// channel for receiving subscription response
-	subChan := make(chan *eftl.Subscription, 1)
-
-	// channel for receiving published messages
-	msgChan := make(chan eftl.Message, 1000)
-
-
-	//Subscribe to destination in endpoints
-	for _, handler := range t.config.Handlers {
-		log.Infof("Subscribing to destination: [%s]", handler.GetSetting("destination"))
-		// create the message content matcher
-		//complex matcher format like '{"_dest":"subject"}' can be used directly
-		matcher := handler.GetSetting("destination")
-		if (string(matcher[0:1]) != "{") {
-			// simple destination, will need to form matcher
-			matcher = fmt.Sprintf("{\"_dest\":\"%s\"}", handler.GetSetting("destination"))
-		}
-		durablename := ""
-		durable, err := strconv.ParseBool(handler.GetSetting("durable"))
-		if err != nil {
-			return err
-		}
-		if durable {
-			durablename = handler.GetSetting("durablename")
-		}
-		conn.SubscribeAsync(matcher, durablename, msgChan, subChan)
+//Subscribe to destination in endpoints
+for i, handler := range t.config.Handlers {
+	msgChans[i] = make(chan eftl.Message)
+	log.Infof("Subscribing to destination [%v]: [%s]", i, handler.GetSetting("destination"))
+	// create the message content matcher
+	//complex matcher format like '{"_dest":"subject"}' can be used directly
+	matcher := handler.GetSetting("destination")
+	if (string(matcher[0:1]) != "{") {
+		// simple destination, will need to form matcher
+		matcher = fmt.Sprintf("{\"_dest\":\"%s\"}", handler.GetSetting("destination"))
 	}
+	durablename := ""
+	durable, err := strconv.ParseBool(handler.GetSetting("durable"))
+	if err != nil {
+		return err
+	}
+	if durable {
+		durablename = handler.GetSetting("durablename")
+	}
+	conn.SubscribeAsync(matcher, durablename, msgChans[i], subChan)
+}
 
-	for {
-		select {
+for {
+  select {
 		case sub := <-subChan:
 			if sub.Error != nil {
 				log.Infof("subscribe operation failed: %s", sub.Error)
 				return sub.Error
 			}
 			log.Infof("subscribed with matcher %s", sub.Matcher)
-		case msg := <-msgChan:
-			log.Infof("received message: %s", msg)
-			destination := msg["_dest"].(string)
-			message := msg["text"].(string)
-			actionId, found := t.destinationToActionId[destination]
-			if found {
-				log.Debugf("About to run action for Id [%s]", actionId)
-				t.RunAction(actionId, message, destination)
-			} else {
-				log.Debug("actionId not found")
-			}
 
 		case err := <-errChan:
 			log.Infof("connection error: %s", err)
 			return err
+	}
+	cases := make([]reflect.SelectCase, len(msgChans))
+	for i, ch := range msgChans {
+		cases[i] = reflect.SelectCase{Dir: reflect.SelectRecv, Chan: reflect.ValueOf(ch)}
+	}
+	remaining := len(cases)
+	for remaining > 0 {
+		chosen, value, ok := reflect.Select(cases)
+		fmt.Printf("Read from channel %#v and received %s\n", chosen, value)
+		log.Infof("received message: %s", value)
+		if !ok {
+			// The chosen channel has been closed, so zero out the channel to disable the case
+			cases[chosen].Chan = reflect.ValueOf(nil)
+			remaining -= 1
+			continue
 		}
+			//Get eFTL message from value
+			msg, ok := value.Interface().(eftl.Message)
+			if !ok {
+				log.Error("Error casting regular message type")
+				continue
+			}
+			message := msg["text"].(string)
+			log.Infof("Message Payload: %v", message)
+			destination := msg["_dest"].(string)
+			log.Infof("Message Destination: %v", destination)
+			//actionId := t.config.Handlers[chosen-2].ActionId
+			actionId := t.config.Handlers[chosen].ActionId
+			log.Debugf("About to run action for Id [%s]", actionId)
+			t.RunAction(actionId, message, destination)
+
+	 }
 	}
 	return nil
 }
-
 
 // Stop implements trigger.Trigger.Start
 func (t *eftlTrigger) Stop() error {

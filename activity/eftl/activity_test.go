@@ -60,9 +60,21 @@ func TestEval(t *testing.T) {
 	result := tc.GetOutput("result")
 	fmt.Println("result: ", result)
 
+///
+fmt.Println("Publishing a flogo test message to destination 'sample' on channel '/channel' on eFTL Server")
+
+tc.SetInput("destination", "sample")
+tc.SetInput("message", "Flynn says Hi!")
+
+act.Eval(tc)
+
+result = tc.GetOutput("result")
+fmt.Println("result: ", result)
+
 	if result == nil {
 		t.Fail()
 	}
+
 
 }
 

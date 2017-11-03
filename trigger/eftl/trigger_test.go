@@ -34,12 +34,21 @@ const testConfig string = `{
     {
       "actionId": "local://testFlow",
       "settings": {
-        "destination": "{\"_dest\":true}",
+        "destination": "flogo",
+				"durable": "false"
+      }
+    },
+		{
+      "actionId": "local://testFlow2",
+      "settings": {
+        "destination": "sample",
 				"durable": "false"
       }
     }
   ]
 }`
+// matcher is also possible for subsription:
+//"destination": "{\"_dest\":\"flogo\", \"_cid\":\"5CCF7F942BCB\"}",
 
 
 /*
