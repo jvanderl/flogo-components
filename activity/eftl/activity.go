@@ -36,6 +36,7 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	wsClientID := context.GetInput("clientid").(string)
 	wsChannel := context.GetInput("channel").(string)
 	wsDestination := context.GetInput("destination").(string)
+	wsSubject := context.GetInput("subject").(string)
 	wsMessage := context.GetInput("message").(string)
 	wsUser := context.GetInput("user").(string)
 	wsPassword := context.GetInput("password").(string)
@@ -101,9 +102,10 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 
 	// publish the message
 	conn.PublishAsync(eftl.Message{
-		"_dest":  wsDestination,
-		"_cid" :  wsClientID,
-		"text" :  wsMessage,
+		"_dest": wsDestination,
+		"_cid" : wsClientID,
+		"_subj": wsSubject,
+		"text" : wsMessage,
 	}, compChan)
 
 	for {

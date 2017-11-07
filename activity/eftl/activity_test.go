@@ -49,6 +49,7 @@ func TestEval(t *testing.T) {
 	tc.SetInput("clientid", "5CCF7F942BCB")
 	tc.SetInput("channel", "/channel")
   tc.SetInput("destination", "flogo")
+	tc.SetInput("subject", "")
 	tc.SetInput("user", "user")
 	tc.SetInput("password", "password")
 	tc.SetInput("message", "{\"deviceID\":\"5CCF7F942BCB\",\"distance\":9,\"distState\":\"Safe\"}")
@@ -65,6 +66,18 @@ fmt.Println("Publishing a flogo test message to destination 'sample' on channel 
 
 tc.SetInput("destination", "sample")
 tc.SetInput("message", "Flynn says Hi!")
+
+act.Eval(tc)
+
+result = tc.GetOutput("result")
+fmt.Println("result: ", result)
+
+///
+fmt.Println("Publishing a flogo test message to destination 'iotcentral' with subject 'sensor1' on channel '/channel' on eFTL Server")
+
+tc.SetInput("destination", "iotcentral")
+tc.SetInput("subject", "sensor1")
+tc.SetInput("message", "Reading from Sensor 1")
 
 act.Eval(tc)
 

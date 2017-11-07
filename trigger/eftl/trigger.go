@@ -13,6 +13,7 @@ import (
 	"net/url"
 	"fmt"
 	"reflect"
+//	"strings"
 )
 
 // log is the default package logger
@@ -142,6 +143,20 @@ for i, handler := range t.config.Handlers {
 		// simple destination, will need to form matcher
 		matcher = fmt.Sprintf("{\"_dest\":\"%s\"}", handler.GetSetting("destination"))
 	}
+	usesubject, err := strconv.ParseBool(handler.GetSetting("usesubject"))
+	if err != nil {
+		return err
+	}
+	subject := ""
+	if usesubject {
+		subject = handler.GetSetting("subject")
+		if (subject != "") {
+			log.Infof ("got subject: %v", subject)
+			matchlen := len(matcher)-1
+			matcher = matcher[0:matchlen] + ", \"_subj\":\"" + subject + "\"}"
+		}
+	}
+
 	durablename := ""
 	durable, err := strconv.ParseBool(handler.GetSetting("durable"))
 	if err != nil {
@@ -150,6 +165,7 @@ for i, handler := range t.config.Handlers {
 	if durable {
 		durablename = handler.GetSetting("durablename")
 	}
+	log.Infof ("created matcher: %v", matcher)
 	conn.SubscribeAsync(matcher, durablename, msgChans[i], subChan)
 }
 
@@ -191,10 +207,12 @@ for {
 			log.Infof("Message Payload: %v", message)
 			destination := msg["_dest"].(string)
 			log.Infof("Message Destination: %v", destination)
+			subject := msg["_subj"].(string)
+			log.Infof("Message Subject: %v", subject)
 			//actionId := t.config.Handlers[chosen-2].ActionId
 			actionId := t.config.Handlers[chosen].ActionId
 			log.Debugf("About to run action for Id [%s]", actionId)
-			t.RunAction(actionId, message, destination)
+			t.RunAction(actionId, message, destination, subject)
 
 	 }
 	}
@@ -208,12 +226,11 @@ func (t *eftlTrigger) Stop() error {
 }
 
 // RunAction starts a new Process Instance
-func (t *eftlTrigger) RunAction(actionId string, payload string, destination string) {
+func (t *eftlTrigger) RunAction(actionId string, payload string, destination string, subject string) {
 	log.Debug("Starting new Process Instance")
 	log.Debugf("Action Id: %s", actionId)
-	log.Debugf("Payload: %s", payload)
 
-	req := t.constructStartRequest(payload)
+	req := t.constructStartRequest(payload, destination, subject)
 
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
 
@@ -231,12 +248,14 @@ func (t *eftlTrigger) RunAction(actionId string, payload string, destination str
 
 }
 
-func (t *eftlTrigger) constructStartRequest(message string) *StartRequest {
+func (t *eftlTrigger) constructStartRequest(message string, destination string, subject string) *StartRequest {
 
 	//TODO how to handle reply to, reply feature
 	req := &StartRequest{}
 	data := make(map[string]interface{})
 	data["message"] = message
+	data["destination"] = destination
+	data["subject"] = subject
 	req.Data = data
 	return req
 }

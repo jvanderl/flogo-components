@@ -35,18 +35,22 @@ const testConfig string = `{
 			"actionId": "local://testFlow",
 			"settings": {
 				"destination": "flogo",
+				"usesubject": "false",
 				"durable": "false"
 			}
 		},
 		{
       "actionId": "local://testFlow2",
       "settings": {
-        "destination": "{\"_dest\":\"sample\"}",
+				"destination": "{\"_dest\":\"iotcentral\"}",
+				"usesubject": "true",
+				"subject": "sensor1",
 				"durable": "false"
       }
     }
   ]
 }`
+
 // complex matcher is also possible for subsription:
 //"destination": "{\"_dest\":\"flogo\", \"_cid\":\"5CCF7F942BCB\"}",
 // or listen to any message that has a destination field:

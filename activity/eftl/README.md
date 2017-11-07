@@ -42,6 +42,11 @@ Inputs and Outputs:
       "value": ""
     },
     {
+      "name": "subject",
+      "type": "string",
+      "value": ""
+    },
+    {
       "name": "message",
       "type": "string",
       "value": ""
@@ -82,6 +87,7 @@ Inputs and Outputs:
 | clientid    | A client id used to identify the connection to eFTL |         
 | channel     | The channel to send the message to (e.g. `/channel`)   |
 | destination | The destination to send the message to (e.g. `default`) |
+| subject     | The subject to pinpoint the message context (e.g. `sensor1`) |
 | message     | The actual message to send |
 | username    | The username to connect to the WebSocket server (e.g. `user`) |
 | password    | The password to connect to the WebSocket server (e.g. `password`) |

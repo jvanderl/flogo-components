@@ -29,6 +29,11 @@
       "value": ""
     },
     {
+      "name": "subject",
+      "type": "string",
+      "value": ""
+    },
+    {
       "name": "message",
       "type": "string",
       "value": ""

@@ -48,6 +48,14 @@
     {
       "name": "message",
       "type": "string"
+    },
+    {
+      "name": "destination",
+      "type": "string"
+    },
+    {
+      "name": "subject",
+      "type": "string"
     }
   ],
   "handler": {
@@ -56,6 +64,16 @@
         "name": "destination",
         "type": "string",
         "required" : true
+      },
+      {
+        "name": "usesubject",
+        "type": "boolean",
+        "required" : true
+      },
+      {
+        "name": "subject",
+        "type": "string",
+        "required" : false
       },
       {
         "name": "durable",

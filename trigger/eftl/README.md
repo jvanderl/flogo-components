@@ -59,6 +59,14 @@ Settings, Outputs and Endpoint:
     {
       "name": "message",
       "type": "string"
+    },
+    {
+      "name": "destination",
+      "type": "string"
+    },
+    {
+      "name": "subject",
+      "type": "string"
     }
   ],
   "handler": {
@@ -66,6 +74,26 @@ Settings, Outputs and Endpoint:
       {
         "name": "destination",
         "type": "string"
+      },
+      {
+        "name": "usesubject",
+        "type": "boolean",
+        "required" : true
+      },
+      {
+        "name": "subject",
+        "type": "string",
+        "required" : false
+      },
+      {
+        "name": "durable",
+        "type": "boolean",
+        "required" : true
+      },
+      {
+        "name": "durablename",
+        "type": "string",
+        "required" : false
       }
     ]
   }
@@ -86,12 +114,16 @@ Settings, Outputs and Endpoint:
 ## Ouputs
 | Output   | Description    |
 |:----------|:---------------|
-| message    | The message payload |
+| message   | The message payload |
+| destination | The actual destination on which the message is received |
+| subject   | Subject (if provided by sender) |
 
 ## Handlers
 | Setting   | Description    |
 |:----------|:---------------|
 | destination | The destination to subscribe to (e.g. 'Default'), can also do '{"_dest":"subject"}' |
+| usesubject | Use subject (set to false if you're only subscribing to a destination) |
+| subject | Use this to match a specific subject of interest (when provided by sender) |
 | durable | Use durable subscription |
 | durablename | Durable subscription name (only needed when durable is set to 'true') |
 
@@ -120,6 +152,7 @@ Configure the Trigger to start "testFlow". So in this case the "endpoints" "sett
       "actionId": "local://testFlow",
       "settings": {
         "destination": "flogo",
+        "subject": "sensor1",
         "durable": "false"
       }
     }
