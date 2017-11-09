@@ -1,0 +1,26 @@
+{
+  "name": "jsontodata",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/jsontodata",
+  "version": "0.0.1",
+  "title": "JSON to Data",
+  "description": "Converts JSON string into a data object",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/jsontodata",
+  "inputs":[
+    {
+      "name": "input",
+      "type": "string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string"
+    },
+    {
+      "name": "data",
+      "type": "object"
+    }
+  ]
+}
