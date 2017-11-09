@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
-	//"strings"
 )
 
 const (
@@ -51,13 +50,6 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	}
 	log.Debug("Umarchalled: ", dat)
 
-	/*data := make(map[string]string, len(dat))
-
-	for key, value := range dat {
-		log.Debug("got key: ", key, ", value: ", value)
-		data[key] = value.(string)
-		}
-	context.SetOutput("data", data) */
 	context.SetOutput("data", dat)
 	context.SetOutput("result", "OK")
 

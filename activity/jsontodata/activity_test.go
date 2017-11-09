@@ -50,11 +50,10 @@ func TestEval(t *testing.T) {
 	act.Eval(tc)
 
 	result := tc.GetOutput("result")
-	//var data map[string]string
 	data := tc.GetOutput("data")
 
-	fmt.Println("distance: ", data)
-	//fmt.Println("status: ", data.status)
+	fmt.Println("data: ", data)
+
 
 	if result == nil {
 		t.Fail()
