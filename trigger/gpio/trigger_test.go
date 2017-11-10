@@ -19,8 +19,7 @@ func getJsonMetadata() string{
 	return string(jsonMetadataBytes)
 }
 
-// Run Once, Start Immediately
-const testConfig1 string = `{
+const testConfig string = `{
   "name": "gpio",
   "settings": {
   },
@@ -28,7 +27,7 @@ const testConfig1 string = `{
     {
       "actionId": "local://testFlow",
       "settings": {
-        "gpiopin": "7",
+				"gpiopin": "7",
 				"state": "1"
       }
     }
@@ -51,7 +50,7 @@ func TestEndpoint(t *testing.T) {
 	// New  factory
 	f := &GPIOFactory{}
 	f.metadata = trigger.NewMetadata(jsonMetadata)
-	tgr := f.New(&testConfig1)
+	tgr := f.New(&config)
 
 	runner := &TestRunner{}
 
