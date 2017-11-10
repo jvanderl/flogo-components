@@ -17,36 +17,48 @@ Outputs and Endpoint:
 ```json
 {
   "settings": [
+    {
+      "name": "interval",
+      "type": "int",
+      "required" : true
+    }    
   ],
   "outputs": [
     {
       "name": "state",
-      "type": "int"
+      "type": "number"
     }
   ],
   "handler": {
     "settings": [
       {
         "name": "gpiopin",
-        "type": "int",
+        "type": "number",
         "required" : true
       },
       {
         "name": "state",
-        "type": "int",
-        "required" : false
+        "type": "number",
+        "required" : true
+      },
+      {
+        "name": "pull",
+        "type": "boolean",
+        "required" : true
       }
     ]
   }
 }
 ```
 ## Settings
-- None -
+| Setting   | Description    |
+|:----------|:---------------|
+| interval   | time between pin scans in Millisecond |
 
 ## Ouputs
 | Output   | Description    |
 |:---------|:---------------|
-| state    | The timer parameters used to trigger this flow |
+| state    | The atual reading of the pin (0 of 1) |
 
 ## Handlers
 | Setting   | Description    |
@@ -59,18 +71,20 @@ Outputs and Endpoint:
 Triggers are configured via the triggers.json of your application. The following is and example configuration of the GPIO Trigger.
 
 ### Only once and immediate
-Configure the Trigger to run a flow when pin 7 becomes high
+Configure the Trigger to run a flow when pin 7 becomes high, check every 0.5 seconds
 ```json
 {
   "name": "gpio",
   "settings": {
+    "interval": "500"
   },
   "handlers": [
     {
       "actionId": "local://testFlow",
       "settings": {
         "gpiopin": "7",
-				"state": "1"
+				"state": "1",
+        "pull": "true"
       }
     }
   ]
