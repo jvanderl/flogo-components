@@ -43,7 +43,7 @@ func (t *GPIOTrigger) Init(runner action.Runner) {
 	t.runner = runner
 	log.Infof("In init, id: '%s', Metadata: '%+v', Config: '%+v'", t.config.Id, t.metadata, t.config)
 
-	//Open rpio
+/*	//Open rpio
 	log.Debug("Opening RPIO")
 	err := rpio.Open()
 	if (err != nil) {
@@ -63,13 +63,20 @@ func (t *GPIOTrigger) Init(runner action.Runner) {
 		log.Debugf("Setting pin %v to input")
 		pin.Input()
 	}
-
+*/
 }
 
 // Start implements ext.Trigger.Start
 func (t *GPIOTrigger) Start() error {
 
 	log.Debug("Start")
+	//Open rpio
+	log.Debug("Opening RPIO")
+	err := rpio.Open()
+	if (err != nil) {
+		log.Errorf("Error opening RPIO: %s", err)
+		return err
+	}
 	handlers := t.config.Handlers
 	log.Debug("Processing handlers")
 
@@ -84,6 +91,7 @@ for {
 		stateSetting := handler.Settings["state"].(string)
 		// assign rpi pin
 		pin := rpio.Pin(gpiopin)
+		pin.Input()
 		//check what state to read and pull opposite first
 		if (stateSetting == "1") {
 			pin.PullDown()
