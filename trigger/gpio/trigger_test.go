@@ -27,7 +27,7 @@ const testConfig string = `{
     {
       "actionId": "local://testFlow",
       "settings": {
-				"gpiopin": "7",
+				"gpiopin": "4",
 				"state": "1"
       }
     }
