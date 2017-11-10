@@ -83,7 +83,7 @@ func (t *GPIOTrigger) Start() error {
 		}
 		stateSetting := handler.Settings["state"].(string)
 		log.Debugf("Looking for state: %v", stateSetting)
-		pinJob.pull, err = strconv.ParseBool(handler.Settings["gpiopin"].(string))
+		pinJob.pull, err = strconv.ParseBool(handler.Settings["pull"].(string))
 		if (err != nil){
 			log.Errorf("Error converting pull setting to bool: %v", err)
 			return err
@@ -139,7 +139,7 @@ func (t *GPIOTrigger) Start() error {
 				}
 		}
 	}
-	
+
 	return nil
 }
 
