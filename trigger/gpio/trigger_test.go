@@ -22,13 +22,15 @@ func getJsonMetadata() string{
 const testConfig string = `{
   "name": "gpio",
   "settings": {
+		"interval":"500"
   },
   "handlers": [
     {
       "actionId": "local://testFlow",
       "settings": {
 				"gpiopin": "4",
-				"state": "1"
+				"state": "1",
+				"pull":"true"
       }
     }
   ]
