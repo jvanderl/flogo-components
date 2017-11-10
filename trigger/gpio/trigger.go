@@ -7,15 +7,23 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/stianeikeland/go-rpio"
 	"strconv"
+	"time"
 )
 
 // log is the default package logger
 var log = logger.GetLogger("trigger-jvanderl-gpio")
+type pinConfig struct {
+	pin		rpio.Pin
+	desiredstate rpio.State
+	laststate	rpio.State
+	pull	bool
+}
 
 type GPIOTrigger struct {
 	metadata   *trigger.Metadata
 	runner     action.Runner
 	config     *trigger.Config
+	pindata		 map[string]*pinConfig
 }
 
 //NewFactory create a new Trigger factory
@@ -42,28 +50,6 @@ func (t *GPIOTrigger) Metadata() *trigger.Metadata {
 func (t *GPIOTrigger) Init(runner action.Runner) {
 	t.runner = runner
 	log.Infof("In init, id: '%s', Metadata: '%+v', Config: '%+v'", t.config.Id, t.metadata, t.config)
-
-/*	//Open rpio
-	log.Debug("Opening RPIO")
-	err := rpio.Open()
-	if (err != nil) {
-		log.Errorf("Error opening RPIO: %s", err)
-		return
-	}
-
-	log.Debug("Setting handler pins to input")
-	//set the pins in trigger to input
-	handlers := t.config.Handlers
-	for _, handler := range handlers {
-		gpiopin, err := strconv.ParseInt(handler.Settings["gpiopin"].(string), 10, 64)
-		if (err != nil){
-			log.Errorf("Error converting GPIO pin setting to int: %v", err)
-		}
-		pin := rpio.Pin(gpiopin)
-		log.Debugf("Setting pin %v to input")
-		pin.Input()
-	}
-*/
 }
 
 // Start implements ext.Trigger.Start
@@ -77,49 +63,83 @@ func (t *GPIOTrigger) Start() error {
 		log.Errorf("Error opening RPIO: %s", err)
 		return err
 	}
+	t.pindata = make(map[string]*pinConfig)
 	handlers := t.config.Handlers
 	log.Debug("Processing handlers")
 
-//loop
-for {
-	log.Debug("Inside for loop")
+	interval,err := strconv.ParseInt(t.config.GetSetting("interval"), 10, 64)
+	log.Debugf("Interval: %v", interval)
+
+	//init the test structure
 
 	for _, handler := range handlers {
-		log.Debug("Inside handler loop")
-		gpiopin, err := strconv.ParseInt(handler.Settings["gpiopin"].(string), 10, 64)
-		log.Debugf("Checking Pin: %v", gpiopin)
+		var pinJob pinConfig
+		tmpUint, err := strconv.ParseUint(handler.Settings["gpiopin"].(string), 10, 8)
+		pinJob.pin = rpio.Pin(tmpUint)
+		log.Debugf("Checking Pin: %v", pinJob.pin)
 		if (err != nil){
 			log.Errorf("Error converting GPIO pin setting to int: %v", err)
+			return err
 		}
 		stateSetting := handler.Settings["state"].(string)
 		log.Debugf("Looking for state: %v", stateSetting)
-		// assign rpi pin
-		pin := rpio.Pin(gpiopin)
-		log.Debug("Setting pin to input")
-		pin.Input()
-		//check what state to read and pull opposite first
-		if (stateSetting == "1") {
-			log.Debug("Pulling pin down first")
-			pin.PullDown()
-			res := pin.Read()
-			log.Debugf("Got reading: %v", res)
-			if res == rpio.High {
-				log.Debugf("calling runaction: %v", handler.ActionId)
-				t.RunAction(handler.ActionId, stateSetting)
-			}
-		} else {
-			log.Debug("Pulling pin up first")
-			pin.PullUp()
-			res := pin.Read()
-			log.Debugf("Got reading: %v", res)
-			if res == rpio.Low {
-				log.Debugf("calling runaction: %v", handler.ActionId)
-				t.RunAction(handler.ActionId, stateSetting)
-			}
+		pinJob.pull, err = strconv.ParseBool(handler.Settings["gpiopin"].(string))
+		if (err != nil){
+			log.Errorf("Error converting pull setting to bool: %v", err)
+			return err
 		}
+		// assign rpi pin
+		//pinJob.pin = rpio.Pin(gpiopin)
+		pinJob.desiredstate = rpio.Low
+		if (stateSetting == "1") {
+			pinJob.desiredstate = rpio.High
+		}
+		t.pindata[handler.ActionId] = &pinJob
 	}
 
-}
+	//loop
+
+  tickChan := time.NewTicker(time.Millisecond * time.Duration(interval)).C
+
+	for {
+			select {
+			case <- tickChan:
+				for _, handler := range handlers {
+					pinConf := t.pindata[handler.ActionId]
+					pin := pinConf.pin
+					pin.Input()
+					//check what state to read and pull opposite first
+					if (pinConf.desiredstate == rpio.High) {
+						if (pinConf.pull) {
+							log.Debug("Pulling pin down first")
+							pin.PullDown()
+						}
+						res := pin.Read()
+						log.Debugf("Got reading: %v", res)
+						if (res == rpio.High && pinConf.laststate != res) {
+							pinConf.laststate = res
+							log.Debugf("calling runaction: %v", handler.ActionId)
+							t.RunAction(handler.ActionId, "1")
+						}
+					} else {
+
+						if (pinConf.pull) {
+							log.Debug("Pulling pin up first")
+							pin.PullUp()
+						}
+						res := pin.Read()
+						log.Debugf("Got reading: %v", res)
+						if (res == rpio.Low && pinConf.laststate != res) {
+							pinConf.laststate = res
+							log.Debugf("calling runaction: %v", handler.ActionId)
+							t.RunAction(handler.ActionId, "0")
+						}
+					}
+					t.pindata[handler.ActionId] = pinConf
+				}
+		}
+	}
+	
 	return nil
 }
 

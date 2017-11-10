@@ -7,6 +7,11 @@
   "description": "GPIO trigger",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/gpio",
   "settings": [
+    {
+      "name": "interval",
+      "type": "int",
+      "required" : true
+    }
   ],
   "outputs": [
     {
@@ -18,12 +23,17 @@
     "settings": [
       {
         "name": "gpiopin",
-        "type": "int",
+        "type": "number",
         "required" : true
       },
       {
         "name": "state",
-        "type": "int",
+        "type": "number",
+        "required" : true
+      },
+      {
+        "name": "pull",
+        "type": "bool",
         "required" : true
       }
     ]
