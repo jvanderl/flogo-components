@@ -33,7 +33,7 @@
       },
       {
         "name": "pull",
-        "type": "bool",
+        "type": "boolean",
         "required" : true
       }
     ]
