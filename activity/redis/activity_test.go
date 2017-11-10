@@ -57,6 +57,8 @@ func TestEval(t *testing.T) {
 	result := tc.GetOutput("result")
 	fmt.Println("result: ", result)
 
+
+
 	//setup attrs
 
 	fmt.Println("Setting key 'flogo_test' to 'Test123', expecting result 'OK'")
