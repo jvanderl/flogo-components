@@ -1,0 +1,31 @@
+{
+  "name": "gpio",
+  "type": "flogo:trigger",
+  "ref": "github.com/jvanderl/flogo-components/trigger/gpio",
+  "version": "0.0.1",
+  "title": "GPIO",
+  "description": "GPIO trigger",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/gpio",
+  "settings": [
+  ],
+  "outputs": [
+    {
+      "name": "state",
+      "type": "number"
+    }
+  ],
+  "handler": {
+    "settings": [
+      {
+        "name": "gpiopin",
+        "type": "int",
+        "required" : true
+      },
+      {
+        "name": "state",
+        "type": "int",
+        "required" : true
+      }
+    ]
+  }
+}
