@@ -8,7 +8,7 @@ flogo install github.com/jvanderl/flogo-components/trigger/gpio
 ```
 Link for flogo web:
 ```
-  https://github.com/jvanderl/flogo-components/trigger/gpio
+https://github.com/jvanderl/flogo-components/trigger/gpio
 ```
 
 ## Schema

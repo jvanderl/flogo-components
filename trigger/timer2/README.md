@@ -9,7 +9,7 @@ flogo install github.com/jvanderl/flogo-components/trigger/timer2
 ```
 Link for flogo web:
 ```
-  https://github.com/jvanderl/flogo-components/trigger/timer2
+https://github.com/jvanderl/flogo-components/trigger/timer2
 ```
 
 ## Schema
