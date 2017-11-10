@@ -97,8 +97,9 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	case "GET":
 		val, err := client.Get(ivKey).Result()
 		if err == redis.Nil {
-			context.SetOutput("result", "NONEXISTENT_KEY")
-			return true, err
+			context.SetOutput("result", "KEY_NOT_FOUND")
+			log.Debugf("Key was not found: %v", err)
+			return true, nil
 		} else if err != nil {
 			context.SetOutput("result", "ERROR_GET_VALUE")
 			return true, err
