@@ -44,17 +44,22 @@ func (tr *TestRunner) Run(context context.Context, action action.Action, uri str
 	return 0, nil, nil
 }
 
-func TestGpio(t *testing.T) {
-	log.Info("Testing GPIO")
+func TestEndpoint(t *testing.T) {
+	log.Info("Testing Endpoint")
 	config := trigger.Config{}
-	json.Unmarshal([]byte(testConfig1), &config)
+	json.Unmarshal([]byte(testConfig), &config)
+	// New  factory
 	f := &GPIOFactory{}
 	f.metadata = trigger.NewMetadata(jsonMetadata)
-	tgr := f.New(&config)
+	tgr := f.New(&testConfig1)
+
 	runner := &TestRunner{}
+
 	tgr.Init(runner)
+
 	tgr.Start()
 	defer tgr.Stop()
-	log.Infof("Press CTRL-C to quit")
-  for {}
+
+	// just loop
+	for {}
 }
