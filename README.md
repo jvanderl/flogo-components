@@ -9,6 +9,7 @@ Collection custom built flogo components
 * [eftl](activity/eftl): Send message to eFTL
 * [filter](activity/filter): Filter out unwanted data
 * [getjson](activity/getjson): Retrieve specific elements from a JSON structure
+* [jsontodata](activity/jsontodata): Convert JSON string to data object
 * [kafka](activity/kafka): Send message to Kafka
 * [mqtt](activity/mqtt): Publish MQTT Message
 * [redis](activity/redis): Interact with Redis keyspace
@@ -22,6 +23,7 @@ Collection custom built flogo components
 ### Triggers
 * [blemaster](trigger/blemaster):Receive BLE Data (Master)
 * [eftl](trigger/eftl): Receive messages from TIBCO eFTL
+* [gpio](trigger/gpio): Use GPIO pin to start flows
 * [kafka](trigger/kafka): Receive messages from Kafka
 * [mqtt2](trigger/mqtt2): Receive messages from MQTT
 * [timer2](trigger/timer2): Start flow from timer
@@ -71,6 +73,15 @@ flogo install github.com/jvanderl/flogo-components/activity/getjson
 Link for flogo web:
 ```
 https://github.com/jvanderl/flogo-components/activity/getjson
+```
+
+#### Install JSON to Data Activity
+```bash
+flogo install github.com/jvanderl/flogo-components/activity/jsontodata
+```
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/jsontodata
 ```
 
 #### Install Send Kafka Activity
@@ -170,6 +181,15 @@ flogo install github.com/jvanderl/flogo-components/trigger/eftl
 Link for flogo web:
 ```
 https://github.com/jvanderl/flogo-components/trigger/eftl
+```
+
+#### Install GPIO trigger
+```bash
+flogo install github.com/jvanderl/flogo-components/trigger/gpio
+```
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/trigger/gpio
 ```
 
 #### Install Receive Kafka Message trigger
