@@ -82,8 +82,10 @@ func (t *GPIOTrigger) Start() error {
 
 //loop
 for {
+	log.Debug("Inside for loop")
 
 	for _, handler := range handlers {
+		log.Debug("Inside handler loop")
 		gpiopin, err := strconv.ParseInt(handler.Settings["gpiopin"].(string), 10, 64)
 		log.Debugf("Checking Pin: %v", gpiopin)
 		if (err != nil){
