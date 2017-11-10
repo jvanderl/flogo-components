@@ -107,6 +107,7 @@ func (t *GPIOTrigger) Start() error {
 				for _, handler := range handlers {
 					pinConf := t.pindata[handler.ActionId]
 					pin := pinConf.pin
+					res := rpio.Low
 					pin.Input()
 					//check what state to read and pull opposite first
 					if (pinConf.desiredstate == rpio.High) {
@@ -114,10 +115,10 @@ func (t *GPIOTrigger) Start() error {
 							log.Debug("Pulling pin down first")
 							pin.PullDown()
 						}
-						res := pin.Read()
+						res = pin.Read()
 						log.Debugf("Got reading: %v", res)
 						if (res == rpio.High && pinConf.laststate != res) {
-							pinConf.laststate = res
+
 							log.Debugf("calling runaction: %v", handler.ActionId)
 							t.RunAction(handler.ActionId, "1")
 						}
@@ -127,7 +128,7 @@ func (t *GPIOTrigger) Start() error {
 							log.Debug("Pulling pin up first")
 							pin.PullUp()
 						}
-						res := pin.Read()
+						res = pin.Read()
 						log.Debugf("Got reading: %v", res)
 						if (res == rpio.Low && pinConf.laststate != res) {
 							pinConf.laststate = res
@@ -135,6 +136,7 @@ func (t *GPIOTrigger) Start() error {
 							t.RunAction(handler.ActionId, "0")
 						}
 					}
+					pinConf.laststate = res
 					t.pindata[handler.ActionId] = pinConf
 				}
 		}
