@@ -85,24 +85,33 @@ for {
 
 	for _, handler := range handlers {
 		gpiopin, err := strconv.ParseInt(handler.Settings["gpiopin"].(string), 10, 64)
+		log.Debugf("Checking Pin: %v", gpiopin)
 		if (err != nil){
 			log.Errorf("Error converting GPIO pin setting to int: %v", err)
 		}
 		stateSetting := handler.Settings["state"].(string)
+		log.Debugf("Looking for state: %v", stateSetting)
 		// assign rpi pin
 		pin := rpio.Pin(gpiopin)
+		log.Debug("Setting pin to input")
 		pin.Input()
 		//check what state to read and pull opposite first
 		if (stateSetting == "1") {
+			log.Debug("Pulling pin down first")
 			pin.PullDown()
 			res := pin.Read()
+			log.Debugf("Got reading: %v", res)
 			if res == rpio.High {
+				log.Debugf("calling runaction: %v", handler.ActionId)
 				t.RunAction(handler.ActionId, stateSetting)
 			}
 		} else {
+			log.Debug("Pulling pin up first")
 			pin.PullUp()
 			res := pin.Read()
+			log.Debugf("Got reading: %v", res)
 			if res == rpio.Low {
+				log.Debugf("calling runaction: %v", handler.ActionId)
 				t.RunAction(handler.ActionId, stateSetting)
 			}
 		}
