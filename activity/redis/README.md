@@ -35,7 +35,7 @@ Inputs and Outputs:
       "name": "operation",
       "type": "string",
       "required": true,
-      "allowed" : ["GET", "PUT", "DEL", "PING"]
+      "allowed" : ["DEL", "GET", "KEYS", "PING", "SET"]
     },
     {
       "name": "key",
@@ -60,7 +60,7 @@ Inputs and Outputs:
 | server    | the address of the redis server ([hostname]:[port])|
 | password  | The Password used when connecting to the redis server |
 | database  | Redis database, default 0 |
-| operation | can be "GET", "SET", "DEL", "PING" |
+| operation | can be "DEL", "GET", "KEYS", "PING", "SET" |
 | key       | Key used to interact with redis |
 | value     | The value to write (only applies when operation is "SET") |
 

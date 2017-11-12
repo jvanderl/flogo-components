@@ -24,7 +24,7 @@
       "name": "operation",
       "type": "string",
       "required": true,
-      "allowed" : ["GET", "SET", "DEL", "PING"]
+      "allowed" : ["DEL", "GET", "KEYS", "PING", "SET"]
     },
     {
       "name": "key",

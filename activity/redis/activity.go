@@ -105,6 +105,28 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 			return true, err
 		}
 		context.SetOutput("result", val)
+	case "KEYS":
+		val, err := client.Keys(ivKey).Result()
+		if err == redis.Nil {
+			context.SetOutput("result", "KEY_NOT_FOUND")
+			log.Debugf("Keys not found: %v", err)
+			return true, nil
+		} else if err != nil {
+			context.SetOutput("result", "ERROR_GET_KEYS")
+			return true, err
+		}
+		context.SetOutput("result", val)
+/*	case "MGET":
+		val, err := client.Mget(ivKey).Result()
+		if err == redis.Nil {
+			context.SetOutput("result", "KEY_NOT_FOUND")
+			log.Debugf("Key was not found: %v", err)
+			return true, nil
+		} else if err != nil {
+			context.SetOutput("result", "ERROR_GET_VALUE")
+			return true, err
+		}
+		context.SetOutput("result", val) */
 	case "SET":
 		err := client.Set(ivKey, ivValue, 0).Err()
 		if err != nil {
@@ -112,6 +134,18 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 			return true, err
 		}
 		context.SetOutput("result", "OK")
+/*	case "MSET":
+		pairs := []interface{}
+		pairs[0]="unos"
+		pairs[1]="dos"
+		var status string = ""
+		err := client.MSet(pairs, status).Err()
+		if err != nil {
+			context.SetOutput("result", "ERROR_SET_MULTI")
+			log.Errorf ("Error: %v", err)
+			return true, err
+		}
+		context.SetOutput("result", "OK") */
 	case "DEL":
 		err := client.Del(ivKey).Err()
 		if err != nil {

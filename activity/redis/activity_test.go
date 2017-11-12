@@ -74,6 +74,17 @@ func TestEval(t *testing.T) {
 	fmt.Println("result: ", result)
 
 	//setup attrs
+	fmt.Println("Getting all keys, expecting result 'flogo_test' at least")
+	tc.SetInput("key", "flogo*")
+	tc.SetInput("operation", "KEYS")
+
+	act.Eval(tc)
+
+	//check result attr
+	result = tc.GetOutput("result")
+	fmt.Println("result: ", result)
+
+	//setup attrs
 	fmt.Println("Getting value for key 'flogo_test', expecting result 'Test123'")
 	tc.SetInput("operation", "GET")
 
@@ -92,6 +103,7 @@ func TestEval(t *testing.T) {
 	//check result attr
 	result = tc.GetOutput("result")
 	fmt.Println("result: ", result)
+
 
 	if result == nil {
 		t.Fail()
