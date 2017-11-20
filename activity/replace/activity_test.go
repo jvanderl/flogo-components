@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-contrib/action/flow/test"
+	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"testing"
 )
@@ -61,7 +62,6 @@ func TestEval(t *testing.T) {
 	fmt.Println("output1: ", output1)
 	fmt.Println("output2: ", output2)
 
-	if result == nil {
-		t.Fail()
-	}
+	assert.Equal(t, output1, "5CCF7F942BCB")
+
 }
