@@ -1,9 +1,0 @@
-{
-  "name": "node_mcu_v2",
-  "type": "flogo:device:profile",
-  "version": "0.0.1",
-  "description": "NodeMCU ESP-12",
-  "board":"nodemcuv2",
-  "platform": "github.com/TIBCOSoftware/flogo-contrib/device/platform/arduino",
-  "platform_wifi": "wifi"
-}
