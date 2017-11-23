@@ -1,9 +1,9 @@
 {
-  "name": "tibco-device-setpin",
+  "name": "jl-device-setpin",
   "type": "flogo:device:activity",
   "ref": "github.com/jvanderl/flogo-components/device/activity/setpin",
   "version": "0.0.1",
-  "title": "Set Pin",
+  "title": "Set Pin 2",
   "description": "Simple Device Set Pin Activity",
   "settings":[
     {
