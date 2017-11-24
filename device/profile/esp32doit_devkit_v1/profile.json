@@ -1,0 +1,9 @@
+{
+  "name": "esp32doit_devkit_v1",
+  "type": "flogo:device:profile",
+  "version": "0.0.1",
+  "description": "DOIT ESP-32 Devkit v1",
+  "board":"esp32doit-devkit-v1",
+  "platform": "github.com/TIBCOSoftware/flogo-contrib/device/platform/arduino",
+  "platform_wifi": "wifi101"
+}
