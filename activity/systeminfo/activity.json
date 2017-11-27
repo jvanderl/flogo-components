@@ -7,7 +7,13 @@
   "description": "Returns system information",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/systeminfo" ,
-  "inputs":[],
+  "inputs":[
+    {
+      "name": "includenetmask",
+      "type": "boolean",
+      "value": "false"
+    }
+  ],
   "outputs": [
     {
       "name": "hostname",
@@ -15,6 +21,14 @@
     },
     {
       "name": "ipaddress",
+      "type": "string"
+    },
+    {
+      "name": "ip6address",
+      "type": "string"
+    },
+    {
+      "name": "macaddress",
       "type": "string"
     }
   ]
