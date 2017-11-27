@@ -17,7 +17,13 @@ Inputs and Outputs:
 
 ```json
 {
-  "inputs":[],
+  "inputs":[
+    {
+      "name": "includenetmask",
+      "type": "boolean",
+      "value": "false"
+    }
+  ],
   "outputs": [
     {
       "name": "hostname",
@@ -26,15 +32,30 @@ Inputs and Outputs:
     {
       "name": "ipaddress",
       "type": "string"
+    },
+    {
+      "name": "ip6address",
+      "type": "string"
+    },
+    {
+      "name": "macaddress",
+      "type": "string"
     }
   ]
 }
 ```
+## Settings
+| Setting     | Description    |
+|:------------|:---------------|
+| includenetmask      | include the netmask in ip addresses (/xx suffix) |
+
 ## Output Descriptions
 | Output   | Description    |
 |:----------|:---------------|
 | hostname  | The Hostname of the machine running the flogo instance |
 | ipaddress | The IP Address of the machine running the flogo instance |         
+| ip6address | The IPv6 Address of the machine running the flogo instance |         
+| macaddress | The MAC Address of the machine running the flogo instance |         
 
 
 ## Configuration Examples
