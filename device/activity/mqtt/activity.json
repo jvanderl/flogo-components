@@ -1,9 +1,9 @@
 {
-  "name": "tibco-device-mqtt",
+  "name": "jl-device-mqtt",
   "type": "flogo:device:activity",
-  "ref": "github.com/TIBCOSoftware/flogo-contrib/device/activity/mqtt",
+  "ref": "github.com/jvanderl/flogo-components/device/activity/mqtt",
   "version": "0.0.1",
-  "title": "Send MQTT Message",
+  "title": "Send MQTT Message 2",
   "description": "Simple Device MQTT Send Activity",
   "settings":[
     {
