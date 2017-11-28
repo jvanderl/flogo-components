@@ -1,4 +1,6 @@
 
+String t_{{.Id}}_message;
+
 void t_{{.Id}}_init() {
   client.subscribe("{{setting . "topic"}}");
 }
@@ -15,5 +17,7 @@ void t_{{.Id}}(char *topic, byte *payload, unsigned int length) {
 
   String value = (const char*)buf;
 
-	a_{{.ActionId}}(value);
+  t_{{.Id}}_message=value;
+
+	a_{{.ActionId}}(length);
 }
