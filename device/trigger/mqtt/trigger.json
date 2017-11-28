@@ -1,0 +1,26 @@
+{
+  "name": "jl-mqtt",
+  "type": "flogo:device:trigger",
+  "ref": "github.com/jvanderl/flogo-components/device/trigger/mqtt",
+  "version": "0.0.1",
+  "title": "Receive MQTT Message 2",
+  "description": "Simple Device MQTT Trigger",
+  "settings":[
+    {
+      "name": "topic",
+      "type": "string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "message",
+      "type": "string"
+    }
+  ],
+  "device_support": [
+    {
+      "framework":"arduino",
+      "template":"mqtt.ino.tmpl"
+    }
+  ]
+}
