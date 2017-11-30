@@ -1,5 +1,4 @@
 #include <SPI.h>
-#include <NewPing.h>
 
 {{if .MqttEnabled}}#include <ESP8266WiFi.h>
 #include <PubSubClient.h>
@@ -8,6 +7,9 @@ WiFiClient wifiClient;
 PubSubClient client(wifiClient);
 
 {{end}}
+
+unsigned int distance = 0;
+
 
 void setup() {
     Serial.begin(115200);
