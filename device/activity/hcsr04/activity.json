@@ -1,0 +1,29 @@
+{
+  "name": "jl-device-hcsr04",
+  "type": "flogo:device:activity",
+  "ref": "github.com/jvanderl/flogo-components/device/activity/hcsr04",
+  "version": "0.0.1",
+  "title": "Measure Distance",
+  "description": "Measure Distance using HC-SR04 module",
+  "settings":[
+    {
+      "name": "echopin",
+      "type": "integer"
+    },
+    {
+      "name": "triggerpin",
+      "type": "integer"
+    },
+    {
+      "name": "maxdistance",
+      "type": "integer"
+    }
+  ],
+  "device_support": [
+    {
+      "framework":"arduino",
+      "template":"hcsr04.ino.tmpl",
+      "devices":[]
+    }
+  ]
+}

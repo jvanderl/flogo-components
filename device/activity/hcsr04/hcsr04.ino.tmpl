@@ -1,0 +1,9 @@
+
+unsigned int a_{{.Id}}_distance = 0;
+
+void ac_{{.Id}}_{{.Activity.Id}}_init() {
+}
+
+void ac_{{.Id}}_{{.Activity.Id}}(int value) {
+	a_{{.Id}}_distance = hcsr04_getdistance();
+}

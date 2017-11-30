@@ -1,0 +1,15 @@
+#include <NewPing.h>
+
+// HC-SR04 Ultrasonic Distance Measuring Module Config
+#define TRIGGER_PIN {{setting . "hcsr04:triggerpin"}} // Pin assignment for HC-SR04 sensor module Trigger
+#define ECHO_PIN {{setting . "hcsr04:echopin"}} // Pin assignment for HC-SR04 sensor module Echo
+#define MAX_DISTANCE {{setting . "hcsr04:maxdistance"}} // Max distance (cm) for the module to register
+
+// Instantiate Ultrasonic Distance Measuring Module
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
+
+//////////////////////
+
+unsinged int hcsr04_getdistance() {
+  return sonar.ping_cm();
+}
