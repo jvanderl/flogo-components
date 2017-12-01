@@ -1,11 +1,16 @@
+#include <NewPing.h>
 
-unsigned int a_{{.Id}}_distance = 0;
+int triggerPin = {{setting .Activity "triggerpin"}};
+int echoPin = {{setting .Activity "echopin"}};
+int maxDistance = {{setting .Activity "maxdistance"}};
+NewPing sonar(triggerPin, echoPin, maxDistance);
+
+unsigned int a_{{.Activity.Id}}_distance = 0;
 
 void ac_{{.Id}}_{{.Activity.Id}}_init() {
 
 }
 
 void ac_{{.Id}}_{{.Activity.Id}}(int value) {
-	getdistance();
-	a_{{.Id}}_distance = distance
+	a_{{.Activity.Id}}_distance = sonar.ping_cm();
 }

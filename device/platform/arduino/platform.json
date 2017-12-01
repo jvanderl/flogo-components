@@ -68,15 +68,5 @@
         "ref": "89"
       }
     ]
-  },
-  "hcsr04": {
-    "template": "hcsr04.ino.tmpl",
-    "libs": [
-      {
-        "name": "NewPing",
-        "type": "platformio",
-        "ref": "176"
-      }
-    ]
   }
 }
