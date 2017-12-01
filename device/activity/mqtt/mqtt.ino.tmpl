@@ -5,5 +5,7 @@ void ac_{{.Id}}_{{.Activity.Id}}_init() {
 void ac_{{.Id}}_{{.Activity.Id}}(int value) {
 	$payload := {{setting .Activity "message"}}
 	String payload = {{if eq $payload "${value}"}}String(value){{else}}"{{$payload}}"{{end}};
+	Serial.print ("Sending MQTT Message: ");
+	Serial.println (payload);
 	publishMQTT("{{setting .Activity "topic"}}", payload);
 }
