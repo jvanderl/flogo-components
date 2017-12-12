@@ -1,0 +1,9 @@
+{
+  "name": "esp12e",
+  "type": "flogo:device:profile",
+  "version": "0.0.1",
+  "description": "NodeMCU Witty ESP12e",
+  "board":"esp12e",
+  "platform": "github.com/jvanderl/flogo-components/device/platform/arduino",
+  "platform_wifi": "wifi"
+}
