@@ -1,0 +1,9 @@
+{
+  "name": "d1_mini",
+  "type": "flogo:device:profile",
+  "version": "0.0.1",
+  "description": "Wemos D1 Mini",
+  "board":"d1_mini",
+  "platform": "github.com/jvanderl/flogo-components/device/platform/arduino",
+  "platform_wifi": "wifi"
+}
