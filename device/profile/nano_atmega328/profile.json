@@ -5,5 +5,5 @@
   "description": "Arduino Nano ATmega328",
   "board":"nanoatmega328",
   "platform": "github.com/TIBCOSoftware/flogo-contrib/device/platform/arduino",
-  "platform_wifi": "wifi101"
+  "platform_wifi": "wifi"
 }

@@ -5,5 +5,5 @@
   "description": "DOIT ESP-32 Devkit v1",
   "board":"esp32doit-devkit-v1",
   "platform": "github.com/TIBCOSoftware/flogo-contrib/device/platform/arduino",
-  "platform_wifi": "wifi101"
+  "platform_wifi": "wifi"
 }
