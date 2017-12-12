@@ -4,6 +4,6 @@
   "version": "0.0.1",
   "description": "Heltec Wifi LoRa ESP32",
   "board":"heltec_wifi_lora_32",
-  "platform": "github.com/jvanderl/flogo-components/device/platform/arduino",
+  "platform": "github.com/TIBCOSoftware/flogo-contrib/device/platform/arduino",
   "platform_wifi": "wifi"
 }
