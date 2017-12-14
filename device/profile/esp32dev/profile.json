@@ -1,0 +1,9 @@
+{
+  "name": "esp32dev",
+  "type": "flogo:device:profile",
+  "version": "0.0.1",
+  "description": "ESP32 Devkit",
+  "board":"esp32dev",
+  "platform": "github.com/TIBCOSoftware/flogo-contrib/device/platform/arduino",
+  "platform_wifi": "wifi"
+}
