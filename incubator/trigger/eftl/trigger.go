@@ -248,7 +248,7 @@ func (t *eftlTrigger) constructStartRequest(messageObject []byte) *StartRequest 
 	//TODO how to handle reply to, reply feature
 	req := &StartRequest{}
 	data := make(map[string]interface{})
-	data["message"] = messageObject
+	data["message"] = string(messageObject)
 	req.Data = data
 	return req
 }
