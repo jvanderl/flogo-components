@@ -217,13 +217,17 @@ func (t *eftlTrigger) RunAction(actionID string, msg eftl.Message) {
 	log.Debugf("Action Id: %s", actionID)
 
 	log.Debugf("message is: %v", msg)
-	log.Debug("trying Marchall...")
-	/*	var msgobj []byte
+	/*
+		log.Debug("trying Marchall...")
+		var msgobj []byte
 
 		msgobj, err := msg.MarshalJSON()
 
-		log.Debugf("MessageObject: %v", string(msgobj)) */
+		log.Debugf("MessageObject: %v", string(msgobj))
 
+		req := t.constructStartRequest(string(msgobj))
+
+	*/
 	req := t.constructStartRequest(msg)
 
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
@@ -259,12 +263,13 @@ func (t *eftlTrigger) RunAction(actionID string, msg eftl.Message) {
 	}
 }
 
-func (t *eftlTrigger) constructStartRequest(messageObject map[string]interface{}) *StartRequest {
+//func (t *eftlTrigger) constructStartRequest(message string) *StartRequest {
+func (t *eftlTrigger) constructStartRequest(message eftl.Message) *StartRequest {
 
 	//TODO how to handle reply to, reply feature
 	req := &StartRequest{}
 	data := make(map[string]interface{})
-	data["message"] = messageObject
+	data["message"] = message
 	req.Data = data
 	return req
 }
