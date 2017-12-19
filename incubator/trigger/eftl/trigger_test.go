@@ -87,7 +87,10 @@ func (tr *TestRunner) Run(context context.Context, action action.Action, uri str
 }
 
 func (tr *TestRunner) RunAction(ctx context.Context, act action.Action, options map[string]interface{}) (results map[string]*data.Attribute, err error) {
-	log.Debugf("Ran Action: %v", act.Config().Id)
+	//log.Debugf("Ran Action: %v", act.Config().Id)
+	log.Debugf("Context: %v", ctx)
+	log.Debugf("Action: %v", act)
+	log.Debugf("Options: %v", options)
 	return nil, nil
 }
 

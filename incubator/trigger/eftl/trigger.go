@@ -1,7 +1,7 @@
 package eftl
 
 import (
-	"context"
+	//"context"
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/base64"
@@ -22,10 +22,9 @@ var log = logger.GetLogger("trigger-jvanderl-eftl")
 
 // eftlTrigger is a stub for your Trigger implementation
 type eftlTrigger struct {
-	metadata              *trigger.Metadata
-	runner                action.Runner
-	config                *trigger.Config
-	destinationToActionId map[string]string
+	metadata *trigger.Metadata
+	runner   action.Runner
+	config   *trigger.Config
 }
 
 //NewFactory create a new Trigger factory
@@ -197,13 +196,13 @@ func (t *eftlTrigger) Start() error {
 						subject := msg["_subj"].(string)
 						log.Infof("Message Subject: %v", subject)
 						//actionId := t.config.Handlers[chosen-2].ActionId */
-			actionId := t.config.Handlers[chosen].ActionId
-			log.Debugf("About to run action for Id [%s]", actionId)
+			actionID := t.config.Handlers[chosen].ActionId
+			log.Debugf("About to run action for Id [%s]", actionID)
 			//t.RunAction(actionId, message, destination, subject)
-			t.RunAction(actionId, msg)
+			t.RunAction(actionID, msg)
 		}
 	}
-	return nil
+	//return nil
 }
 
 // Stop implements trigger.Trigger.Start
@@ -213,42 +212,59 @@ func (t *eftlTrigger) Stop() error {
 }
 
 // RunAction starts a new Process Instance
-func (t *eftlTrigger) RunAction(actionId string, msg eftl.Message) {
+func (t *eftlTrigger) RunAction(actionID string, msg eftl.Message) {
 	log.Debug("Starting new Process Instance")
-	log.Debugf("Action Id: %s", actionId)
+	log.Debugf("Action Id: %s", actionID)
 
 	log.Debugf("message is: %v", msg)
 	log.Debug("trying Marchall...")
-	var msgobj []byte
+	/*	var msgobj []byte
 
-	msgobj, err := msg.MarshalJSON()
+		msgobj, err := msg.MarshalJSON()
 
-	log.Debugf("MessageObject: %v", string(msgobj))
+		log.Debugf("MessageObject: %v", string(msgobj)) */
 
-	req := t.constructStartRequest(msgobj)
+	req := t.constructStartRequest(msg)
 
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
 
-	action := action.Get(actionId)
+	act := action.Get(actionID)
 
-	context := trigger.NewContext(context.Background(), startAttrs)
-
-	_, replyData, err := t.runner.Run(context, action, actionId, nil)
+	//add handlerCfg to handle return mappings
+	ctx := trigger.NewInitialContext(startAttrs, nil)
+	results, err := t.runner.RunAction(ctx, act, nil)
 	if err != nil {
 		log.Error(err)
 	}
 
-	log.Debugf("Ran action: [%s]", actionId)
-	log.Debugf("Reply data: [%v]", replyData)
+	log.Debugf("Ran action: [%s]", actionID)
+	log.Debugf("Result: [%v]", results)
 
+	var replyData interface{}
+
+	if len(results) != 0 {
+		dataAttr, ok := results["data"]
+		if ok {
+			replyData = dataAttr.Value
+		}
+	}
+
+	if replyData != nil {
+		//data, err := json.Marshal(replyData)
+		if err != nil {
+			log.Error(err)
+		} else {
+			//t.publishMessage(req.ReplyTo, string(data))
+		}
+	}
 }
 
-func (t *eftlTrigger) constructStartRequest(messageObject []byte) *StartRequest {
+func (t *eftlTrigger) constructStartRequest(messageObject map[string]interface{}) *StartRequest {
 
 	//TODO how to handle reply to, reply feature
 	req := &StartRequest{}
 	data := make(map[string]interface{})
-	data["message"] = string(messageObject)
+	data["message"] = messageObject
 	req.Data = data
 	return req
 }

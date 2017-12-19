@@ -44,9 +44,15 @@
       "required" : false
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "message",
+      "type": "object"
+    }
+  ],
+  "reply": [
+    {
+      "name": "data",
       "type": "object"
     }
   ],
