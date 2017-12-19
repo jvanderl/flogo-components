@@ -3,17 +3,19 @@ package timer2
 import (
 	"context"
 	"encoding/json"
-	"testing"
-	"github.com/TIBCOSoftware/flogo-lib/core/action"
-	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"io/ioutil"
+	"testing"
+
+	"github.com/TIBCOSoftware/flogo-lib/core/action"
+	"github.com/TIBCOSoftware/flogo-lib/core/data"
+	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 )
 
 var jsonMetadata = getJsonMetadata()
 
-func getJsonMetadata() string{
+func getJsonMetadata() string {
 	jsonMetadataBytes, err := ioutil.ReadFile("trigger.json")
-	if err != nil{
+	if err != nil {
 		panic("No Json Metadata found for trigger.json path")
 	}
 	return string(jsonMetadataBytes)
@@ -69,7 +71,6 @@ const testConfig3 string = `{
   ]
 }`
 
-
 //Run Every 5 seconds, start Delayed
 const testConfig4 string = `{
 "name": "timer2",
@@ -87,7 +88,6 @@ const testConfig4 string = `{
 	}
 ]
 }`
-
 
 // Multiple timer configurations
 const testConfig5 string = `{
@@ -127,8 +127,13 @@ type TestRunner struct {
 
 // Run implements action.Runner.Run
 func (tr *TestRunner) Run(context context.Context, action action.Action, uri string, options interface{}) (code int, data interface{}, err error) {
-	log.Infof("Ran Action: %v", uri)
+	log.Debugf("Ran Action: %v", uri)
 	return 0, nil, nil
+}
+
+func (tr *TestRunner) RunAction(ctx context.Context, act action.Action, options map[string]interface{}) (results map[string]*data.Attribute, err error) {
+	log.Debugf("Ran Action: %v", act.Config().Id)
+	return nil, nil
 }
 
 func TestTimer(t *testing.T) {
@@ -143,5 +148,6 @@ func TestTimer(t *testing.T) {
 	tgr.Start()
 	defer tgr.Stop()
 	log.Infof("Press CTRL-C to quit")
-  for {}
+	for {
+	}
 }

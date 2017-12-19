@@ -3,13 +3,15 @@ package kafka
 import (
 	"context"
 	"encoding/json"
-	"github.com/TIBCOSoftware/flogo-lib/core/action"
-	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
-	"github.com/optiopay/kafka"
-	"github.com/optiopay/kafka/proto"
 	"io/ioutil"
 	"testing"
 	"time"
+
+	"github.com/TIBCOSoftware/flogo-lib/core/action"
+	"github.com/TIBCOSoftware/flogo-lib/core/data"
+	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
+	"github.com/optiopay/kafka"
+	"github.com/optiopay/kafka/proto"
 )
 
 var jsonMetadata = getJsonMetadata()
@@ -54,9 +56,13 @@ type TestRunner struct {
 
 // Run implements action.Runner.Run
 func (tr *TestRunner) Run(context context.Context, action action.Action, uri string, options interface{}) (code int, data interface{}, err error) {
-	log.Infof("Ran Action: %v", uri)
-	ranAction <- true
+	log.Debugf("Ran Action: %v", uri)
 	return 0, nil, nil
+}
+
+func (tr *TestRunner) RunAction(ctx context.Context, act action.Action, options map[string]interface{}) (results map[string]*data.Attribute, err error) {
+	log.Debugf("Ran Action: %v", act.Config().Id)
+	return nil, nil
 }
 
 /*func TestInit(t *testing.T) {
@@ -104,12 +110,12 @@ func TestEndpoint(t *testing.T) {
 	//broker.Close()
 	log.Info("Waiting 5 seconds for the message to be handled by the trigger...")
 	select {
-		case <-ranAction:
-			log.Debug("Message was handled OK by the trigger")
-		case <-time.After(5 * time.Second):
-			t.Error("No action called by trigger based on message")
-			t.Fail()
-			return
+	case <-ranAction:
+		log.Debug("Message was handled OK by the trigger")
+	case <-time.After(5 * time.Second):
+		t.Error("No action called by trigger based on message")
+		t.Fail()
+		return
 	}
 	log.Info("Publishing test message to topic 'flogo' on Kafka")
 	if _, err := producer.Produce("flogo", 0, msg); err != nil {
@@ -119,12 +125,12 @@ func TestEndpoint(t *testing.T) {
 	//broker.Close()
 	log.Info("Waiting 5 seconds for the message to be handled by the trigger...")
 	select {
-		case <-ranAction:
-			log.Debug("Message was handled OK by the trigger")
-		case <-time.After(5 * time.Second):
-			t.Error("No action called by trigger based on message")
-			t.Fail()
-			return
+	case <-ranAction:
+		log.Debug("Message was handled OK by the trigger")
+	case <-time.After(5 * time.Second):
+		t.Error("No action called by trigger based on message")
+		t.Fail()
+		return
 	}
 
 }
