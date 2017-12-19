@@ -217,7 +217,15 @@ func (t *eftlTrigger) RunAction(actionId string, msg eftl.Message) {
 	log.Debug("Starting new Process Instance")
 	log.Debugf("Action Id: %s", actionId)
 
-	req := t.constructStartRequest(msg)
+	log.Debugf("message is: %v", msg)
+	log.Debug("trying Marchall...")
+	var msgobj []byte
+
+	msgobj, err := msg.MarshalJSON()
+
+	log.Debugf("MessageObject: %v", string(msgobj))
+
+	req := t.constructStartRequest(msgobj)
 
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
 
@@ -235,12 +243,12 @@ func (t *eftlTrigger) RunAction(actionId string, msg eftl.Message) {
 
 }
 
-func (t *eftlTrigger) constructStartRequest(message eftl.Message) *StartRequest {
+func (t *eftlTrigger) constructStartRequest(messageObject []byte) *StartRequest {
 
 	//TODO how to handle reply to, reply feature
 	req := &StartRequest{}
 	data := make(map[string]interface{})
-	data["message"] = message
+	data["message"] = messageObject
 	req.Data = data
 	return req
 }
