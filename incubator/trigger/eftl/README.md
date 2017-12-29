@@ -17,73 +17,61 @@ Settings, Outputs and Endpoint:
 
 ```json
 {
-  "name": "eftl",
-  "type": "flogo:trigger",
-  "ref": "github.com/jvanderl/flogo-components/trigger/eftl",
-  "version": "0.0.1",
-  "title": "Receive eFTL Message",
-  "description": "eFTL Subscriber",
-  "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/eftl",
   "settings":[
     {
       "name": "server",
-      "type": "string"
+      "type": "string",
+      "required" : true
     },
     {
       "name": "clientid",
-      "type": "string"
+      "type": "string",
+      "required" : true
     },
     {
       "name": "channel",
-      "type": "string"
+      "type": "string",
+      "required" : true
     },
     {
       "name": "user",
-      "type": "string"
+      "type": "string",
+      "required" : false
     },
     {
       "name": "password",
-      "type": "string"
+      "type": "string",
+      "required" : false
     },
     {
       "name": "secure",
-      "type": "boolean"
+      "type": "boolean",
+      "required" : true
     },
     {
       "name": "certificate",
-      "type": "string"
+      "type": "string",
+      "required" : false
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "message",
-      "type": "string"
-    },
+      "type": "object"
+    }
+  ],
+  "reply": [
     {
-      "name": "destination",
-      "type": "string"
-    },
-    {
-      "name": "subject",
-      "type": "string"
+      "name": "data",
+      "type": "object"
     }
   ],
   "handler": {
     "settings": [
       {
-        "name": "destination",
-        "type": "string"
-      },
-      {
-        "name": "usesubject",
-        "type": "boolean",
-        "required" : true
-      },
-      {
-        "name": "subject",
+        "name": "matcher",
         "type": "string",
-        "required" : false
+        "required" : true
       },
       {
         "name": "durable",
@@ -114,9 +102,7 @@ Settings, Outputs and Endpoint:
 ## Ouputs
 | Output   | Description    |
 |:----------|:---------------|
-| message   | The message payload |
-| destination | The actual destination on which the message is received |
-| subject   | Subject (if provided by sender) |
+| message   | The message object |
 
 ## Handlers
 | Setting   | Description    |
