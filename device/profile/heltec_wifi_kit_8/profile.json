@@ -1,0 +1,9 @@
+{
+  "name": "heltec_wifi_kit_8",
+  "type": "flogo:device:profile",
+  "version": "0.0.1",
+  "description": "Heltec Wifi Kit 8",
+  "board":"heltec_wifi_kit_8",
+  "platform": "github.com/TIBCOSoftware/flogo-contrib/device/platform/arduino",
+  "platform_wifi": "wifi"
+}
