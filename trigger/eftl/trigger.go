@@ -2,18 +2,19 @@ package eftl
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
+	"encoding/base64"
+	"fmt"
+	"net/url"
+	"reflect"
+	"strconv"
+
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/jvanderl/tib-eftl"
-	"encoding/base64"
-	"strconv"
-	"crypto/x509"
-	"crypto/tls"
-	"net/url"
-	"fmt"
-	"reflect"
-//	"strings"
+	//	"strings"
 )
 
 // log is the default package logger
@@ -111,8 +112,7 @@ func (t *eftlTrigger) Start() error {
 	errChan := make(chan error, 1)
 
 	//Create the subsription channel [1]
-	subChan := make(chan *eftl.Subscription, 1)
-
+	//subChan := make(chan *eftl.Subscription, 1)
 
 	// set connection options
 	opts := &eftl.Options{
@@ -132,71 +132,77 @@ func (t *eftlTrigger) Start() error {
 	// close the connection when done
 	defer conn.Disconnect()
 
-//Subscribe to destination in endpoints
-for i, handler := range t.config.Handlers {
-	msgChans[i] = make(chan eftl.Message)
-	log.Infof("Subscribing to destination [%v]: [%s]", i, handler.GetSetting("destination"))
-	// create the message content matcher
-	//complex matcher format like '{"_dest":"subject"}' can be used directly
-	matcher := handler.GetSetting("destination")
-	if (string(matcher[0:1]) != "{") {
-		// simple destination, will need to form matcher
-		matcher = fmt.Sprintf("{\"_dest\":\"%s\"}", handler.GetSetting("destination"))
-	}
-	usesubject, err := strconv.ParseBool(handler.GetSetting("usesubject"))
-	if err != nil {
-		return err
-	}
-	subject := ""
-	if usesubject {
-		subject = handler.GetSetting("subject")
-		if (subject != "") {
-			log.Infof ("got subject: %v", subject)
-			matchlen := len(matcher)-1
-			matcher = matcher[0:matchlen] + ", \"_subj\":\"" + subject + "\"}"
+	//Subscribe to destination in endpoints
+	for i, handler := range t.config.Handlers {
+		msgChans[i] = make(chan eftl.Message)
+		log.Infof("Subscribing to destination [%v]: [%s]", i, handler.GetSetting("destination"))
+		// create the message content matcher
+		//complex matcher format like '{"_dest":"subject"}' can be used directly
+		matcher := handler.GetSetting("destination")
+		if string(matcher[0:1]) != "{" {
+			// simple destination, will need to form matcher
+			matcher = fmt.Sprintf("{\"_dest\":\"%s\"}", handler.GetSetting("destination"))
 		}
-	}
-
-	durablename := ""
-	durable, err := strconv.ParseBool(handler.GetSetting("durable"))
-	if err != nil {
-		return err
-	}
-	if durable {
-		durablename = handler.GetSetting("durablename")
-	}
-	log.Infof ("created matcher: %v", matcher)
-	conn.SubscribeAsync(matcher, durablename, msgChans[i], subChan)
-}
-
-for {
-  select {
-		case sub := <-subChan:
-			if sub.Error != nil {
-				log.Infof("subscribe operation failed: %s", sub.Error)
-				return sub.Error
-			}
-			log.Infof("subscribed with matcher %s", sub.Matcher)
-
-		case err := <-errChan:
-			log.Infof("connection error: %s", err)
+		usesubject, err := strconv.ParseBool(handler.GetSetting("usesubject"))
+		if err != nil {
 			return err
-	}
-	cases := make([]reflect.SelectCase, len(msgChans))
-	for i, ch := range msgChans {
-		cases[i] = reflect.SelectCase{Dir: reflect.SelectRecv, Chan: reflect.ValueOf(ch)}
-	}
-	remaining := len(cases)
-	for remaining > 0 {
-		chosen, value, ok := reflect.Select(cases)
-		fmt.Printf("Read from channel %#v and received %s\n", chosen, value)
-		log.Infof("received message: %s", value)
-		if !ok {
-			// The chosen channel has been closed, so zero out the channel to disable the case
-			cases[chosen].Chan = reflect.ValueOf(nil)
-			remaining -= 1
-			continue
 		}
+		subject := ""
+		if usesubject {
+			subject = handler.GetSetting("subject")
+			if subject != "" {
+				log.Infof("got subject: %v", subject)
+				matchlen := len(matcher) - 1
+				matcher = matcher[0:matchlen] + ", \"_subj\":\"" + subject + "\"}"
+			}
+		}
+
+		durablename := ""
+		durable, err := strconv.ParseBool(handler.GetSetting("durable"))
+		if err != nil {
+			return err
+		}
+		if durable {
+			durablename = handler.GetSetting("durablename")
+		}
+		log.Infof("created matcher: %v", matcher)
+		_, err = conn.Subscribe(matcher, durablename, msgChans[i])
+		if err != nil {
+			log.Infof("Error subscribing with matcher %s", err)
+		} else {
+			log.Infof("Subscribe succesful: %s", matcher)
+		}
+		//conn.SubscribeAsync(matcher, durablename, msgChans[i], subChan)
+	}
+
+	for {
+		/*		select {
+				case sub := <-subChan:
+					if sub.Error != nil {
+						log.Infof("subscribe operation failed: %s", sub.Error)
+						return sub.Error
+					}
+					log.Infof("subscribed with matcher %s", sub.Matcher)
+
+				case err := <-errChan:
+					log.Infof("connection error: %s", err)
+					return err
+				} */
+		cases := make([]reflect.SelectCase, len(msgChans))
+		for i, ch := range msgChans {
+			cases[i] = reflect.SelectCase{Dir: reflect.SelectRecv, Chan: reflect.ValueOf(ch)}
+		}
+		remaining := len(cases)
+		for remaining > 0 {
+			chosen, value, ok := reflect.Select(cases)
+			fmt.Printf("Read from channel %#v and received %s\n", chosen, value)
+			log.Infof("received message: %s", value)
+			if !ok {
+				// The chosen channel has been closed, so zero out the channel to disable the case
+				cases[chosen].Chan = reflect.ValueOf(nil)
+				remaining--
+				continue
+			}
 			//Get eFTL message from value
 			msg, ok := value.Interface().(eftl.Message)
 			if !ok {
@@ -214,8 +220,9 @@ for {
 			log.Debugf("About to run action for Id [%s]", actionId)
 			t.RunAction(actionId, message, destination, subject)
 
-	 }
+		}
 	}
+
 	return nil
 }
 
@@ -262,9 +269,9 @@ func (t *eftlTrigger) constructStartRequest(message string, destination string, 
 
 // StartRequest describes a request for starting a ProcessInstance
 type StartRequest struct {
-	ProcessURI  string                 `json:"flowUri"`
-	Data        map[string]interface{} `json:"data"`
-	ReplyTo     string                 `json:"replyTo"`
+	ProcessURI string                 `json:"flowUri"`
+	Data       map[string]interface{} `json:"data"`
+	ReplyTo    string                 `json:"replyTo"`
 }
 
 func convert(b []byte) string {

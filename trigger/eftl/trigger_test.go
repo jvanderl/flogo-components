@@ -37,16 +37,17 @@ const testConfig string = `{
 			"actionId": "local://testFlow",
 			"settings": {
 				"destination": "flogo",
-				"usesubject": "false",
+				"usesubject": "true",
+				"subject": "startup",
 				"durable": "false"
 			}
 		},
 		{
       "actionId": "local://testFlow2",
       "settings": {
-				"destination": "{\"_dest\":\"iotcentral\"}",
+				"destination": "{\"_dest\":\"flogo\"}",
 				"usesubject": "true",
-				"subject": "sensor1",
+				"subject": "distance",
 				"durable": "false"
       }
     }
