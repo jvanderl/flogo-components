@@ -176,18 +176,18 @@ func (t *eftlTrigger) Start() error {
 	}
 
 	for {
-		/*		select {
-				case sub := <-subChan:
-					if sub.Error != nil {
-						log.Infof("subscribe operation failed: %s", sub.Error)
-						return sub.Error
-					}
-					log.Infof("subscribed with matcher %s", sub.Matcher)
+		/* select {
+		/*		case sub := <-subChan:
+				if sub.Error != nil {
+					log.Infof("subscribe operation failed: %s", sub.Error)
+					return sub.Error
+				}
+				log.Infof("subscribed with matcher %s", sub.Matcher)
 
-				case err := <-errChan:
-					log.Infof("connection error: %s", err)
-					return err
-				} */
+		case err := <-errChan:
+			log.Infof("connection error: %s", err)
+			return err
+		} */
 		cases := make([]reflect.SelectCase, len(msgChans))
 		for i, ch := range msgChans {
 			cases[i] = reflect.SelectCase{Dir: reflect.SelectRecv, Chan: reflect.ValueOf(ch)}

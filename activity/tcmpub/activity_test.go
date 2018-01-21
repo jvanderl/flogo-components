@@ -2,10 +2,11 @@ package tcmpub
 
 import (
 	"fmt"
-	"github.com/TIBCOSoftware/flogo-lib/core/activity"
-	"github.com/TIBCOSoftware/flogo-contrib/action/flow/test"
 	"io/ioutil"
 	"testing"
+
+	"github.com/TIBCOSoftware/flogo-contrib/action/flow/test"
+	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 )
 
 var activityMetadata *activity.Metadata
@@ -29,7 +30,6 @@ func TestCreate(t *testing.T) {
 		return
 	}
 }
-
 
 func TestEval(t *testing.T) {
 

@@ -2,10 +2,11 @@ package eftl
 
 import (
 	"fmt"
-	"github.com/TIBCOSoftware/flogo-lib/core/activity"
-	"github.com/TIBCOSoftware/flogo-contrib/action/flow/test"
 	"io/ioutil"
 	"testing"
+
+	"github.com/TIBCOSoftware/flogo-contrib/action/flow/test"
+	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 )
 
 var activityMetadata *activity.Metadata
@@ -30,7 +31,6 @@ func TestCreate(t *testing.T) {
 	}
 }
 
-
 func TestEval(t *testing.T) {
 
 	defer func() {
@@ -48,7 +48,7 @@ func TestEval(t *testing.T) {
 	tc.SetInput("server", "localhost:9191")
 	tc.SetInput("clientid", "5CCF7F942BCB")
 	tc.SetInput("channel", "/channel")
-  tc.SetInput("destination", "flogo")
+	tc.SetInput("destination", "flogo")
 	tc.SetInput("subject", "")
 	tc.SetInput("user", "user")
 	tc.SetInput("password", "password")
@@ -61,33 +61,32 @@ func TestEval(t *testing.T) {
 	result := tc.GetOutput("result")
 	fmt.Println("result: ", result)
 
-///
-fmt.Println("Publishing a flogo test message to destination 'sample' on channel '/channel' on eFTL Server")
+	///
+	fmt.Println("Publishing a flogo test message to destination 'sample' on channel '/channel' on eFTL Server")
 
-tc.SetInput("destination", "sample")
-tc.SetInput("message", "Flynn says Hi!")
+	tc.SetInput("destination", "sample")
+	tc.SetInput("message", "Flynn says Hi!")
 
-act.Eval(tc)
+	act.Eval(tc)
 
-result = tc.GetOutput("result")
-fmt.Println("result: ", result)
+	result = tc.GetOutput("result")
+	fmt.Println("result: ", result)
 
-///
-fmt.Println("Publishing a flogo test message to destination 'iotcentral' with subject 'sensor1' on channel '/channel' on eFTL Server")
+	///
+	fmt.Println("Publishing a flogo test message to destination 'iotcentral' with subject 'sensor1' on channel '/channel' on eFTL Server")
 
-tc.SetInput("destination", "iotcentral")
-tc.SetInput("subject", "sensor1")
-tc.SetInput("message", "Reading from Sensor 1")
+	tc.SetInput("destination", "iotcentral")
+	tc.SetInput("subject", "sensor1")
+	tc.SetInput("message", "Reading from Sensor 1")
 
-act.Eval(tc)
+	act.Eval(tc)
 
-result = tc.GetOutput("result")
-fmt.Println("result: ", result)
+	result = tc.GetOutput("result")
+	fmt.Println("result: ", result)
 
 	if result == nil {
 		t.Fail()
 	}
-
 
 }
 

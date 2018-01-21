@@ -25,7 +25,7 @@ const testConfig string = `{
   "name": "tcmsub",
   "settings": {
     "url": "<Your TCM URL Here>",
-		"authkey": "<Your TCM Auht Key Here>",
+		"authkey": "<Your TCM Auth Key Here>",
 		"clientid": "flogo-testsubscriber"
   },
   "handlers": [

@@ -2,15 +2,16 @@ package tcmsub
 
 import (
 	"context"
+	"crypto/tls"
+	"crypto/x509"
+	"encoding/base64"
+	"fmt"
+	"strconv"
+
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/jvanderl/tib-eftl"
-	"strconv"
-	"crypto/x509"
-	"crypto/tls"
-	"encoding/base64"
-	"fmt"
 	//"flag"
 )
 
@@ -54,12 +55,11 @@ func (t *tcmsubTrigger) Init(runner action.Runner) {
 // Start implements trigger.Trigger.Start
 func (t *tcmsubTrigger) Start() error {
 
-
 	// start the trigger
 	wsURL := t.config.GetSetting("url")
 	wsAuthKey := t.config.GetSetting("authkey")
 	wsClientID := t.config.GetSetting("clientid")
-  //wsCert := t.config.GetSetting("certificate")
+	//wsCert := t.config.GetSetting("certificate")
 	wsCert := ""
 
 	// Read Actions from trigger endpoints
@@ -97,7 +97,6 @@ func (t *tcmsubTrigger) Start() error {
 		}
 	}
 
-
 	// channel for receiving connection errors
 	errChan := make(chan error, 1)
 
@@ -120,11 +119,10 @@ func (t *tcmsubTrigger) Start() error {
 	defer conn.Disconnect()
 
 	// channel for receiving subscription response
-	subChan := make(chan *eftl.Subscription, 1)
+	//subChan := make(chan *eftl.Subscription, 1)
 
 	// channel for receiving published messages
 	msgChan := make(chan eftl.Message, 1000)
-
 
 	//Subscribe to destination in endpoints
 	for _, handler := range t.config.Handlers {
@@ -132,7 +130,7 @@ func (t *tcmsubTrigger) Start() error {
 		destMatch := handler.GetSetting("destinationmatch")
 		// create the message content matcher
 		matcher := ""
-		if (destMatch == "*") {
+		if destMatch == "*" {
 			matcher = fmt.Sprintf("{\"%s\":true}", destName)
 		} else {
 			matcher = fmt.Sprintf("{\"%s\":\"%s\"}", destName, destMatch)
@@ -141,24 +139,32 @@ func (t *tcmsubTrigger) Start() error {
 		if err != nil {
 			return err
 		}
+		durablename := ""
 		if durable {
-			durablename := handler.GetSetting("durablename")
-			log.Infof("Subscribing to destination: %s:%s, durable name:%s", destName, destMatch, durablename)
-			conn.SubscribeAsync(matcher, durablename, msgChan, subChan)
+			durablename = handler.GetSetting("durablename")
+			//	log.Infof("Subscribing to destination: %s:%s, durable name:%s", destName, destMatch, durablename)
+			//	conn.SubscribeAsync(matcher, durablename, msgChan, subChan)
+		}
+		//else {
+		//	log.Infof("Subscribing to destination: %s:%s", destName, destMatch)
+		//		conn.SubscribeAsync(matcher, "", msgChan, subChan)
+		//	}
+		_, err = conn.Subscribe(matcher, durablename, msgChan)
+		if err != nil {
+			log.Infof("Error subscribing with matcher '%s': %v", matcher, err)
 		} else {
-			log.Infof("Subscribing to destination: %s:%s", destName, destMatch)
-			conn.SubscribeAsync(matcher, "", msgChan, subChan)
+			log.Infof("Subscribe succesful, matcher: %s", matcher)
 		}
 	}
 
 	for {
 		select {
-		case sub := <-subChan:
-			if sub.Error != nil {
-				log.Infof("subscribe operation failed: %s", sub.Error)
-				return sub.Error
-			}
-			log.Infof("subscribed with matcher %s", sub.Matcher)
+		/*case sub := <-subChan:
+		if sub.Error != nil {
+			log.Infof("subscribe operation failed: %s", sub.Error)
+			return sub.Error
+		}
+		log.Infof("subscribed with matcher %s", sub.Matcher) */
 		case msg := <-msgChan:
 			log.Infof("received message: %s", msg)
 			// see if we can find a matching handler
@@ -166,7 +172,7 @@ func (t *tcmsubTrigger) Start() error {
 				destName := handler.GetSetting("destinationname")
 				destMatch := handler.GetSetting("destinationmatch")
 				msgName := handler.GetSetting("messagename")
-				if ((msg[destName].(string) == destMatch) || (msg[destName] != nil && destMatch == "*")) {
+				if (msg[destName].(string) == destMatch) || (msg[destName] != nil && destMatch == "*") {
 					destination := destName + "_" + destMatch
 					message := msg[msgName].(string)
 					actionId, found := t.destinationToActionId[destination]
@@ -186,7 +192,6 @@ func (t *tcmsubTrigger) Start() error {
 	}
 	return nil
 }
-
 
 // Stop implements trigger.Trigger.Start
 func (t *tcmsubTrigger) Stop() error {
@@ -230,9 +235,9 @@ func (t *tcmsubTrigger) constructStartRequest(message string) *StartRequest {
 
 // StartRequest describes a request for starting a ProcessInstance
 type StartRequest struct {
-	ProcessURI  string                 `json:"flowUri"`
-	Data        map[string]interface{} `json:"data"`
-	ReplyTo     string                 `json:"replyTo"`
+	ProcessURI string                 `json:"flowUri"`
+	Data       map[string]interface{} `json:"data"`
+	ReplyTo    string                 `json:"replyTo"`
 }
 
 func convert(b []byte) string {
