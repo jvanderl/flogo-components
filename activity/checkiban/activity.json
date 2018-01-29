@@ -1,0 +1,30 @@
+{
+  "name": "checkiban",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/checkiban",
+  "version": "0.0.1",
+  "title": "Check IBAN",
+  "description": "Validates International Bank Account Number",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/checkiban" ,
+  "inputs":[
+    {
+      "name": "iban",
+      "type": "string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string"
+    },
+    {
+      "name": "printcode",
+      "type": "string"
+    },
+    {
+      "name": "code",
+      "type": "string"
+    }
+  ]
+}
