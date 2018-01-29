@@ -5,6 +5,7 @@ Collection custom built flogo components
 
 ### Activities
 * [blewrite](activity/blewrite): Write data to a Bluetooth BLE Device
+* [checkiban](activity/checkiban): Validates an International Bank Account Number
 * [combine](activity/combine): Combine separate parts into a single string
 * [eftl](activity/eftl): Send message to eFTL
 * [filter](activity/filter): Filter out unwanted data
