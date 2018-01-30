@@ -1,6 +1,8 @@
 package checkiban
 
 import (
+	"encoding/json"
+
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/almerlucke/go-iban/iban"
@@ -32,6 +34,9 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	code := ""
 	printcode := ""
 	result := ""
+	countrycode := ""
+	checkdigits := ""
+	bban := ""
 
 	log.Debugf("Checking IBAN: %v", ivIban)
 
@@ -44,12 +49,24 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 		result = "OK"
 		printcode = iban.PrintCode
 		code = iban.Code
-		log.Debugf("IBAN check OK: %v", printcode)
+		countrycode = iban.CountryCode
+		checkdigits = iban.CheckDigits
+		bban = iban.BBAN
+		//create JSON object for iban struct
+		ibanobj, err := json.Marshal(iban)
+		if err != nil {
+			log.Errorf("Error marshalling iban structure: %s", err)
+		}
+		context.SetOutput("ibanobj", string(ibanobj))
+		log.Debugf("IBAN check OK: %v", string(ibanobj))
 	}
 
 	context.SetOutput("result", result)
 	context.SetOutput("code", code)
 	context.SetOutput("printcode", printcode)
+	context.SetOutput("countrycode", countrycode)
+	context.SetOutput("checkdigits", checkdigits)
+	context.SetOutput("bban", bban)
 
 	return true, nil
 }

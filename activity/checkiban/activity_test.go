@@ -55,10 +55,18 @@ func TestEval(t *testing.T) {
 	result := tc.GetOutput("result")
 	code := tc.GetOutput("code")
 	printcode := tc.GetOutput("printcode")
+	countrycode := tc.GetOutput("countrycode")
+	checkdigits := tc.GetOutput("checkdigits")
+	bban := tc.GetOutput("bban")
+	ibanobj := tc.GetOutput("ibanobj")
 
 	fmt.Println("result: ", result)
 	fmt.Println("code: ", code)
 	fmt.Println("printcode: ", printcode)
+	fmt.Println("countrycode: ", countrycode)
+	fmt.Println("checkdigits: ", checkdigits)
+	fmt.Println("bban: ", bban)
+	fmt.Println("ibanobj: ", ibanobj)
 
 	if result == nil {
 		t.Fail()

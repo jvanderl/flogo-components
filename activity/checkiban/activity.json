@@ -25,6 +25,22 @@
     {
       "name": "code",
       "type": "string"
-    }
+    },
+    {
+      "name": "countrycode",
+      "type": "string"
+    },
+    {
+      "name": "checkdigits",
+      "type": "string"
+    },
+    {
+      "name": "bban",
+      "type": "string"
+    },
+    {
+      "name": "ibanobj",
+      "type": "object"
+    }        
   ]
 }

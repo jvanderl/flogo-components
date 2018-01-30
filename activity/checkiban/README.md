@@ -35,7 +35,23 @@ Inputs and Outputs:
     {
       "name": "code",
       "type": "string"
-    }
+    },
+    {
+      "name": "countrycode",
+      "type": "string"
+    },
+    {
+      "name": "checkdigits",
+      "type": "string"
+    },
+    {
+      "name": "bban",
+      "type": "string"
+    },
+    {
+      "name": "ibanobj",
+      "type": "object"
+    }        
   ]
 }
 
@@ -51,6 +67,11 @@ Inputs and Outputs:
 | result  | Validation result, OK when valid IBAN |
 | printcode | Printable version of the IBAN code, when valid |         
 | code |  IBAN code returned when valid |         
+| countrycode  | The country code section of a valid IBAN |
+| checkdigits | The check digits section of a valid IBAN |         
+| bban |  The Basic Bank Account Number section of a valid IBAN |         
+| ibanobj  | The complete returned object of a valid IBAN |
+     
 
 ## Configuration Examples
 ### Simple
