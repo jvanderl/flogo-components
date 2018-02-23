@@ -14,6 +14,7 @@ Collection custom built flogo components
 * [kafka](activity/kafka): Send message to Kafka
 * [mqtt](activity/mqtt): Publish MQTT Message
 * [redis](activity/redis): Interact with Redis keyspace
+* [slack](activity/slack): Send message to Slack
 * [splitjson](activity/splitjson): Splits JSON structure into separate name-value pairs
 * [splitpath](activity/splitpath): Splits a path into separate parts
 * [statechange](activity/statechange): Detects state change for up to eight inputs
@@ -27,6 +28,7 @@ Collection custom built flogo components
 * [gpio](trigger/gpio): Use GPIO pin to start flows
 * [kafka](trigger/kafka): Receive messages from Kafka
 * [mqtt2](trigger/mqtt2): Receive messages from MQTT
+* [slack](trigger/slack): Receive messages from Slack
 * [timer2](trigger/timer2): Start flow from timer
 * [tcmsub](trigger/tcmsub): Receive messages from TIBCO Cloud Messaging
 
@@ -129,6 +131,15 @@ Link for flogo web:
 https://github.com/jvanderl/flogo-components/activity/replace
 ```
 
+#### Install Slack Activity
+```bash
+flogo install github.com/jvanderl/flogo-components/activity/slack
+```
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/activity/slack
+```
+
 #### Install Split JSON Activity
 ```bash
 flogo install github.com/jvanderl/flogo-components/activity/splitjson
@@ -217,6 +228,15 @@ flogo install github.com/jvanderl/flogo-components/trigger/mqtt2
 Link for flogo web:
 ```
 https://github.com/jvanderl/flogo-components/trigger/mqtt2
+```
+
+#### Install Slack trigger
+```bash
+flogo install github.com/jvanderl/flogo-components/trigger/slack
+```
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/trigger/slack
 ```
 
 #### Install Receive TCM Message trigger

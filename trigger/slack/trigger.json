@@ -1,0 +1,45 @@
+{
+  "name": "slack",
+  "type": "flogo:trigger",
+  "ref": "github.com/jvanderl/flogo-components/trigger/slack",
+  "version": "0.0.1",
+  "title": "Receive Slack Message",
+  "description": "Slack Subscriber",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/slack",
+  "settings":[
+    {
+      "name": "token",
+      "type": "string",
+      "required" : true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "message",
+      "type": "string"
+    },
+    {
+      "name": "channel",
+      "type": "string"
+    },
+    {
+      "name": "username",
+      "type": "string"
+    }
+  ],
+  "handler": {
+    "settings": [
+      {
+        "name": "channel",
+        "type": "string",
+        "required" : true
+      },
+      {
+        "name": "matchtext",
+        "type": "string",
+        "required" : false
+      }
+    ]
+  }
+}

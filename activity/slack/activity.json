@@ -1,0 +1,33 @@
+{
+  "name": "slack",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/slack",
+  "version": "0.0.1",
+  "title": "Send Slack Message",
+  "description": "Sends a message to Slack",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/slack" ,
+  "inputs":[
+    {
+      "name": "token",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "channel",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "message",
+      "type": "string",
+      "value": ""
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "string"
+    }
+  ]
+}
