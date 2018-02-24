@@ -126,7 +126,10 @@ Loop:
 									log.Debugf("Skipping Bot Message")
 								} else {
 									log.Debugf("About to run action for Id [%s]", actionId)
-									t.RunAction(actionId, handler, message, channel, username)
+									response := t.RunAction(actionId, handler, message, channel, username)
+									if response != "" {
+										rtm.SendMessage(rtm.NewOutgoingMessage(response, ev.Channel))
+									}
 								}
 							} else {
 								log.Debug("actionId not found")
@@ -159,7 +162,7 @@ func (t *slackTrigger) Stop() error {
 }
 
 // RunAction starts a new Process Instance
-func (t *slackTrigger) RunAction(actionID string, handlerCfg *trigger.HandlerConfig, message string, channel string, username string) {
+func (t *slackTrigger) RunAction(actionID string, handlerCfg *trigger.HandlerConfig, message string, channel string, username string) string {
 	log.Debug("Starting new Process Instance")
 	log.Debugf("Message: %s", message)
 	log.Debugf("Channel: %s", channel)
@@ -207,7 +210,7 @@ func (t *slackTrigger) RunAction(actionID string, handlerCfg *trigger.HandlerCon
 
 	if err != nil {
 		log.Debugf("Slack Trigger Error: %s", err.Error())
-		return
+		return ""
 	}
 
 	msgText := "not found"
@@ -220,7 +223,7 @@ func (t *slackTrigger) RunAction(actionID string, handlerCfg *trigger.HandlerCon
 
 		}
 		log.Debugf("This is where we would respond with: %v", msgText)
-		return
+		return msgText
 	}
 
 	/*	var replyData interface{}
@@ -241,6 +244,7 @@ func (t *slackTrigger) RunAction(actionID string, handlerCfg *trigger.HandlerCon
 			}
 		}
 	*/
+	return ""
 }
 
 func (t *slackTrigger) constructStartRequest(message string, channel string, username string) *StartRequest {
