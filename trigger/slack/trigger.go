@@ -179,6 +179,8 @@ func (t *slackTrigger) RunAction(handlerCfg *trigger.HandlerConfig, message stri
 		log.Debugf("Ran action: [%v]", act)
 	*/
 
+	log.Debugf("******** RESULTS ARE IN! : %v", results)
+
 	var replyData interface{}
 	var replyCode int
 
