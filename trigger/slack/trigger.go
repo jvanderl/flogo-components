@@ -164,12 +164,16 @@ func (t *slackTrigger) RunAction(handlerCfg *trigger.HandlerConfig, message stri
 	log.Debugf("Username: %s", username)
 
 	req := t.constructStartRequest(message, channel, username)
+	log.Debugf("req: %v", req)
 
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
+	log.Debugf("startAttrs: %v", startAttrs)
 
 	act := action.Get(handlerCfg.ActionId)
+	log.Debugf("act: %v", act)
 
 	ctx := trigger.NewInitialContext(startAttrs, handlerCfg)
+	log.Debugf("ctx: %v", ctx)
 
 	results, err := t.runner.RunAction(ctx, act, nil)
 	/*
