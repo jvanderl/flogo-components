@@ -69,6 +69,7 @@ func (t *slackTrigger) Start() error {
 		if err != nil {
 			return err
 		}
+
 	}
 
 	// connect to Slack
@@ -117,6 +118,7 @@ Loop:
 							//Text matches, Run Action
 							destination := destChannel + "_" + destMatch
 							actionId, found := t.channelToActionID[destination]
+							log.Debugf("AAACCCTIONNNIIIDDD: %v", actionId)
 							if found {
 								//now check if we need to skip bots
 								nobots, _ := strconv.ParseBool(handler.GetSetting("nobots"))
@@ -124,7 +126,7 @@ Loop:
 									log.Debugf("Skipping Bot Message")
 								} else {
 									log.Debugf("About to run action for Id [%s]", actionId)
-									t.RunAction(handler, message, channel, username)
+									t.RunAction(actionId, handler, message, channel, username)
 								}
 							} else {
 								log.Debug("actionId not found")
@@ -157,11 +159,13 @@ func (t *slackTrigger) Stop() error {
 }
 
 // RunAction starts a new Process Instance
-func (t *slackTrigger) RunAction(handlerCfg *trigger.HandlerConfig, message string, channel string, username string) {
+func (t *slackTrigger) RunAction(actionID string, handlerCfg *trigger.HandlerConfig, message string, channel string, username string) {
 	log.Debug("Starting new Process Instance")
 	log.Debugf("Message: %s", message)
 	log.Debugf("Channel: %s", channel)
 	log.Debugf("Username: %s", username)
+	log.Debugf("ActionID: %v", actionID)
+	log.Debugf("handlerCfg: %v", handlerCfg)
 
 	req := t.constructStartRequest(message, channel, username)
 	log.Debugf("req: %v", req)
@@ -169,7 +173,7 @@ func (t *slackTrigger) RunAction(handlerCfg *trigger.HandlerConfig, message stri
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
 	log.Debugf("startAttrs: %v", startAttrs)
 
-	act := action.Get(handlerCfg.ActionId)
+	act := action.Get(actionID)
 	log.Debugf("act: %v", act)
 
 	ctx := trigger.NewInitialContext(startAttrs, handlerCfg)
