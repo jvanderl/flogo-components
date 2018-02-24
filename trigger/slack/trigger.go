@@ -1,13 +1,13 @@
 package slack
 
 import (
-	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
 
 	"github.com/TIBCOSoftware/flogo-contrib/action/flow/support"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
+	"github.com/TIBCOSoftware/flogo-lib/core/data"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/nlopes/slack"
@@ -172,30 +172,57 @@ func (t *slackTrigger) RunAction(handlerCfg *trigger.HandlerConfig, message stri
 	ctx := trigger.NewInitialContext(startAttrs, handlerCfg)
 
 	results, err := t.runner.RunAction(ctx, act, nil)
-
-	if err != nil {
-		log.Error("Error starting action: ", err.Error())
-	}
-	log.Debugf("Ran action: [%v]", act)
+	/*
+		if err != nil {
+			log.Error("Error starting action: ", err.Error())
+		}
+		log.Debugf("Ran action: [%v]", act)
+	*/
 
 	var replyData interface{}
+	var replyCode int
 
 	if len(results) != 0 {
-		dataAttr, ok := results["response"]
+		dataAttr, ok := results["data"]
 		if ok {
 			replyData = dataAttr.Value()
+			log.Debugf("Got Reply Data: %v", replyData)
 		}
+		codeAttr, ok := results["code"]
+		if ok {
+			replyCode, _ = data.CoerceToInteger(codeAttr.Value())
+			log.Debugf("Got Reply Code: %v", replyCode)
+		}
+	}
+
+	if err != nil {
+		log.Debugf("Slack Trigger Error: %s", err.Error())
+		return
 	}
 
 	if replyData != nil {
-		data, err := json.Marshal(replyData)
-		if err != nil {
-			log.Error(err)
-		} else {
-			log.Debugf("Here is where we would post repsonse: %s", string(data))
-		}
+		log.Debugf("This is where we would respond with: %v", replyData)
+		return
 	}
 
+	/*	var replyData interface{}
+
+		if len(results) != 0 {
+			dataAttr, ok := results["response"]
+			if ok {
+				replyData = dataAttr.Value()
+			}
+		}
+
+		if replyData != nil {
+			data, err := json.Marshal(replyData)
+			if err != nil {
+				log.Error(err)
+			} else {
+				log.Debugf("Here is where we would post repsonse: %s", string(data))
+			}
+		}
+	*/
 }
 
 func (t *slackTrigger) constructStartRequest(message string, channel string, username string) *StartRequest {

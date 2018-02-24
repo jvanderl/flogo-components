@@ -30,8 +30,12 @@
   ],
   "reply": [
     {
-      "name": "response",
-      "type": "string"
+      "name": "code",
+      "type": "integer"
+    },
+    {
+      "name": "data",
+      "type": "object"
     }
   ],
   "handler": {
