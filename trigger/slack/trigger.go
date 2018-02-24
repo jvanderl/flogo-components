@@ -77,8 +77,6 @@ func (t *slackTrigger) Start() error {
 	rtm := api.NewRTM()
 	go rtm.ManageConnection()
 
-	/////////////////////////////
-
 Loop:
 	for {
 		select {
@@ -118,7 +116,6 @@ Loop:
 							//Text matches, Run Action
 							destination := destChannel + "_" + destMatch
 							actionId, found := t.channelToActionID[destination]
-							log.Debugf("AAACCCTIONNNIIIDDD: %v", actionId)
 							if found {
 								//now check if we need to skip bots
 								nobots, _ := strconv.ParseBool(handler.GetSetting("nobots"))
@@ -171,26 +168,14 @@ func (t *slackTrigger) RunAction(actionID string, handlerCfg *trigger.HandlerCon
 	log.Debugf("handlerCfg: %v", handlerCfg)
 
 	req := t.constructStartRequest(message, channel, username)
-	log.Debugf("req: %v", req)
 
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
-	log.Debugf("startAttrs: %v", startAttrs)
 
 	act := action.Get(actionID)
-	log.Debugf("act: %v", act)
 
 	ctx := trigger.NewInitialContext(startAttrs, handlerCfg)
-	log.Debugf("ctx: %v", ctx)
 
 	results, err := t.runner.RunAction(ctx, act, nil)
-	/*
-		if err != nil {
-			log.Error("Error starting action: ", err.Error())
-		}
-		log.Debugf("Ran action: [%v]", act)
-	*/
-
-	log.Debugf("******** RESULTS ARE IN! : %v", results)
 
 	var replyData interface{}
 	var replyCode int
@@ -213,37 +198,16 @@ func (t *slackTrigger) RunAction(actionID string, handlerCfg *trigger.HandlerCon
 		return ""
 	}
 
-	msgText := "not found"
+	msgText := ""
 	if replyData != nil {
 		for s, a := range replyData.(map[string]interface{}) {
 			if s == "text" {
 				msgText = a.(string)
 			}
-			log.Debugf("******** REPLY DATA ****** %s: %v", s, a)
-
 		}
-		log.Debugf("This is where we would respond with: %v", msgText)
 		return msgText
 	}
 
-	/*	var replyData interface{}
-
-		if len(results) != 0 {
-			dataAttr, ok := results["response"]
-			if ok {
-				replyData = dataAttr.Value()
-			}
-		}
-
-		if replyData != nil {
-			data, err := json.Marshal(replyData)
-			if err != nil {
-				log.Error(err)
-			} else {
-				log.Debugf("Here is where we would post repsonse: %s", string(data))
-			}
-		}
-	*/
 	return ""
 }
 
