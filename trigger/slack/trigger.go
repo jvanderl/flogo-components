@@ -211,7 +211,7 @@ func (t *slackTrigger) RunAction(actionID string, handlerCfg *trigger.HandlerCon
 	}
 
 	if replyData != nil {
-		for s, a := range replyData.(map[string]string) {
+		for s, a := range replyData.(map[string]interface{}) {
 			log.Debugf("******** REPLY DATA ****** %s: %v", s, a)
 		}
 		log.Debugf("This is where we would respond with: %v", replyData)
