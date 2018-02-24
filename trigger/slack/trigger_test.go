@@ -24,7 +24,7 @@ func getJSONMetadata() string {
 const testConfig string = `{
   "name": "slack",
   "settings": {
-    "token": "<your token here>"
+    "token": "<yout token here>"
   },
   "handlers": [
     {
@@ -51,7 +51,6 @@ func (tr *TestRunner) RunAction(ctx context.Context, act action.Action, options 
 	log.Debugf("Ran Action: %v", act.Config().Id)
 	return nil, nil
 }
-
 func TestEndpoint(t *testing.T) {
 	log.Info("Testing Endpoint")
 	config := trigger.Config{}

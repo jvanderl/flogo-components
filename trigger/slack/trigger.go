@@ -1,11 +1,12 @@
 package slack
 
 import (
-	"context"
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
 
+	"github.com/TIBCOSoftware/flogo-contrib/action/flow/support"
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
@@ -17,10 +18,10 @@ var log = logger.GetLogger("trigger-jvanderl-slack")
 
 // slackTrigger is a stub for your Trigger implementation
 type slackTrigger struct {
-	metadata              *trigger.Metadata
-	runner                action.Runner
-	config                *trigger.Config
-	destinationToActionId map[string]string
+	metadata          *trigger.Metadata
+	runner            action.Runner
+	config            *trigger.Config
+	channelToActionID map[string]string
 }
 
 //NewFactory create a new Trigger factory
@@ -56,13 +57,13 @@ func (t *slackTrigger) Start() error {
 	wsToken := t.config.GetSetting("token")
 
 	// Read Actions from trigger endpoints
-	t.destinationToActionId = make(map[string]string)
+	t.channelToActionID = make(map[string]string)
 
 	for _, handlerCfg := range t.config.Handlers {
 		log.Debugf("handlers: [%s]", handlerCfg.ActionId)
 		epdestination := handlerCfg.GetSetting("channel") + "_" + handlerCfg.GetSetting("matchtext")
 		log.Debugf("destination: [%s]", epdestination)
-		t.destinationToActionId[epdestination] = handlerCfg.ActionId
+		t.channelToActionID[epdestination] = handlerCfg.ActionId
 		nobots, err := strconv.ParseBool(handlerCfg.GetSetting("nobots"))
 		log.Debugf("nobots: [%v]", nobots)
 		if err != nil {
@@ -115,7 +116,7 @@ Loop:
 						if destMatch == "*" || destMatch != "*" && strings.Contains(strings.ToUpper(message), strings.ToUpper(destMatch)) {
 							//Text matches, Run Action
 							destination := destChannel + "_" + destMatch
-							actionId, found := t.destinationToActionId[destination]
+							actionId, found := t.channelToActionID[destination]
 							if found {
 								//now check if we need to skip bots
 								nobots, _ := strconv.ParseBool(handler.GetSetting("nobots"))
@@ -123,7 +124,7 @@ Loop:
 									log.Debugf("Skipping Bot Message")
 								} else {
 									log.Debugf("About to run action for Id [%s]", actionId)
-									t.RunAction(actionId, message, channel, username)
+									t.RunAction(handler, message, channel, username)
 								}
 							} else {
 								log.Debug("actionId not found")
@@ -156,9 +157,8 @@ func (t *slackTrigger) Stop() error {
 }
 
 // RunAction starts a new Process Instance
-func (t *slackTrigger) RunAction(actionId string, message string, channel string, username string) {
+func (t *slackTrigger) RunAction(handlerCfg *trigger.HandlerConfig, message string, channel string, username string) {
 	log.Debug("Starting new Process Instance")
-	log.Debugf("Action Id: %s", actionId)
 	log.Debugf("Message: %s", message)
 	log.Debugf("Channel: %s", channel)
 	log.Debugf("Username: %s", username)
@@ -167,17 +167,34 @@ func (t *slackTrigger) RunAction(actionId string, message string, channel string
 
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
 
-	action := action.Get(actionId)
+	act := action.Get(handlerCfg.ActionId)
 
-	context := trigger.NewContext(context.Background(), startAttrs)
+	ctx := trigger.NewInitialContext(startAttrs, handlerCfg)
 
-	_, replyData, err := t.runner.Run(context, action, actionId, nil)
+	results, err := t.runner.RunAction(ctx, act, nil)
+
 	if err != nil {
-		log.Error(err)
+		log.Error("Error starting action: ", err.Error())
+	}
+	log.Debugf("Ran action: [%v]", act)
+
+	var replyData interface{}
+
+	if len(results) != 0 {
+		dataAttr, ok := results["response"]
+		if ok {
+			replyData = dataAttr.Value()
+		}
 	}
 
-	log.Debugf("Ran action: [%s]", actionId)
-	log.Debugf("Reply data: [%v]", replyData)
+	if replyData != nil {
+		data, err := json.Marshal(replyData)
+		if err != nil {
+			log.Error(err)
+		} else {
+			log.Debugf("Here is where we would post repsonse: %s", string(data))
+		}
+	}
 
 }
 
@@ -195,9 +212,11 @@ func (t *slackTrigger) constructStartRequest(message string, channel string, use
 
 // StartRequest describes a request for starting a ProcessInstance
 type StartRequest struct {
-	ProcessURI string                 `json:"flowUri"`
-	Data       map[string]interface{} `json:"data"`
-	ReplyTo    string                 `json:"replyTo"`
+	ProcessURI  string                 `json:"flowUri"`
+	Data        map[string]interface{} `json:"data"`
+	Interceptor *support.Interceptor   `json:"interceptor"`
+	Patch       *support.Patch         `json:"patch"`
+	ReplyTo     string                 `json:"replyTo"`
 }
 
 func convert(b []byte) string {
