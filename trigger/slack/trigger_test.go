@@ -30,8 +30,9 @@ const testConfig string = `{
     {
       "actionId": "local://testFlow",
       "settings": {
-        "channel": "flogo",
-				"matchtext": "*"
+        "channel": "sbb",
+				"matchtext": "*",
+				"nobots": "true"
       }
     }
   ]

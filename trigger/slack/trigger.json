@@ -39,7 +39,12 @@
         "name": "matchtext",
         "type": "string",
         "required" : false
-      }
+      },
+      {
+        "name": "nobots",
+        "type": "boolean",
+        "required" : true
+      }      
     ]
   }
 }

@@ -46,7 +46,7 @@ func TestEval(t *testing.T) {
 	fmt.Println("Publishing a flogo test message to Slack")
 
 	tc.SetInput("token", "<your token here>")
-	tc.SetInput("channel", "flogo")
+	tc.SetInput("channel", "sbb")
 	tc.SetInput("message", "Hello from FLOGO 2")
 
 	act.Eval(tc)

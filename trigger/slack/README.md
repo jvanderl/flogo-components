@@ -72,6 +72,7 @@ Settings, Outputs and Handler:
 |:----------|:---------------|
 | channel  | The channel to listen on. Use '*' for all channels |
 | matchtext | Only trigger on messages containing this text. Use '*' for any text |
+| nobots   | Skip messages coming from bots |
 
 
 ## Example Configurations
@@ -79,7 +80,7 @@ Settings, Outputs and Handler:
 Triggers are configured via the triggers.json of your application. The following are some example configuration of the TCM Trigger.
 
 ### Start a flow
-Configure the Trigger to start "testFlow". So in this case any message received on channel "flogo" will start "testFlow".
+Configure the Trigger to start "testFlow". So in this case any message received on channel "flogo" will start "testFlow". Skip messages coming from bots.
 
 ```json
 {
@@ -92,7 +93,8 @@ Configure the Trigger to start "testFlow". So in this case any message received 
       "actionId": "local://testFlow",
       "settings": {
         "channel": "flogo",
-        "matchtext": "*"
+        "matchtext": "*",
+        "nobots": "true"
       }
     }
   ]

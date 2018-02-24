@@ -3,6 +3,7 @@ package slack
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
@@ -62,6 +63,11 @@ func (t *slackTrigger) Start() error {
 		epdestination := handlerCfg.GetSetting("channel") + "_" + handlerCfg.GetSetting("matchtext")
 		log.Debugf("destination: [%s]", epdestination)
 		t.destinationToActionId[epdestination] = handlerCfg.ActionId
+		nobots, err := strconv.ParseBool(handlerCfg.GetSetting("nobots"))
+		log.Debugf("nobots: [%v]", nobots)
+		if err != nil {
+			return err
+		}
 	}
 
 	// connect to Slack
@@ -90,6 +96,7 @@ Loop:
 				message := ev.Text
 				channel := ev.Channel
 				username := ev.User
+				isBot := false
 				channelInfo, err := api.GetChannelInfo(ev.Channel)
 				if err == nil {
 					channel = channelInfo.NameNormalized
@@ -97,8 +104,9 @@ Loop:
 				userInfo, err := api.GetUserInfo(ev.User)
 				if err == nil {
 					username = userInfo.Name
+					isBot = userInfo.IsBot
+					log.Debugf("Is this a bot? : %v", isBot)
 				}
-
 				for _, handler := range t.config.Handlers {
 					destChannel := handler.GetSetting("channel")
 					destMatch := handler.GetSetting("matchtext")
@@ -109,8 +117,14 @@ Loop:
 							destination := destChannel + "_" + destMatch
 							actionId, found := t.destinationToActionId[destination]
 							if found {
-								log.Debugf("About to run action for Id [%s]", actionId)
-								t.RunAction(actionId, message, channel, username)
+								//now check if we need to skip bots
+								nobots, _ := strconv.ParseBool(handler.GetSetting("nobots"))
+								if isBot && nobots {
+									log.Debugf("Skipping Bot Message")
+								} else {
+									log.Debugf("About to run action for Id [%s]", actionId)
+									t.RunAction(actionId, message, channel, username)
+								}
 							} else {
 								log.Debug("actionId not found")
 							}
