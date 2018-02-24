@@ -210,11 +210,16 @@ func (t *slackTrigger) RunAction(actionID string, handlerCfg *trigger.HandlerCon
 		return
 	}
 
+	msgText := "not found"
 	if replyData != nil {
 		for s, a := range replyData.(map[string]interface{}) {
+			if s == "text" {
+				msgText = a.(string)
+			}
 			log.Debugf("******** REPLY DATA ****** %s: %v", s, a)
+
 		}
-		log.Debugf("This is where we would respond with: %v", replyData)
+		log.Debugf("This is where we would respond with: %v", msgText)
 		return
 	}
 
