@@ -1,0 +1,30 @@
+{
+  "name": "matchresponse",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/matchresponse",
+  "version": "0.0.1",
+  "description": "finds a substring in an array of find and returns response",
+  "title": "Match Response",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/matchresponse",
+  "inputs":[
+    {
+      "name": "input",
+      "type": "string"
+    },
+    {
+      "name": "searchdata",
+      "type": "array"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "match",
+      "type": "string"
+    },
+    {
+      "name": "response",
+      "type": "string"
+    }
+  ]
+}

@@ -12,6 +12,7 @@ Collection custom built flogo components
 * [getjson](activity/getjson): Retrieve specific elements from a JSON structure
 * [jsontodata](activity/jsontodata): Convert JSON string to data object
 * [kafka](activity/kafka): Send message to Kafka
+* [matchresponse](activity/matchresponse): response to input text based on seach data
 * [mqtt](activity/mqtt): Publish MQTT Message
 * [redis](activity/redis): Interact with Redis keyspace
 * [slack](activity/slack): Send message to Slack
