@@ -34,8 +34,8 @@
       "type": "integer"
     },
     {
-      "name": "response",
-      "type": "string"
+      "name": "data",
+      "type": "object"
     }
   ],
   "handler": {
