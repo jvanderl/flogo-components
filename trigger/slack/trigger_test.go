@@ -24,13 +24,13 @@ func getJSONMetadata() string {
 const testConfig string = `{
   "name": "slack",
   "settings": {
-    "token": "<your token here>"
+    "token": "xoxb-320057751010-rnUUCVkp36RhxBgKmc2xY2ig"
   },
   "handlers": [
     {
       "actionId": "local://testFlow",
       "settings": {
-        "channel": "sbb",
+        "channel": "bot",
 				"matchtext": "*",
 				"nobots": "true"
       }
