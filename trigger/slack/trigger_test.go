@@ -24,7 +24,7 @@ func getJSONMetadata() string {
 const testConfig string = `{
   "name": "slack",
   "settings": {
-    "token": "xoxb-320057751010-rnUUCVkp36RhxBgKmc2xY2ig"
+    "token": "<your token here>"
   },
   "handlers": [
     {

@@ -126,6 +126,7 @@ Loop:
 									log.Debugf("About to run action for Id [%s]", actionId)
 									response := t.RunAction(actionId, handler, message, channel, username)
 									if response != "" {
+										log.Debugf("About to send response: %v", response)
 										rtm.SendMessage(rtm.NewOutgoingMessage(response, ev.Channel))
 									}
 								}
