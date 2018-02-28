@@ -81,7 +81,6 @@ Loop:
 	for {
 		select {
 		case msg := <-rtm.IncomingEvents:
-			//fmt.Print("Event Received: ")
 			log.Debugf("Event Received: %v", msg.Type)
 			switch ev := msg.Data.(type) {
 			case *slack.ConnectedEvent:
