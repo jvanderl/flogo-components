@@ -17,7 +17,7 @@ Inputs and Outputs:
 
 ```json
 {
-  "inputs":[
+  "input":[
    {
       "name": "broker",
       "type": "string",
@@ -52,7 +52,7 @@ Inputs and Outputs:
       "required": true
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

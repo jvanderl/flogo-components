@@ -7,7 +7,7 @@
   "description": "Combines separate parts into a single string",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/combine",
-  "inputs":[
+  "input":[
     {
       "name": "delimiter",
       "type": "string"
@@ -53,7 +53,7 @@
       "type": "string"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

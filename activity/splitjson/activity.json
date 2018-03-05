@@ -7,13 +7,13 @@
   "description": "Splits JSON structure into separate name-value pairs",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/splitjson",
-  "inputs":[
+  "input":[
     {
       "name": "input",
       "type": "string"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

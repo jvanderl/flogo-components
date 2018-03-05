@@ -7,7 +7,7 @@
   "description": "Trottles output based on unique data source and time interval",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/throttle",
-  "inputs":[
+  "input":[
     {
       "name": "datasource",
       "type": "string"
@@ -22,7 +22,7 @@
       "allowed" : ["hours", "minutes", "seconds", "milliseconds"]
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "pass",
       "type": "boolean"

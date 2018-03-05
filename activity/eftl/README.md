@@ -20,7 +20,7 @@ Inputs and Outputs:
 
 ```json
 {
-  "inputs":[
+  "input":[
     {
       "name": "server",
       "type": "string",
@@ -72,7 +72,7 @@ Inputs and Outputs:
       "value": ""
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

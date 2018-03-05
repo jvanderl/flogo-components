@@ -17,14 +17,14 @@ Inputs and Outputs:
 
 ```json
 {
-  "inputs":[
+  "input":[
     {
       "name": "includenetmask",
       "type": "boolean",
       "value": "false"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "hostname",
       "type": "string"

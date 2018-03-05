@@ -7,7 +7,7 @@
   "description": "Sends a message to TIBCO eFTL",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/eftl" ,
-  "inputs":[
+  "input":[
     {
       "name": "server",
       "type": "string",
@@ -59,7 +59,7 @@
       "value": ""
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

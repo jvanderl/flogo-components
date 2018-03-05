@@ -7,7 +7,7 @@
   "description": "Splits a path into separate parts",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/splitpath",
-  "inputs":[
+  "input":[
     {
       "name": "input",
       "type": "string"
@@ -21,7 +21,7 @@
       "type": "string"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

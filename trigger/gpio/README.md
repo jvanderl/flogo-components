@@ -23,7 +23,7 @@ Outputs and Endpoint:
       "required" : true
     }    
   ],
-  "outputs": [
+  "output": [
     {
       "name": "state",
       "type": "number"

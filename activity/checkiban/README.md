@@ -17,13 +17,13 @@ Inputs and Outputs:
 
 ```json
 {
-  "inputs":[
+  "input":[
     {
       "name": "iban",
       "type": "string"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

@@ -6,7 +6,7 @@
   "title": "Send to Kafka",
   "description": "Send message to Kafka",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/kafka",
-  "inputs":[
+  "input":[
     {
       "name": "server",
       "type": "string",
@@ -33,7 +33,7 @@
       "required": true
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

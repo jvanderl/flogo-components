@@ -7,7 +7,7 @@
   "title": "Match Response",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/matchresponse",
-  "inputs":[
+  "input":[
     {
       "name": "input",
       "type": "string"
@@ -17,7 +17,7 @@
       "type": "array"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "match",
       "type": "string"

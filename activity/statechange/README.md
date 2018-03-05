@@ -17,7 +17,7 @@ Inputs and Outputs:
 
 ```json
 {
- "inputs":[
+ "input":[
     {
       "name": "datasource",
       "type": "string"
@@ -55,7 +55,7 @@ Inputs and Outputs:
       "type": "string"
     }   
   ],
-  "outputs": [
+  "output": [
     {
       "name": "changed",
       "type": "boolean"

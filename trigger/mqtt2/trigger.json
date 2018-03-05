@@ -37,7 +37,7 @@
       "type": "boolean"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "message",
       "type": "string"

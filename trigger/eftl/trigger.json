@@ -44,7 +44,7 @@
       "required" : false
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "message",
       "type": "string"

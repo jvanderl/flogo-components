@@ -17,7 +17,7 @@ Inputs and Outputs:
 
 ```json
 {
-  "inputs":[
+  "input":[
    {
       "name": "devicename",
       "type": "string"
@@ -39,7 +39,7 @@ Inputs and Outputs:
       "type": "string"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

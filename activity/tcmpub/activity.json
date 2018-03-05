@@ -7,7 +7,7 @@
   "description": "Sends a message to TIBCO Cloud Messaging",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/tcmpub" ,
-  "inputs":[
+  "input":[
     {
       "name": "url",
       "type": "string",
@@ -44,7 +44,7 @@
       "value": ""
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

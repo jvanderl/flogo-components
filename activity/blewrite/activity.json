@@ -6,7 +6,7 @@
   "title": "Write BLE data",
   "description": "Writes data to a BLE device",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "inputs":[
+  "input":[
     {
       "name": "devicename",
       "type": "string"
@@ -32,7 +32,7 @@
       "type": "integer"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

@@ -17,7 +17,7 @@ Inputs and Outputs:
 
 ```json
 {
-  "inputs":[
+  "input":[
     {
       "name": "input",
       "type": "string",
@@ -42,7 +42,7 @@ Inputs and Outputs:
       "type": "boolean"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "pass",
       "type": "boolean"

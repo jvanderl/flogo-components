@@ -7,13 +7,13 @@
   "description": "Validates International Bank Account Number",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/checkiban" ,
-  "inputs":[
+  "input":[
     {
       "name": "iban",
       "type": "string"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

@@ -48,7 +48,7 @@ Settings, Outputs and Endpoint:
       "type": "boolean"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "message",
       "type": "string"

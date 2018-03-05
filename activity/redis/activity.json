@@ -6,7 +6,7 @@
   "title": "Redis",
   "description": "Interacts with a Redis keyspace",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "inputs":[
+  "input":[
    {
       "name": "server",
       "type": "string",
@@ -35,7 +35,7 @@
       "type": "string"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

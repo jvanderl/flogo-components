@@ -7,7 +7,7 @@
   "description": "Sends a message to Slack",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/slack" ,
-  "inputs":[
+  "input":[
     {
       "name": "token",
       "type": "string",
@@ -24,7 +24,7 @@
       "value": ""
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

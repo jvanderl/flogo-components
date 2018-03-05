@@ -7,13 +7,13 @@
   "description": "Converts JSON string into a data object",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/jsontodata",
-  "inputs":[
+  "input":[
     {
       "name": "input",
       "type": "string"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

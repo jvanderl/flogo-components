@@ -16,7 +16,8 @@ https://github.com/jvanderl/flogo-components/activity/kafka
 Inputs and Outputs:
 
 ```json
-  "inputs":[
+{
+    "input":[
     {
       "name": "server",
       "type": "string"
@@ -38,7 +39,7 @@ Inputs and Outputs:
       "type": "string"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

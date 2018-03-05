@@ -7,14 +7,14 @@
   "description": "Returns system information",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/systeminfo" ,
-  "inputs":[
+  "input":[
     {
       "name": "includenetmask",
       "type": "boolean",
       "value": "false"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "hostname",
       "type": "string"

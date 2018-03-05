@@ -19,7 +19,7 @@ Outputs and Endpoint:
 {
   "settings": [
   ],
-  "outputs": [
+  "output": [
     {
       "name": "params",
       "type": "params"

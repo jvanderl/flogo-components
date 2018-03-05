@@ -6,7 +6,7 @@
   "title": "Send MQTT Message",
   "description": "Pubishes message on MQTT topic",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "inputs":[
+  "input":[
    {
       "name": "broker",
       "type": "string"
@@ -37,7 +37,7 @@
       "type": "string"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

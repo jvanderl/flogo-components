@@ -14,7 +14,7 @@
       "required" : true
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "message",
       "type": "string"

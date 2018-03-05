@@ -16,7 +16,7 @@ Inputs and Outputs:
 
 ```json
 {
-  "inputs":[
+  "input":[
     {
       "name": "input",
       "type": "string"
@@ -26,7 +26,7 @@ Inputs and Outputs:
       "type": "array"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "match",
       "type": "string"

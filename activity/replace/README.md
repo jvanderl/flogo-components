@@ -16,7 +16,7 @@ Inputs and Outputs:
 
 ```json
 {
-  "inputs":[
+  "input":[
     {
       "name": "find",
       "type": "string"
@@ -58,7 +58,7 @@ Inputs and Outputs:
       "type": "string"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "result",
       "type": "string"

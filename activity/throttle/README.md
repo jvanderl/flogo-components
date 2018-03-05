@@ -17,7 +17,7 @@ Inputs and Outputs:
 
 ```json
 {
-  "inputs":[
+  "input":[
     {
       "name": "datasource",
       "type": "string"
@@ -32,7 +32,7 @@ Inputs and Outputs:
       "allowed" : ["hours", "minutes", "seconds", "milliseconds"]
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "pass",
       "type": "boolean"

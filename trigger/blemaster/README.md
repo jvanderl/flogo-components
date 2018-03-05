@@ -48,7 +48,7 @@ Settings, Outputs and Endpoint:
       "allowed" : ["hours", "minutes", "seconds", "milliseconds"]
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "notification",
       "type": "string"

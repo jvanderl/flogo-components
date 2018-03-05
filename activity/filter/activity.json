@@ -7,7 +7,7 @@
   "description": "Filters input data based on min, max value",
   "author": "Jan van der Lugt <jvanderl@tibco.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/filter",
-  "inputs":[
+  "input":[
     {
       "name": "input",
       "type": "string"
@@ -31,7 +31,7 @@
       "type": "boolean"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "pass",
       "type": "boolean"

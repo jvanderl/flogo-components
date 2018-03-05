@@ -55,7 +55,7 @@ Settings, Outputs and Endpoint:
       "type": "string"
     }
   ],
-  "outputs": [
+  "output": [
     {
       "name": "message",
       "type": "string"
