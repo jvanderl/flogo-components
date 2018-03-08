@@ -6,25 +6,27 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"github.com/carlescere/scheduler"
-	"github.com/TIBCOSoftware/flogo-lib/logger"
-	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
+
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
+	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
+	"github.com/TIBCOSoftware/flogo-lib/logger"
+	"github.com/carlescere/scheduler"
 )
 
 // log is the default package logger
 var log = logger.GetLogger("trigger-jvanderl-timer")
 
+//TimerTrigger is th main structure for this trigger
 type TimerTrigger struct {
-	metadata   *trigger.Metadata
-	runner     action.Runner
-	config     *trigger.Config
-	timers     map[string]*scheduler.Job
+	metadata *trigger.Metadata
+	runner   action.Runner
+	config   *trigger.Config
+	timers   map[string]*scheduler.Job
 }
 
 //NewFactory create a new Trigger factory
 func NewFactory(md *trigger.Metadata) trigger.Factory {
-	return &Timer2Factory{metadata:md}
+	return &Timer2Factory{metadata: md}
 }
 
 // TimerFactory Timer Trigger factory
@@ -34,7 +36,7 @@ type Timer2Factory struct {
 
 //New Creates a new trigger instance for a given id
 func (t *Timer2Factory) New(config *trigger.Config) trigger.Trigger {
-	return &TimerTrigger{metadata: t.metadata, config:config}
+	return &TimerTrigger{metadata: t.metadata, config: config}
 }
 
 // Metadata implements trigger.Trigger.Metadata
@@ -157,7 +159,7 @@ func (t *TimerTrigger) scheduleRepeating(handlerCfg *trigger.HandlerConfig) {
 
 func getInitialStartInSeconds(handlerCfg *trigger.HandlerConfig) int {
 
-	if _,ok := handlerCfg.Settings["startDate"]; !ok {
+	if _, ok := handlerCfg.Settings["startDate"]; !ok {
 		return 0
 	}
 
@@ -203,8 +205,8 @@ func getInitialStartInSeconds(handlerCfg *trigger.HandlerConfig) int {
 		triggerDate = triggerDate.Add(time.Duration(minutes) * time.Minute)
 	} else {
 		log.Debug("Subtracting to triggerDate")
-		triggerDate = triggerDate.Add(time.Duration(hour * -1) * time.Hour)
-		triggerDate = triggerDate.Add(time.Duration(minutes * -1) * time.Minute)
+		triggerDate = triggerDate.Add(time.Duration(hour*-1) * time.Hour)
+		triggerDate = triggerDate.Add(time.Duration(minutes*-1) * time.Minute)
 	}
 
 	currentTime := time.Now().UTC()
@@ -226,19 +228,19 @@ func (j *PrintJob) Run() error {
 
 func (t *TimerTrigger) scheduleJobEverySecond(handlerCfg *trigger.HandlerConfig, fn func()) {
 
-	var interval int = 0
+	var interval int
 	//if seconds := handlerCfg.GetSetting("seconds"); seconds != "" {
-  if seconds := GetSettingSafe(handlerCfg, "seconds", ""); seconds != "" {
+	if seconds := GetSettingSafe(handlerCfg, "seconds", ""); seconds != "" {
 		seconds, _ := strconv.Atoi(seconds)
 		interval = interval + seconds
 	}
 	if minutes := GetSettingSafe(handlerCfg, "minutes", ""); minutes != "" {
-//	if minutes := handlerCfg.GetSetting("minutes"); minutes != "" {
+		//	if minutes := handlerCfg.GetSetting("minutes"); minutes != "" {
 		minutes, _ := strconv.Atoi(minutes)
 		interval = interval + minutes*60
 	}
 	if hours := GetSettingSafe(handlerCfg, "hours", ""); hours != "" {
-//	if hours := handlerCfg.GetSetting("hours"); hours != "" {
+		//	if hours := handlerCfg.GetSetting("hours"); hours != "" {
 		hours, _ := strconv.Atoi(hours)
 		interval = interval + hours*3600
 	}
@@ -285,18 +287,18 @@ func (t *TimerTrigger) constructStartRequest(handlerCfg *trigger.HandlerConfig) 
 
 // StartRequest describes a request for starting a ProcessInstance
 type StartRequest struct {
-	ProcessURI  string                 `json:"flowUri"`
-	Data        map[string]interface{} `json:"data"`
-	ReplyTo     string                 `json:"replyTo"`
+	ProcessURI string                 `json:"flowUri"`
+	Data       map[string]interface{} `json:"data"`
+	ReplyTo    string                 `json:"replyTo"`
 }
 
-func GetSettingSafe (handlerCfg *trigger.HandlerConfig, setting string, defaultValue string) string {
-var retString string
+func GetSettingSafe(handlerCfg *trigger.HandlerConfig, setting string, defaultValue string) string {
+	var retString string
 	defer func() {
 		if r := recover(); r != nil {
 			retString = defaultValue
 		}
 	}()
- retString = handlerCfg.GetSetting(setting)
- return retString
+	retString = handlerCfg.GetSetting(setting)
+	return retString
 }

@@ -125,14 +125,21 @@ const testConfig5 string = `{
 type TestRunner struct {
 }
 
+var Test action.Runner
+
 // Run implements action.Runner.Run
 func (tr *TestRunner) Run(context context.Context, action action.Action, uri string, options interface{}) (code int, data interface{}, err error) {
-	log.Debugf("Ran Action: %v", uri)
+	log.Debugf("Ran Action (Run): %v", uri)
 	return 0, nil, nil
 }
 
 func (tr *TestRunner) RunAction(ctx context.Context, act action.Action, options map[string]interface{}) (results map[string]*data.Attribute, err error) {
-	log.Debugf("Ran Action: %v", act.Config().Id)
+	log.Debugf("Ran Action (RunAction): %v", act)
+	return nil, nil
+}
+
+func (tr *TestRunner) Execute(ctx context.Context, act action.Action, inputs map[string]*data.Attribute) (results map[string]*data.Attribute, err error) {
+	log.Debugf("Ran Action (Execute): %v", act)
 	return nil, nil
 }
 
