@@ -29,7 +29,7 @@ func NewFactory(md *trigger.Metadata) trigger.Factory {
 	return &Timer2Factory{metadata: md}
 }
 
-// TimerFactory Timer Trigger factory
+// Timer2Factory Timer Trigger factory
 type Timer2Factory struct {
 	metadata *trigger.Metadata
 }
@@ -264,9 +264,10 @@ func (t *TimerTrigger) RunAction(handlerCfg *trigger.HandlerConfig) {
 	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
 	action := action.Get(handlerCfg.ActionId)
 	context := trigger.NewContext(context.Background(), startAttrs)
-	log.Debugf("Found action: '%+x'", action)
+	//log.Debugf("Found action: '%+x'", action)
 	log.Debugf("ActionID: '%s'", handlerCfg.ActionId)
 	_, _, err := t.runner.Run(context, action, handlerCfg.ActionId, nil)
+
 	if err != nil {
 		log.Error("Error starting action: ", err.Error())
 	}
