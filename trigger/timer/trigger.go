@@ -82,16 +82,16 @@ func (t *TimerTrigger) Start() error {
 // Stop implements ext.Trigger.Stop
 func (t *TimerTrigger) Stop() error {
 
-	log.Debug("Stopping endpoints")
-	for k, v := range t.timers {
-		if t.timers[k].IsRunning() {
-			log.Debug("Stopping timer for : ", k)
-			v.Quit <- true
-		} else {
-			log.Debugf("Timer: %s is not running", k)
+	log.Debug("Stopping trigger")
+	/*	for k, v := range t.timers {
+			if t.timers[k].IsRunning() {
+				log.Debug("Stopping timer for : ", k)
+				v.Quit <- true
+			} else {
+				log.Debugf("Timer: %s is not running", k)
+			}
 		}
-	}
-
+	*/
 	return nil
 }
 
