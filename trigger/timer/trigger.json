@@ -1,0 +1,55 @@
+{
+  "name": "timer",
+  "type": "flogo:trigger",
+  "ref": "github.com/jvanderl/flogo-components/trigger/timer",
+  "version": "0.0.1",
+  "title": "Timer 2",
+  "description": "Simple Timer trigger",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/timer",
+  "settings": [
+  ],
+  "output": [
+    {
+      "name": "params",
+      "type": "params"
+    },
+    {
+      "name": "triggerTime",
+      "type": "string"
+    }
+  ],
+  "handler": {
+    "settings": [
+      {
+        "name": "repeating",
+        "type": "boolean",
+        "required" : true
+      },
+      {
+        "name": "hours",
+        "type": "number",
+        "required" : false
+      },
+      {
+        "name": "minutes",
+        "type": "number",
+        "required" : false
+      },
+      {
+        "name": "seconds",
+        "type": "number",
+        "required" : false
+      },
+      {
+        "name": "startImmediate",
+        "type": "boolean",
+        "required" : false
+      },
+      {
+        "name": "startDate",
+        "type": "string",
+        "required" : false
+      }
+    ]
+  }
+}
