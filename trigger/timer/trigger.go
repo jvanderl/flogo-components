@@ -10,7 +10,7 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
-	schdlr "github.com/carlescere/scheduler"
+	"github.com/carlescere/scheduler"
 )
 
 // log is the default package logger
@@ -21,7 +21,7 @@ type TimerTrigger struct {
 	metadata *trigger.Metadata
 	runner   action.Runner
 	config   *trigger.Config
-	timers   map[string]*schdlr.Job
+	timers   map[string]*scheduler.Job
 }
 
 //NewFactory create a new Trigger factory
@@ -54,7 +54,7 @@ func (t *TimerTrigger) Init(runner action.Runner) {
 func (t *TimerTrigger) Start() error {
 
 	log.Debug("Start")
-	t.timers = make(map[string]*schdlr.Job)
+	t.timers = make(map[string]*scheduler.Job)
 	handlers := t.config.Handlers
 
 	log.Debug("Processing handlers")
@@ -99,7 +99,7 @@ func (t *TimerTrigger) scheduleOnce(handlerCfg *trigger.HandlerConfig) {
 
 	seconds := getInitialStartInSeconds(handlerCfg)
 	log.Debug("Seconds till trigger fires: ", seconds)
-	timerJob := schdlr.Every(int(seconds))
+	timerJob := scheduler.Every(int(seconds))
 
 	if timerJob == nil {
 		log.Error("timerJob is nil")
@@ -139,7 +139,7 @@ func (t *TimerTrigger) scheduleRepeating(handlerCfg *trigger.HandlerConfig) {
 	} else {
 		seconds := getInitialStartInSeconds(handlerCfg)
 		log.Debug("Seconds till trigger fires: ", seconds)
-		timerJob := schdlr.Every(seconds)
+		timerJob := scheduler.Every(seconds)
 		if timerJob == nil {
 			log.Error("timerJob is nil")
 		}
@@ -246,7 +246,7 @@ func (t *TimerTrigger) scheduleJobEverySecond(handlerCfg *trigger.HandlerConfig,
 
 	log.Debug("Repeating seconds: ", interval)
 	// schedule repeating
-	timerJob, err := schdlr.Every(interval).Seconds().Run(fn)
+	timerJob, err := scheduler.Every(interval).Seconds().Run(fn)
 	if err != nil {
 		log.Error("Error scheduleRepeating (repeat seconds) flo err: ", err.Error())
 	}
