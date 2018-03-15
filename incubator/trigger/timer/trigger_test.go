@@ -146,7 +146,7 @@ func (tr *TestRunner) Execute(ctx context.Context, act action.Action, inputs map
 func TestTimer(t *testing.T) {
 	log.Info("Testing Timer")
 	config := trigger.Config{}
-	json.Unmarshal([]byte(testConfig5), &config)
+	json.Unmarshal([]byte(testConfig1), &config)
 	f := &TimerFactory{}
 	f.metadata = trigger.NewMetadata(jsonMetadata)
 	tgr := f.New(&config)

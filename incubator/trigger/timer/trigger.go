@@ -19,9 +19,9 @@ var log = logger.GetLogger("trigger-jvanderl-timer")
 //TimerTrigger is th main structure for this trigger
 type TimerTrigger struct {
 	metadata *trigger.Metadata
-	runner   action.Runner
-	config   *trigger.Config
-	timers   map[string]*scheduler.Job
+	//runner   action.Runner
+	config *trigger.Config
+	timers map[string]*scheduler.Job
 }
 
 //NewFactory create a new Trigger factory
@@ -46,35 +46,66 @@ func (t *TimerTrigger) Metadata() *trigger.Metadata {
 
 // Init implements ext.Trigger.Init
 func (t *TimerTrigger) Init(runner action.Runner) {
-	t.runner = runner
-	log.Infof("In init, id: '%s', Metadata: '%+v', Config: '%+v'", t.config.Id, t.metadata, t.config)
+	log.Debug("Trigger Init called")
+	//	t.runner = runner
+	//	log.Infof("In init, id: '%s', Metadata: '%+v', Config: '%+v'", t.config.Id, t.metadata, t.config)
+}
+
+// Initialize implements ext.Trigger.Initialize
+func (t *TimerTrigger) Initialize(ctx trigger.InitContext) error {
+	log.Debug("Trigger Initialize called")
+	t.timers = make(map[string]*scheduler.Job)
+	//handlers := t.config.Handlers
+
+	for _, handler := range ctx.GetHandlers() {
+		repeating := handler.GetStringSetting("repeating")
+		//repeating := handler.Settings["repeating"]
+		log.Debug("Repeating: ", repeating)
+		if repeating == "false" {
+			if handler.GetStringSetting("startImmediate") == "true" {
+				//				if handler.Settings["startImmediate"] == "true" {
+				t.Execute(ctx, handler)
+				//				t.RunAction(handler)
+			} else {
+				t.scheduleOnce(ctx, handler)
+			}
+		} else if repeating == "true" {
+			t.scheduleRepeating(ctx, handler)
+		} else {
+			log.Error("No match for repeating: ", repeating)
+		}
+		log.Debugf("Settings repeating: %v", repeating)
+		log.Debugf("Processing Handler: %v", handler)
+	}
+
+	return nil
 }
 
 // Start implements ext.Trigger.Start
 func (t *TimerTrigger) Start() error {
 
-	log.Debug("Start")
-	t.timers = make(map[string]*scheduler.Job)
-	handlers := t.config.Handlers
+	log.Debug("Trigger Start Called")
+	/*	t.timers = make(map[string]*scheduler.Job)
+		handlers := t.config.Handlers
 
-	log.Debug("Processing handlers")
-	for _, handler := range handlers {
-		repeating := handler.Settings["repeating"]
-		log.Debug("Repeating: ", repeating)
-		if repeating == "false" {
-			if handler.Settings["startImmediate"] == "true" {
-				t.RunAction(handler)
+		log.Debug("Processing handlers")
+		for _, handler := range handlers {
+			repeating := handler.Settings["repeating"]
+			log.Debug("Repeating: ", repeating)
+			if repeating == "false" {
+				if handler.Settings["startImmediate"] == "true" {
+					t.RunAction(handler)
+				} else {
+					t.scheduleOnce(handler)
+				}
+			} else if repeating == "true" {
+				t.scheduleRepeating(handler)
 			} else {
-				t.scheduleOnce(handler)
+				log.Error("No match for repeating: ", repeating)
 			}
-		} else if repeating == "true" {
-			t.scheduleRepeating(handler)
-		} else {
-			log.Error("No match for repeating: ", repeating)
-		}
-		log.Debug("Settings repeating: ", handler.Settings["repeating"])
-		log.Debugf("Processing Handler: %s", handler.ActionId)
-	}
+			log.Debug("Settings repeating: ", handler.Settings["repeating"])
+			log.Debugf("Processing Handler: %s", handler.ActionId)
+		}*/
 
 	return nil
 }
@@ -94,10 +125,10 @@ func (t *TimerTrigger) Stop() error {
 	return nil
 }
 
-func (t *TimerTrigger) scheduleOnce(handlerCfg *trigger.HandlerConfig) {
+func (t *TimerTrigger) scheduleOnce(ctx trigger.InitContext, handler *trigger.Handler) {
 	log.Info("Scheduling a run one time job")
 
-	seconds := getInitialStartInSeconds(handlerCfg)
+	seconds := getInitialStartInSeconds(handler)
 	log.Debug("Seconds till trigger fires: ", seconds)
 	timerJob := scheduler.Every(int(seconds))
 
@@ -107,7 +138,8 @@ func (t *TimerTrigger) scheduleOnce(handlerCfg *trigger.HandlerConfig) {
 
 	fn := func() {
 		log.Debug("-- Starting \"Once\" timer process")
-		t.RunAction(handlerCfg)
+		t.Execute(ctx, handler)
+		//		t.RunAction(handlerCfg)
 		timerJob.Quit <- true
 	}
 
@@ -116,28 +148,31 @@ func (t *TimerTrigger) scheduleOnce(handlerCfg *trigger.HandlerConfig) {
 		log.Error("Error scheduleOnce flo err: ", err.Error())
 	}
 
-	t.timers[handlerCfg.ActionId] = timerJob
+	//TODO: Fix these timers if needed
+	//t.timers[handlerCfg.ActionId] = timerJob
 }
 
-func (t *TimerTrigger) scheduleRepeating(handlerCfg *trigger.HandlerConfig) {
+func (t *TimerTrigger) scheduleRepeating(ctx trigger.InitContext, handler *trigger.Handler) {
 	log.Info("Scheduling a repeating job")
 
 	fn1 := func() {
 		fn2_2 := func() {
 			log.Debug("-- Starting \"Repeating\" (repeat) timer action")
-			t.RunAction(handlerCfg)
+			t.Execute(ctx, handler)
+			//t.RunAction(handlerCfg)
 		}
-		t.scheduleJobEverySecond(handlerCfg, fn2_2)
+		t.scheduleJobEverySecond(handler, fn2_2)
 	}
 
-	if handlerCfg.Settings["startImmediate"] == "true" {
+	if handler.GetStringSetting("startImmediate") == "true" {
 		fn2 := func() {
 			log.Debug("-- Starting \"Repeating\" (repeat) timer action")
-			t.RunAction(handlerCfg)
+			t.Execute(ctx, handler)
+			//t.RunAction(handlerCfg)
 		}
-		t.scheduleJobEverySecond(handlerCfg, fn2)
+		t.scheduleJobEverySecond(handler, fn2)
 	} else {
-		seconds := getInitialStartInSeconds(handlerCfg)
+		seconds := getInitialStartInSeconds(handler)
 		log.Debug("Seconds till trigger fires: ", seconds)
 		timerJob := scheduler.Every(seconds)
 		if timerJob == nil {
@@ -150,20 +185,20 @@ func (t *TimerTrigger) scheduleRepeating(handlerCfg *trigger.HandlerConfig) {
 		if timerJob == nil {
 			log.Error("timerJob is nil")
 		}
-
-		t.timers[handlerCfg.ActionId] = timerJob
+		// TODO Fix timers if needed
+		//t.timers[handlerCfg.ActionId] = timerJob
 
 	}
 }
 
-func getInitialStartInSeconds(handlerCfg *trigger.HandlerConfig) int {
+func getInitialStartInSeconds(handler *trigger.Handler) int {
 
-	if _, ok := handlerCfg.Settings["startDate"]; !ok {
+	if _, ok := handler.GetSetting("startDate"); !ok {
 		return 0
 	}
 
 	layout := time.RFC3339
-	startDate := handlerCfg.GetSetting("startDate")
+	startDate := handler.GetStringSetting("startDate")
 	idx := strings.LastIndex(startDate, "Z")
 	timeZone := startDate[idx+1 : len(startDate)]
 	log.Debug("Time Zone: ", timeZone)
@@ -225,20 +260,18 @@ func (j *PrintJob) Run() error {
 	return nil
 }
 
-func (t *TimerTrigger) scheduleJobEverySecond(handlerCfg *trigger.HandlerConfig, fn func()) {
+func (t *TimerTrigger) scheduleJobEverySecond(handler *trigger.Handler, fn func()) {
 
 	var interval int
-	//if seconds := handlerCfg.GetSetting("seconds"); seconds != "" {
-	if seconds := GetSettingSafe(handlerCfg, "seconds", ""); seconds != "" {
+	if seconds := handler.GetStringSetting("seconds"); seconds != "" {
 		seconds, _ := strconv.Atoi(seconds)
 		interval = interval + seconds
 	}
-	if minutes := GetSettingSafe(handlerCfg, "minutes", ""); minutes != "" {
-		//	if minutes := handlerCfg.GetSetting("minutes"); minutes != "" {
+	if minutes := handler.GetStringSetting("minutes"); minutes != "" {
 		minutes, _ := strconv.Atoi(minutes)
 		interval = interval + minutes*60
 	}
-	if hours := GetSettingSafe(handlerCfg, "hours", ""); hours != "" {
+	if hours := handler.GetStringSetting("hours"); hours != "" {
 		//	if hours := handlerCfg.GetSetting("hours"); hours != "" {
 		hours, _ := strconv.Atoi(hours)
 		interval = interval + hours*3600
@@ -254,9 +287,28 @@ func (t *TimerTrigger) scheduleJobEverySecond(handlerCfg *trigger.HandlerConfig,
 		log.Error("timerJob is nil")
 	}
 
-	t.timers["r:"+handlerCfg.ActionId] = timerJob
+	//TODO: Fix timers if needed
+	//t.timers["r:"+handlerCfg.ActionId] = timerJob
 }
 
+func (t *TimerTrigger) Execute(ctx trigger.InitContext, handler *trigger.Handler) {
+	log.Debug("Starting process")
+
+	triggerData := map[string]interface{}{
+		"params":      &handler,
+		"triggerTime": time.Now().String(),
+	}
+
+	response, err := handler.Handle(context.Background(), triggerData)
+
+	if err != nil {
+		log.Error("Error starting action: ", err.Error())
+	} else {
+		log.Debugf("Action call successful: %v", response)
+	}
+}
+
+/*
 func (t *TimerTrigger) RunAction(handlerCfg *trigger.HandlerConfig) {
 	log.Debug("Starting Immediate \"Once\" process")
 	req := t.constructStartRequest(handlerCfg)
@@ -292,6 +344,7 @@ type StartRequest struct {
 	ReplyTo    string                 `json:"replyTo"`
 }
 
+
 func GetSettingSafe(handlerCfg *trigger.HandlerConfig, setting string, defaultValue string) string {
 	var retString string
 	defer func() {
@@ -302,3 +355,4 @@ func GetSettingSafe(handlerCfg *trigger.HandlerConfig, setting string, defaultVa
 	retString = handlerCfg.GetSetting(setting)
 	return retString
 }
+*/

@@ -1,0 +1,34 @@
+{
+  "name": "udp",
+  "version": "0.0.1",
+  "type": "flogo:trigger",
+  "ref": "https://github.com/ayh20/flogo-components/trigger/udp",
+  "title": "Receive UDP Message",
+  "description": "UDP message handler",
+  "author": "Andy hampshire <ahampshire@tibco.com>",
+  "homepage": "https://github.com/ayh20/flogo-components/tree/master/trigger/udp",
+  "settings":[
+    {
+      "name": "port",
+      "type": "integer"
+    },
+    {
+      "name": "multicast_group",
+      "type": "string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "payload",
+      "type": "string"
+    }
+  ],
+  "handler": {
+    "settings": [
+      {
+        "name": "handler_setting",
+        "type": "string"
+      }
+    ]
+  }
+ }
