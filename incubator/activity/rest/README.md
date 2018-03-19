@@ -13,11 +13,12 @@ Inputs and Outputs:
 
 ```json
 {
-  "input":[
+   "input":[
     {
       "name": "method",
       "type": "string",
-      "required": true
+      "required": true,
+      "allowed" : ["GET", "POST", "PUT", "PATCH", "DELETE"]
     },
     {
       "name": "uri",
@@ -25,8 +26,9 @@ Inputs and Outputs:
       "required": true
     },
     {
-      "name": "params",
-      "type": "params"
+      "name": "proxy",
+      "type": "string",
+      "required": false
     },
     {
       "name": "pathParams",
@@ -42,20 +44,37 @@ Inputs and Outputs:
     },
     {
       "name": "content",
-      "type": "object"
+      "type": "any"
     },
     {
       "name": "allowInsecure",
       "type": "boolean"
+    },
+    {
+      "name": "useBasicAuth",
+      "type": "boolean"
+    },
+    {
+      "name": "userID",
+      "type": "string"
+    },
+    {
+      "name": "password",
+      "type": "string"
     }
   ],
   "output": [
     {
       "name": "result",
-      "type": "object"
+      "type": "any"
+    },
+    {
+      "name": "status",
+      "type": "integer"
     }
   ]
 }
+
 ```
 ## Settings
 | Setting     | Description    |
@@ -66,7 +85,10 @@ Inputs and Outputs:
 | queryParams | The query parameters |
 | header      | The header parameters |
 | content     | The message content |
-| params      | The path parameters (Deprecated) |
+| allowInsecure | Skip security verification |
+| useBasicAuth  | Enable basic authentication (fill in userID and password) |
+| userID        | Basic authentication User ID |
+| password      | Basic authentication Password |
 Note: 
 
 * **pathParams**: Is only required if you have params in your URI ( i.e. http://.../pet/:id )

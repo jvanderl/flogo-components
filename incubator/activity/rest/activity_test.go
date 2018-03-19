@@ -221,3 +221,50 @@ func TestSimpleGetWithProxy(t *testing.T) {
 	val := tc.GetOutput("result")
 	fmt.Printf("result: %v\n", val)
 }
+
+func TestTDVBD(t *testing.T) {
+
+	act := NewActivity(getActivityMetadata())
+	tc := test.NewTestActivityContext(getActivityMetadata())
+
+	uri := "https://ec2-34-243-92-189.eu-west-1.compute.amazonaws.com:9512/rest/v2/propertyGroups/:group/properties/:property/resources"
+
+	pathParams := map[string]string{
+		"group":    "GroupJL",
+		"property": "PropertyJL",
+	}
+
+	newURI := BuildURI(uri, pathParams)
+
+	fmt.Println(newURI)
+
+	var content = `{
+		"resourceBeans": [
+		  {
+			"resourcePath": "/localhost_9410/services/databases/IntroDemo",
+			"resourceType": "database"
+		  }
+		],
+		"propertyValue": [
+		  "Muhahahah from FLOGO!"
+		]
+	  }`
+
+	tc.SetInput("method", "POST")
+	tc.SetInput("uri", uri)
+	tc.SetInput("pathParams", pathParams)
+	tc.SetInput("content", content)
+	tc.SetInput("allowInsecure", "true")
+	tc.SetInput("useBasicAuth", "true")
+	tc.SetInput("userID", "admin")
+	tc.SetInput("password", "admin")
+
+	//eval
+	_, err := act.Eval(tc)
+	if err != nil {
+		fmt.Printf("error: %v\n", err)
+	}
+	val := tc.GetOutput("result")
+	fmt.Printf("result: %v\n", val)
+
+}

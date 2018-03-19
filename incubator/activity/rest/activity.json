@@ -3,7 +3,7 @@
   "type": "flogo:activity",
   "ref": "github.com/jvanderl/flogo-components/incubator/activity/rest",
   "version": "0.0.1",
-  "title": "Invoke REST Service",
+  "title": "Invoke REST Service 2",
   "description": "Simple REST Activity",
   "homepage": "https://github.com/jvanderl/flogo-components/incubator/tree/master/activity/rest",
   "input":[
@@ -42,6 +42,18 @@
     {
       "name": "allowInsecure",
       "type": "boolean"
+    },
+    {
+      "name": "useBasicAuth",
+      "type": "boolean"
+    },
+    {
+      "name": "userID",
+      "type": "string"
+    },
+    {
+      "name": "password",
+      "type": "string"
     }
   ],
   "output": [

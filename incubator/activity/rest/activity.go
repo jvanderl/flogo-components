@@ -15,7 +15,7 @@ import (
 )
 
 // log is the default package logger
-var log = logger.GetLogger("activity-tibco-rest")
+var log = logger.GetLogger("activity-jl-rest")
 
 const (
 	methodGET    = "GET"
@@ -33,6 +33,9 @@ const (
 	ivParams        = "params"
 	ivProxy         = "proxy"
 	ivAllowInsecure = "allowInsecure"
+	ivUseBasicAuth  = "useBasicAuth"
+	ivUserID        = "userID"
+	ivPassword      = "password"
 
 	ovResult = "result"
 	ovStatus = "status"
@@ -137,7 +140,7 @@ func (a *RESTActivity) Eval(context activity.Context) (done bool, err error) {
 
 	// Set the proxy server to use, if supplied
 	allowInsecure := context.GetInput(ivAllowInsecure)
-	var insecureValue, _ = allowInsecure.(string)
+	var insecureValue, _ = allowInsecure.(bool)
 	proxy := context.GetInput(ivProxy)
 	var client *http.Client
 	var proxyValue, ok = proxy.(string)
@@ -150,21 +153,34 @@ func (a *RESTActivity) Eval(context activity.Context) (done bool, err error) {
 		log.Debug("Setting proxy server:", proxyValue)
 		client = &http.Client{Transport: &http.Transport{Proxy: http.ProxyURL(proxyURL)}}
 	} else {
-		if insecureValue == "true" {
+		if insecureValue == true {
+			log.Debug("Enable Insecure Skip Verify")
 			client = &http.Client{Transport: &http.Transport{
 				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 			}}
 		} else {
+			log.Debug("Not skipping verify")
 			client = &http.Client{}
 		}
 
 	}
+
+	//Check Basic Auth
+	useBasicAuth := context.GetInput(ivUseBasicAuth)
+	var basicAuthValue, _ = useBasicAuth.(bool)
+	if basicAuthValue == true {
+		userID := context.GetInput(ivUserID).(string)
+		password := context.GetInput(ivPassword).(string)
+		req.SetBasicAuth(userID, password)
+	}
+
 	resp, err := client.Do(req)
-	defer resp.Body.Close()
 
 	if err != nil {
 		return false, err
 	}
+
+	defer resp.Body.Close()
 
 	log.Debug("response Status:", resp.Status)
 	respBody, _ := ioutil.ReadAll(resp.Body)
