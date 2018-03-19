@@ -227,7 +227,7 @@ func TestTDVBD(t *testing.T) {
 	act := NewActivity(getActivityMetadata())
 	tc := test.NewTestActivityContext(getActivityMetadata())
 
-	uri := "https://ec2-34-243-92-189.eu-west-1.compute.amazonaws.com:9512/rest/v2/propertyGroups/:group/properties/:property/resources"
+	uri := "https://<server name here>:9512/rest/v2/propertyGroups/:group/properties/:property/resources"
 
 	pathParams := map[string]string{
 		"group":    "GroupJL",
@@ -256,8 +256,8 @@ func TestTDVBD(t *testing.T) {
 	tc.SetInput("content", content)
 	tc.SetInput("allowInsecure", "true")
 	tc.SetInput("useBasicAuth", "true")
-	tc.SetInput("userID", "admin")
-	tc.SetInput("password", "admin")
+	tc.SetInput("userID", "<username>")
+	tc.SetInput("password", "<username>")
 
 	//eval
 	_, err := act.Eval(tc)
