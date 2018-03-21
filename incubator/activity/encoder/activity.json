@@ -1,0 +1,38 @@
+{
+  "name": "encoder",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/incubator/activity/encoder",
+  "version": "0.0.1",
+  "title": "Encoder",
+  "description": "Encoder and Decoder",
+  "homepage": "https://github.com/jvanderl/flogo-components/incubator/tree/master/activity/encoder",
+  "input":[
+    {
+      "name": "encoder",
+      "type": "string",
+      "required": true,
+      "allowed" : ["BASE32", "BASE64", "HEX"]
+    },
+    {
+      "name": "action",
+      "type": "string",
+      "required": true,
+      "allowed" : ["ENCODE", "DECODE"]
+    },
+    {
+      "name": "input",
+      "type": "string",
+      "required": true
+    }
+  ],
+  "output": [
+    {
+      "name": "result",
+      "type": "string"
+    },
+    {
+      "name": "status",
+      "type": "string"
+    }
+  ]
+}
