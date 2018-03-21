@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "title": "Encoder",
   "description": "Encoder and Decoder",
-  "homepage": "https://github.com/jvanderl/flogo-components/incubator/tree/master/activity/encoder",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/incubator/activity/encoder",
   "input":[
     {
       "name": "encoder",

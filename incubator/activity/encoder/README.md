@@ -5,7 +5,11 @@ This activity provides your flogo application the ability to encode en decode st
 ## Installation
 
 ```bash
-flogo add activity github.com/jvanderl/flogo-components/incubator/activity/encode
+flogo install github.com/jvanderl/flogo-components/incubator/activity/encoder
+```
+Link for flogo web:
+```
+https://github.com/jvanderl/flogo-components/incubator/activity/encoder
 ```
 
 ## Schema
