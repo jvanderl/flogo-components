@@ -1,11 +1,11 @@
 {
   "name": "encoder",
   "type": "flogo:activity",
-  "ref": "github.com/jvanderl/flogo-components/incubator/activity/encoder",
+  "ref": "github.com/jvanderl/flogo-components/activity/encoder",
   "version": "0.0.1",
   "title": "Encoder",
   "description": "Encoder and Decoder",
-  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/incubator/activity/encoder",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/encoder",
   "input":[
     {
       "name": "encoder",
