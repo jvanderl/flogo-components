@@ -1,0 +1,27 @@
+{
+  "name": "grovepiDigitalWrite",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/incubator/activity/grovepiDigitalWrite",
+  "version": "0.0.1",
+  "title": "grovepi Digital Write",
+  "description": "Digital Write Activity for GrovePi",
+  "homepage": "https://github.com/jvanderl/flogo-components/incubator/tree/master/activity/grovepiDigitalWrite",
+  "inputs":[
+    {
+      "name": "pin",
+      "type": "integer",
+      "required": true
+    },
+    {
+      "name": "value",
+      "type": "boolean",
+      "required": true
+    }
+  ],
+  "outputs": [
+    {
+      "name": "success",
+      "type": "boolean"
+    }
+  ]
+}
