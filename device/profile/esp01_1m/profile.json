@@ -1,0 +1,9 @@
+{
+  "name": "esp01_1m",
+  "type": "flogo:device:profile",
+  "version": "0.0.1",
+  "description": "ESP8266 ESP-01 1MB",
+  "board":"esp01_1m",
+  "platform": "github.com/jvanderl/flogo-components/device/platform/arduino",
+  "platform_wifi": "wifi"
+}
