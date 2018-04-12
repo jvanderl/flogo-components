@@ -1,0 +1,9 @@
+{
+  "name": "adafruit_feather_m0",
+  "type": "flogo:device:profile",
+  "version": "0.0.1",
+  "description": "Adafruit Feather M0",
+  "board":"adafruit_feather_m0",
+  "platform": "github.com/TIBCOSoftware/flogo-contrib/device/platform/arduino",
+  "platform_wifi": "wifi101"
+}
