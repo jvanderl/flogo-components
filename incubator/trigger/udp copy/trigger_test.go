@@ -32,15 +32,13 @@ type udpTrigger struct {
 	metadata *trigger.Metadata
 	runner   action.Runner
 	config   *trigger.Config
-	handlers []*trigger.Handler
+	//handlers []*trigger.Handler
 }
 
-/*
 // Init implements trigger.Trigger.Init
 func (t *udpTrigger) Init(runner action.Runner) {
 	t.runner = runner
 }
-*/
 
 // Metadata implements trigger.Trigger.Metadata
 func (t *udpTrigger) Metadata() *trigger.Metadata {
@@ -50,13 +48,6 @@ func (t *udpTrigger) Metadata() *trigger.Metadata {
 const (
 	maxDatagramSize = 8192
 )
-
-func (t *udpTrigger) Initialize(ctx trigger.InitContext) error {
-	log.Debug("Initialize")
-	t.handlers = ctx.GetHandlers()
-	return nil
-
-}
 
 // Start implements trigger.Trigger.Start
 func (t *udpTrigger) Start() error {
@@ -113,19 +104,11 @@ func (t *udpTrigger) Start() error {
 
 			log.Debugf("Received %v from %v", payload, addr)
 
-			//handlers := t.config.Handlers
-			trgData := make(map[string]interface{})
-			trgData["payload"] = payload
-			trgData["buffer"] = payloadB
+			handlers := t.config.Handlers
 
 			log.Debug("Processing handlers")
-			for _, handler := range t.handlers {
-				results, err := handler.Handle(context.Background(), trgData)
-				if err != nil {
-					log.Error("Error starting action: ", err.Error())
-				}
-				log.Debugf("Ran Handler: [%s]", handler)
-				log.Debugf("Results: [%v]", results)
+			for _, handler := range handlers {
+				t.RunAction(handler, payload, payloadB)
 			}
 		}
 	}
@@ -138,7 +121,6 @@ func (t *udpTrigger) Stop() error {
 	return nil
 }
 
-/*
 func (t *udpTrigger) RunAction(handlerCfg *trigger.HandlerConfig, payload string, payloadB []byte) {
 
 	log.Debug("Starting Payload data action")
@@ -178,4 +160,3 @@ type StartRequest struct {
 	Data       map[string]interface{} `json:"data"`
 	ReplyTo    string                 `json:"replyTo"`
 }
-*/

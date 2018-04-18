@@ -1,0 +1,34 @@
+{
+  "name": "udp",
+  "version": "0.0.1",
+  "type": "flogo:trigger",
+  "ref": "github.com/jvanderl/flogo-components/incubator/trigger/udp",
+  "title": "Receive UDP Message",
+  "description": "UDP message handler",
+  "author": "Andy hampshire <ahampshire@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/incubator/trigger/udp",
+  "settings":[
+    {
+      "name": "port",
+      "type": "integer"
+    },
+    {
+      "name": "multicast_group",
+      "type": "string"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "payload",
+      "type": "string"
+    }
+  ],
+  "handler": {
+    "settings": [
+      {
+        "name": "handler_setting",
+        "type": "string"
+      }
+    ]
+  }
+ }
