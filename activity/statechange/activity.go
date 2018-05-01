@@ -1,11 +1,12 @@
 package statechange
 
 import (
+	"strconv"
+	"sync"
+
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-lib/core/data"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
-	"strconv"
-	"sync"
 )
 
 const (
@@ -62,14 +63,17 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 			//			log.Debugf("Input value: %s", ifInput)
 			gotAnyInputs = true
 			prevStateLocation := ifDataSource + "." + laststate + "." + inputName
-			//			log.Debugf ("Checking previous State Data at : %s", prevStateLocation)
+			log.Debugf("Checking previous State Data at : %s", prevStateLocation)
 
 			//data source is set, now try get history from global data
+			var attribInput interface{} = ifInput
+			log.Debugf("input attribute is %v", attribInput)
+			var prevstatedat *data.Attribute
 			prevstatedat, ok := data.GetGlobalScope().GetAttr(prevStateLocation)
 			if ok {
 				//got previous state
-				prevState := prevstatedat.Value.(string)
-				//				log.Debugf ("Previous State is: %s", prevState)
+				prevState := prevstatedat.Value().(string)
+				log.Debugf("previous state value is %v", prevState)
 				if prevState != ifInput {
 					//state has changed
 					stateChanged = true
@@ -83,7 +87,8 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 					}
 					resultText = resultText + inputName + " changed from " + prevState + " to " + ifInput
 					// update previous state
-					data.GetGlobalScope().SetAttrValue(prevStateLocation, ifInput)
+					//					data.GetGlobalScope().SetAttrValue(prevStateLocation, ifInput)
+					data.GetGlobalScope().SetAttrValue(prevStateLocation, attribInput)
 
 				} else {
 					//state has not changed
@@ -105,7 +110,8 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 				// add current input data to prevState
 				dt, ok := data.ToTypeEnum("string")
 				if ok {
-					data.GetGlobalScope().AddAttr(prevStateLocation, dt, ifInput)
+					//					data.GetGlobalScope().AddAttr(prevStateLocation, dt, ifInput)
+					data.GetGlobalScope().AddAttr(prevStateLocation, dt, attribInput)
 				}
 			}
 		}

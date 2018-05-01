@@ -2,11 +2,12 @@ package throttle
 
 import (
 	"fmt"
+	"sync"
+	"time"
+
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-lib/core/data"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
-	"sync"
-	"time"
 )
 
 const (
@@ -70,7 +71,7 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 		lasttimedat, ok := data.GetGlobalScope().GetAttr(ifDataSource)
 		if ok {
 			// previous data found, go ahead and analyse
-			ifLastTimePassed := lasttimedat.Value.(string)
+			ifLastTimePassed := lasttimedat.Value().(string)
 			lasttime, err := time.Parse(timelayout, ifLastTimePassed)
 			if err != nil {
 				//invalid previous timestamp format
