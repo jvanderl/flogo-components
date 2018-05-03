@@ -79,6 +79,8 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 		}
 	}
 
+	context.SetOutput("result", result)
+
 	// Signal to the Flogo engine that the activity is completed
 	return true, nil
 }
