@@ -88,7 +88,6 @@ func TestSingle(t *testing.T) {
 	f.metadata = trigger.NewMetadata(jsonMetadata)
 	tgr := f.New(&config)
 	//runner := &TestRunner{}
-	//tgr.Initialize()
 	//tgr.Init(runner)
 	tgr.Start()
 	defer tgr.Stop()
