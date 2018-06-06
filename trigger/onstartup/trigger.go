@@ -21,7 +21,8 @@ var log = logger.GetLogger("trigger-jvanderl-onstartup")
 type OnStartupTrigger struct {
 	metadata *trigger.Metadata
 	//runner   action.Runner
-	config *trigger.Config
+	config   *trigger.Config
+	handlers []*trigger.Handler
 	//timers map[string]*scheduler.Job
 }
 
@@ -56,9 +57,7 @@ func (t *OnStartupTrigger) Init(runner action.Runner) {
 func (t *OnStartupTrigger) Initialize(ctx trigger.InitContext) error {
 	log.Debug("Trigger Initialize called")
 
-	for _, handler := range ctx.GetHandlers() {
-		t.Execute(ctx, handler)
-	}
+	t.handlers = ctx.GetHandlers()
 
 	return nil
 }
@@ -67,6 +66,10 @@ func (t *OnStartupTrigger) Initialize(ctx trigger.InitContext) error {
 func (t *OnStartupTrigger) Start() error {
 
 	log.Debug("Trigger Start Called")
+
+	for _, handler := range t.handlers {
+		t.Execute(handler)
+	}
 	return nil
 }
 
@@ -77,7 +80,7 @@ func (t *OnStartupTrigger) Stop() error {
 }
 
 // Execute executes any handlers defined immediately on startup
-func (t *OnStartupTrigger) Execute(ctx trigger.InitContext, handler *trigger.Handler) {
+func (t *OnStartupTrigger) Execute(handler *trigger.Handler) {
 	log.Debug("Starting process")
 
 	triggerData := map[string]interface{}{
