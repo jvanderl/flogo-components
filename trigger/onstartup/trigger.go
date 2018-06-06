@@ -81,7 +81,6 @@ func (t *OnStartupTrigger) Execute(ctx trigger.InitContext, handler *trigger.Han
 	log.Debug("Starting process")
 
 	triggerData := map[string]interface{}{
-		"params":      &handler,
 		"triggerTime": time.Now().String(),
 	}
 

@@ -40,7 +40,6 @@ Outputs and Endpoint:
 ## Ouputs
 | Output   | Description    |
 |:----------|:---------------|
-| params    | The parameters used to trigger this flow |
 | triggerTime |  The date and time the trigger fired |
 
 ## Handlers
