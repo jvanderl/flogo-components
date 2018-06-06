@@ -1,0 +1,25 @@
+{
+  "name": "onstartup",
+  "type": "flogo:trigger",
+  "ref": "github.com/jvanderl/flogo-components/trigger/onstartup",
+  "version": "0.0.1",
+  "title": "On Startup",
+  "description": "Run flow on Startup",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/onstartup",
+  "settings": [
+  ],
+  "output": [
+    {
+      "name": "params",
+      "type": "params"
+    },
+    {
+      "name": "triggerTime",
+      "type": "string"
+    }
+  ],
+  "handler": {
+    "settings": [
+    ]
+  }
+}
