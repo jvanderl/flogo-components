@@ -1,4 +1,4 @@
-package timer
+package timert
 
 import (
 	"context"
@@ -14,7 +14,7 @@ import (
 )
 
 // log is the default package logger
-var log = logger.GetLogger("trigger-jvanderl-timer")
+var log = logger.GetLogger("trigger-jvanderl-timert")
 
 //TimerTrigger is th main structure for this trigger
 type TimerTrigger struct {
@@ -233,7 +233,7 @@ func getInitialStartInSeconds(handler *trigger.Handler) int {
 	return int(math.Abs(duration.Seconds()))
 }
 
-type PrintJob struct {
+/*type PrintJob struct {
 	Msg string
 }
 
@@ -241,7 +241,7 @@ func (j *PrintJob) Run() error {
 	log.Debug(j.Msg)
 	return nil
 }
-
+*/
 func (t *TimerTrigger) scheduleJobEverySecond(handler *trigger.Handler, fn func()) {
 
 	var interval int
@@ -273,6 +273,7 @@ func (t *TimerTrigger) scheduleJobEverySecond(handler *trigger.Handler, fn func(
 	//t.timers["r:"+handlerCfg.ActionId] = timerJob
 }
 
+//Execute starts the actual flow
 func (t *TimerTrigger) Execute(handler *trigger.Handler) {
 	log.Debug("Starting process")
 

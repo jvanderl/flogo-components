@@ -1,15 +1,15 @@
-# Timer
+# Timert
 This trigger provides your flogo application the ability to schedule a flow via scheduling service
 It's a modified version of the original timer activity on https://github.com/TIBCOSoftware/flogo-contrib
 
 ## Installation
 
 ```bash
-flogo install github.com/jvanderl/flogo-components/trigger/timer
+flogo install github.com/jvanderl/flogo-components/incubator/trigger/timert
 ```
 Link for flogo web:
 ```
-https://github.com/jvanderl/flogo-components/trigger/timer
+https://github.com/jvanderl/flogo-components/incubator/trigger/timert
 ```
 
 ## Schema

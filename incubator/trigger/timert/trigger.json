@@ -1,11 +1,11 @@
 {
-  "name": "timer",
+  "name": "timert",
   "type": "flogo:trigger",
-  "ref": "github.com/jvanderl/flogo-components/trigger/timer",
+  "ref": "github.com/jvanderl/flogo-components/incubator/trigger/timert",
   "version": "0.0.1",
-  "title": "Timer 2",
+  "title": "Timert",
   "description": "Simple Timer trigger",
-  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/timer",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/incubator/trigger/timert",
   "settings": [
   ],
   "output": [

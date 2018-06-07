@@ -1,4 +1,4 @@
-package timer
+package timert
 
 import (
 	"context"
@@ -11,9 +11,9 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 )
 
-var jsonMetadata = getJsonMetadata()
+var jsonMetadata = getJSONMetadata()
 
-func getJsonMetadata() string {
+func getJSONMetadata() string {
 	jsonMetadataBytes, err := ioutil.ReadFile("trigger.json")
 	if err != nil {
 		panic("No Json Metadata found for trigger.json path")
@@ -23,7 +23,7 @@ func getJsonMetadata() string {
 
 // Run Once, Start Immediately
 const testConfig1 string = `{
-  "name": "timer",
+  "name": "timert",
   "settings": {
   },
   "handlers": [
@@ -39,7 +39,7 @@ const testConfig1 string = `{
 
 //Run Every 5 seconds, start Immediately
 const testConfig2 string = `{
-"name": "timer",
+"name": "timert",
 "settings": {
 },
 "handlers": [
@@ -56,7 +56,7 @@ const testConfig2 string = `{
 
 // Run Once, Start Delayed at given datetime
 const testConfig3 string = `{
-  "name": "timer",
+  "name": "timert",
   "settings": {
   },
   "handlers": [
@@ -73,7 +73,7 @@ const testConfig3 string = `{
 
 //Run Every 5 seconds, start Delayed at given time
 const testConfig4 string = `{
-"name": "timer",
+"name": "timert",
 "settings": {
 },
 "handlers": [
@@ -91,7 +91,7 @@ const testConfig4 string = `{
 
 // Multiple timer configurations
 const testConfig5 string = `{
-  "name": "timer",
+  "name": "timert",
   "settings": {
   },
   "handlers": [
@@ -150,8 +150,8 @@ func TestTimer(t *testing.T) {
 	f := &TimerFactory{}
 	f.metadata = trigger.NewMetadata(jsonMetadata)
 	tgr := f.New(&config)
-	runner := &TestRunner{}
-	tgr.Init(runner)
+	//runner := &TestRunner{}
+	//tgr.Init(runner)
 	tgr.Start()
 	defer tgr.Stop()
 	log.Infof("Press CTRL-C to quit")
