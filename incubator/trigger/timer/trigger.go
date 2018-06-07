@@ -20,8 +20,9 @@ var log = logger.GetLogger("trigger-jvanderl-timer")
 type TimerTrigger struct {
 	metadata *trigger.Metadata
 	//runner   action.Runner
-	config *trigger.Config
-	timers map[string]*scheduler.Job
+	config   *trigger.Config
+	timers   map[string]*scheduler.Job
+	handlers []*trigger.Handler
 }
 
 //NewFactory create a new Trigger factory
@@ -54,29 +55,8 @@ func (t *TimerTrigger) Init(runner action.Runner) {
 // Initialize implements ext.Trigger.Initialize
 func (t *TimerTrigger) Initialize(ctx trigger.InitContext) error {
 	log.Debug("Trigger Initialize called")
-	t.timers = make(map[string]*scheduler.Job)
-	//handlers := t.config.Handlers
 
-	for _, handler := range ctx.GetHandlers() {
-		repeating := handler.GetStringSetting("repeating")
-		//repeating := handler.Settings["repeating"]
-		log.Debug("Repeating: ", repeating)
-		if repeating == "false" {
-			if handler.GetStringSetting("startImmediate") == "true" {
-				//				if handler.Settings["startImmediate"] == "true" {
-				t.Execute(ctx, handler)
-				//				t.RunAction(handler)
-			} else {
-				t.scheduleOnce(ctx, handler)
-			}
-		} else if repeating == "true" {
-			t.scheduleRepeating(ctx, handler)
-		} else {
-			log.Error("No match for repeating: ", repeating)
-		}
-		log.Debugf("Settings repeating: %v", repeating)
-		log.Debugf("Processing Handler: %v", handler)
-	}
+	t.handlers = ctx.GetHandlers()
 
 	return nil
 }
@@ -85,27 +65,29 @@ func (t *TimerTrigger) Initialize(ctx trigger.InitContext) error {
 func (t *TimerTrigger) Start() error {
 
 	log.Debug("Trigger Start Called")
-	/*	t.timers = make(map[string]*scheduler.Job)
-		handlers := t.config.Handlers
 
-		log.Debug("Processing handlers")
-		for _, handler := range handlers {
-			repeating := handler.Settings["repeating"]
-			log.Debug("Repeating: ", repeating)
-			if repeating == "false" {
-				if handler.Settings["startImmediate"] == "true" {
-					t.RunAction(handler)
-				} else {
-					t.scheduleOnce(handler)
-				}
-			} else if repeating == "true" {
-				t.scheduleRepeating(handler)
+	t.timers = make(map[string]*scheduler.Job)
+
+	for _, handler := range t.handlers {
+		repeating := handler.GetStringSetting("repeating")
+		//repeating := handler.Settings["repeating"]
+		log.Debug("Repeating: ", repeating)
+		if repeating == "false" {
+			if handler.GetStringSetting("startImmediate") == "true" {
+				//				if handler.Settings["startImmediate"] == "true" {
+				t.Execute(handler)
+				//				t.RunAction(handler)
 			} else {
-				log.Error("No match for repeating: ", repeating)
+				t.scheduleOnce(handler)
 			}
-			log.Debug("Settings repeating: ", handler.Settings["repeating"])
-			log.Debugf("Processing Handler: %s", handler.ActionId)
-		}*/
+		} else if repeating == "true" {
+			t.scheduleRepeating(handler)
+		} else {
+			log.Error("No match for repeating: ", repeating)
+		}
+		log.Debugf("Settings repeating: %v", repeating)
+		log.Debugf("Processing Handler: %v", handler)
+	}
 
 	return nil
 }
@@ -125,7 +107,7 @@ func (t *TimerTrigger) Stop() error {
 	return nil
 }
 
-func (t *TimerTrigger) scheduleOnce(ctx trigger.InitContext, handler *trigger.Handler) {
+func (t *TimerTrigger) scheduleOnce(handler *trigger.Handler) {
 	log.Info("Scheduling a run one time job")
 
 	seconds := getInitialStartInSeconds(handler)
@@ -138,7 +120,7 @@ func (t *TimerTrigger) scheduleOnce(ctx trigger.InitContext, handler *trigger.Ha
 
 	fn := func() {
 		log.Debug("-- Starting \"Once\" timer process")
-		t.Execute(ctx, handler)
+		t.Execute(handler)
 		//		t.RunAction(handlerCfg)
 		timerJob.Quit <- true
 	}
@@ -152,13 +134,13 @@ func (t *TimerTrigger) scheduleOnce(ctx trigger.InitContext, handler *trigger.Ha
 	//t.timers[handlerCfg.ActionId] = timerJob
 }
 
-func (t *TimerTrigger) scheduleRepeating(ctx trigger.InitContext, handler *trigger.Handler) {
+func (t *TimerTrigger) scheduleRepeating(handler *trigger.Handler) {
 	log.Info("Scheduling a repeating job")
 
 	fn1 := func() {
 		fn2_2 := func() {
 			log.Debug("-- Starting \"Repeating\" (repeat) timer action")
-			t.Execute(ctx, handler)
+			t.Execute(handler)
 			//t.RunAction(handlerCfg)
 		}
 		t.scheduleJobEverySecond(handler, fn2_2)
@@ -167,7 +149,7 @@ func (t *TimerTrigger) scheduleRepeating(ctx trigger.InitContext, handler *trigg
 	if handler.GetStringSetting("startImmediate") == "true" {
 		fn2 := func() {
 			log.Debug("-- Starting \"Repeating\" (repeat) timer action")
-			t.Execute(ctx, handler)
+			t.Execute(handler)
 			//t.RunAction(handlerCfg)
 		}
 		t.scheduleJobEverySecond(handler, fn2)
@@ -291,7 +273,7 @@ func (t *TimerTrigger) scheduleJobEverySecond(handler *trigger.Handler, fn func(
 	//t.timers["r:"+handlerCfg.ActionId] = timerJob
 }
 
-func (t *TimerTrigger) Execute(ctx trigger.InitContext, handler *trigger.Handler) {
+func (t *TimerTrigger) Execute(handler *trigger.Handler) {
 	log.Debug("Starting process")
 
 	triggerData := map[string]interface{}{
@@ -307,52 +289,3 @@ func (t *TimerTrigger) Execute(ctx trigger.InitContext, handler *trigger.Handler
 		log.Debugf("Action call successful: %v", response)
 	}
 }
-
-/*
-func (t *TimerTrigger) RunAction(handlerCfg *trigger.HandlerConfig) {
-	log.Debug("Starting Immediate \"Once\" process")
-	req := t.constructStartRequest(handlerCfg)
-	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
-	action := action.Get(handlerCfg.ActionId)
-	context := trigger.NewContext(context.Background(), startAttrs)
-	//log.Debugf("Found action: '%+x'", action)
-	log.Debugf("ActionID: '%s'", handlerCfg.ActionId)
-	_, _, err := t.runner.Run(context, action, handlerCfg.ActionId, nil)
-
-	if err != nil {
-		log.Error("Error starting action: ", err.Error())
-	}
-}
-
-func (t *TimerTrigger) constructStartRequest(handlerCfg *trigger.HandlerConfig) *StartRequest {
-
-	log.Debug("Received contstruct start request")
-
-	//TODO how to handle reply to, reply feature
-	req := &StartRequest{}
-	data := make(map[string]interface{})
-	data["params"] = &handlerCfg
-	data["triggerTime"] = time.Now().String()
-	req.Data = data
-	return req
-}
-
-// StartRequest describes a request for starting a ProcessInstance
-type StartRequest struct {
-	ProcessURI string                 `json:"flowUri"`
-	Data       map[string]interface{} `json:"data"`
-	ReplyTo    string                 `json:"replyTo"`
-}
-
-
-func GetSettingSafe(handlerCfg *trigger.HandlerConfig, setting string, defaultValue string) string {
-	var retString string
-	defer func() {
-		if r := recover(); r != nil {
-			retString = defaultValue
-		}
-	}()
-	retString = handlerCfg.GetSetting(setting)
-	return retString
-}
-*/
