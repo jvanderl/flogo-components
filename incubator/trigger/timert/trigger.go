@@ -10,7 +10,7 @@ import (
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
-	"github.com/carlescere/scheduler"
+	carlsched "github.com/carlescere/scheduler"
 )
 
 // log is the default package logger
@@ -21,7 +21,7 @@ type TimerTrigger struct {
 	metadata *trigger.Metadata
 	//runner   action.Runner
 	config   *trigger.Config
-	timers   map[string]*scheduler.Job
+	timers   map[string]*carlsched.Job
 	handlers []*trigger.Handler
 }
 
@@ -66,7 +66,7 @@ func (t *TimerTrigger) Start() error {
 
 	log.Debug("Trigger Start Called")
 
-	t.timers = make(map[string]*scheduler.Job)
+	t.timers = make(map[string]*carlsched.Job)
 
 	for _, handler := range t.handlers {
 		repeating := handler.GetStringSetting("repeating")
@@ -112,7 +112,7 @@ func (t *TimerTrigger) scheduleOnce(handler *trigger.Handler) {
 
 	seconds := getInitialStartInSeconds(handler)
 	log.Debug("Seconds till trigger fires: ", seconds)
-	timerJob := scheduler.Every(int(seconds))
+	timerJob := carlsched.Every(int(seconds))
 
 	if timerJob == nil {
 		log.Error("timerJob is nil")
@@ -156,7 +156,7 @@ func (t *TimerTrigger) scheduleRepeating(handler *trigger.Handler) {
 	} else {
 		seconds := getInitialStartInSeconds(handler)
 		log.Debug("Seconds till trigger fires: ", seconds)
-		timerJob := scheduler.Every(seconds)
+		timerJob := carlsched.Every(seconds)
 		if timerJob == nil {
 			log.Error("timerJob is nil")
 		}
@@ -261,7 +261,7 @@ func (t *TimerTrigger) scheduleJobEverySecond(handler *trigger.Handler, fn func(
 
 	log.Debug("Repeating seconds: ", interval)
 	// schedule repeating
-	timerJob, err := scheduler.Every(interval).Seconds().Run(fn)
+	timerJob, err := carlsched.Every(interval).Seconds().Run(fn)
 	if err != nil {
 		log.Error("Error scheduleRepeating (repeat seconds) flo err: ", err.Error())
 	}
