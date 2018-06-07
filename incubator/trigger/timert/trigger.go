@@ -21,7 +21,7 @@ type TimerTrigger struct {
 	metadata *trigger.Metadata
 	//runner   action.Runner
 	config   *trigger.Config
-	timers   map[string]*scheduler.Job
+	timers   []*scheduler.Job
 	handlers []*trigger.Handler
 }
 
@@ -66,7 +66,7 @@ func (t *TimerTrigger) Start() error {
 
 	log.Debug("Trigger Start Called")
 
-	t.timers = make(map[string]*scheduler.Job)
+	//t.timers = make(map[string]*scheduler.Job)
 
 	for _, handler := range t.handlers {
 		repeating := handler.GetStringSetting("repeating")
