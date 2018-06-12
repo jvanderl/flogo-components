@@ -36,6 +36,7 @@ Collection of custom built flogo components
 * [slack](trigger/slack): Receive messages from Slack
 * [tcmsub](trigger/tcmsub): Receive messages from TIBCO Cloud Messaging
 * [timer2](trigger/timer2): Start flow from timer
+* [wsserver](trigger/wsserver): Receive messages on built-in WebSocket server
 
 
 ## Related Information
