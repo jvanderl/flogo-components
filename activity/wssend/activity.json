@@ -1,0 +1,33 @@
+{
+  "name": "wssend",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/wssend",
+  "version": "0.0.1",
+  "title": "Send WebSocket Message",
+  "description": "This activity sends a message to a WebSocket server",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/wssend",
+  "input":[
+    {
+      "name": "server",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "channel",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "message",
+      "type": "string",
+      "value": ""
+    }
+  ],
+  "output": [
+    {
+      "name": "result",
+      "type": "string"
+    }
+  ]
+}

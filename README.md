@@ -25,6 +25,7 @@ Collection of custom built flogo components
 * [tcmpub](activity/tcmpub): Publish message on TIBCO Cloud Messaging
 * [throttle](activity/throttle): Throttle data based on interval
 * [udp](activity/udp): Send message over UDP
+* [wsmessage](activity/wsmessage): Send message over WebSockets
 
 ### Triggers
 * [blemaster](trigger/blemaster):Receive BLE Data (Master)
