@@ -22,11 +22,25 @@
       "name": "message",
       "type": "string",
       "value": ""
+    },
+    {
+      "name": "waitforresponse",
+      "type": "bool",
+      "value": "false"
+    },
+    {
+      "name": "timeout",
+      "type": "int",
+      "value": "5"
     }
   ],
   "output": [
     {
       "name": "result",
+      "type": "string"
+    },
+    {
+      "name": "response",
       "type": "string"
     }
   ]

@@ -33,13 +33,17 @@ func TestOK(t *testing.T) {
 	tc := test.NewTestActivityContext(getActivityMetadata())
 
 	//setup attrs
-	tc.SetInput("server", "localhost:8080")
-	tc.SetInput("channel", "/echo")
+	tc.SetInput("server", "localhost:9191")
+	tc.SetInput("channel", "/test")
 	tc.SetInput("message", "haha!")
+	tc.SetInput("waitforresponse", "true")
+	tc.SetInput("timeout", "5")
 
 	act.Eval(tc)
 
 	//check result attr
 	result := tc.GetOutput("result")
 	fmt.Printf("result: %v\n", result)
+	response := tc.GetOutput("response")
+	fmt.Printf("response: %v\n", response)
 }
