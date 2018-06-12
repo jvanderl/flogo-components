@@ -1,14 +1,14 @@
-# OnStartup
-This trigger provides your flogo application the ability to start a flow when your flogo app starts.
+# WsServer
+This trigger provides your flogo application the ability to start a flow when you receive a Websocket Message.
 
 ## Installation
 
 ```bash
-flogo install github.com/jvanderl/flogo-components/trigger/onstartup
+flogo install github.com/jvanderl/flogo-components/incubator/trigger/wsserver
 ```
 Link for flogo web:
 ```
-https://github.com/jvanderl/flogo-components/trigger/onstartup
+https://github.com/jvanderl/flogo-components/incubator/trigger/wsserver
 ```
 
 ## Schema
