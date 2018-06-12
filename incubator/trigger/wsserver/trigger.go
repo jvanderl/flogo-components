@@ -135,6 +135,6 @@ func (t *WsServerTrigger) Execute(handler *trigger.Handler, wsmessage string, ws
 	if err != nil {
 		log.Error("Error starting action: ", err.Error())
 	} else {
-		log.Debugf("NEW Action call successful: %v", response["response"])
+		log.Debugf("NEW Action call successful: %v", response["response"].Value)
 	}
 }
