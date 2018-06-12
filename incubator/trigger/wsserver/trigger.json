@@ -15,7 +15,7 @@
   "output": [
     {
       "name": "message",
-      "type": "object"
+      "type": "string"
     },
     {
       "name": "channel",
