@@ -7,10 +7,11 @@ import (
 	"strings"
 	"time"
 
+	"github.com/carlescere/scheduler"
+
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
-	"github.com/carlescere/scheduler"
 )
 
 // log is the default package logger
