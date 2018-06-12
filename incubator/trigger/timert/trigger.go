@@ -7,11 +7,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/carlescere/scheduler"
-
-	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
+	"github.com/carlescere/scheduler"
 )
 
 // log is the default package logger
@@ -20,7 +18,6 @@ var log = logger.GetLogger("trigger-jvanderl-timert")
 //TimerTrigger is th main structure for this trigger
 type TimerTrigger struct {
 	metadata *trigger.Metadata
-	//runner   action.Runner
 	config   *trigger.Config
 	timers   []*scheduler.Job
 	handlers []*trigger.Handler
@@ -44,13 +41,6 @@ func (t *TimerFactory) New(config *trigger.Config) trigger.Trigger {
 // Metadata implements trigger.Trigger.Metadata
 func (t *TimerTrigger) Metadata() *trigger.Metadata {
 	return t.metadata
-}
-
-// Init implements ext.Trigger.Init
-func (t *TimerTrigger) Init(runner action.Runner) {
-	log.Debug("Trigger Init called")
-	//	t.runner = runner
-	//	log.Infof("In init, id: '%s', Metadata: '%+v', Config: '%+v'", t.config.Id, t.metadata, t.config)
 }
 
 // Initialize implements ext.Trigger.Initialize
@@ -113,7 +103,7 @@ func (t *TimerTrigger) scheduleOnce(handler *trigger.Handler) {
 
 	seconds := getInitialStartInSeconds(handler)
 	log.Debug("Seconds till trigger fires: ", seconds)
-	timerJob := scheduler.Every(int(seconds))
+	timerJob := scheduler.Every(seconds)
 
 	if timerJob == nil {
 		log.Error("timerJob is nil")
@@ -125,7 +115,6 @@ func (t *TimerTrigger) scheduleOnce(handler *trigger.Handler) {
 		//		t.RunAction(handlerCfg)
 		timerJob.Quit <- true
 	}
-
 	timerJob, err := timerJob.Seconds().NotImmediately().Run(fn)
 	if err != nil {
 		log.Error("Error scheduleOnce flo err: ", err.Error())
