@@ -22,6 +22,12 @@
       "type": "string"
     }
   ],
+  "reply": [
+    {
+      "name": "response",
+      "type": "string"
+    }
+  ],
   "handler": {
     "settings": [
         {
