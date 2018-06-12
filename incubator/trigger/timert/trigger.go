@@ -223,7 +223,7 @@ func getInitialStartInSeconds(handler *trigger.Handler) int {
 	return int(math.Abs(duration.Seconds()))
 }
 
-/*type PrintJob struct {
+type PrintJob struct {
 	Msg string
 }
 
@@ -231,7 +231,7 @@ func (j *PrintJob) Run() error {
 	log.Debug(j.Msg)
 	return nil
 }
-*/
+
 func (t *TimerTrigger) scheduleJobEverySecond(handler *trigger.Handler, fn func()) {
 
 	var interval int
