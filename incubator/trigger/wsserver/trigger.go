@@ -59,7 +59,7 @@ func (t *WsServerTrigger) Initialize(ctx trigger.InitContext) error {
 	return nil
 }
 
-func handleWS(w http.ResponseWriter, r *http.Request) {
+func (t *WsServerTrigger) handleWS(w http.ResponseWriter, r *http.Request) {
 	c, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Errorf("upgrade: %v", err)
@@ -67,7 +67,8 @@ func handleWS(w http.ResponseWriter, r *http.Request) {
 	}
 	defer c.Close()
 	for {
-		mt, message, err := c.ReadMessage()
+		//mt, message, err := c.ReadMessage()
+		_, message, err := c.ReadMessage()
 		log.Debugf("RequestURI: %v", r.RequestURI)
 		if err != nil {
 			log.Errorf("read: %v", err)
@@ -75,11 +76,25 @@ func handleWS(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Debugf("RequestURI: %s", r.RequestURI)
 		log.Debugf("recv: %s", message)
-		err = c.WriteMessage(mt, message)
-		if err != nil {
-			log.Errorf("write: %v", err)
-			break
+
+		for _, handler := range t.handlers {
+			channel := handler.GetStringSetting("channel")
+			//repeating := handler.Settings["repeating"]
+			log.Debugf("Checking URI aginst handler channel: %s", channel)
+			if r.RequestURI == channel {
+				log.Debug("Found matching handler, starting flow")
+				t.Execute(handler)
+			}
 		}
+		//TODO: Add code to something in reply of trigger call
+
+		/*
+			err = c.WriteMessage(mt, message)
+			if err != nil {
+				log.Errorf("write: %v", err)
+				break
+			}
+		*/
 	}
 }
 
@@ -93,7 +108,7 @@ func (t *WsServerTrigger) Start() error {
 
 	flag.Parse()
 
-	http.HandleFunc("/", handleWS)
+	http.HandleFunc("/", t.handleWS)
 
 	http.ListenAndServe(*addr, nil)
 
