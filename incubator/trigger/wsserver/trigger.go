@@ -83,7 +83,7 @@ func (t *WsServerTrigger) handleWS(w http.ResponseWriter, r *http.Request) {
 			log.Debugf("Checking URI aginst handler channel: %s", channel)
 			if r.RequestURI == channel {
 				log.Debug("Found matching handler, starting flow")
-				t.Execute(handler)
+				t.Execute(handler, string(message), channel)
 			}
 		}
 		//TODO: Add code to something in reply of trigger call
@@ -122,11 +122,12 @@ func (t *WsServerTrigger) Stop() error {
 }
 
 // Execute executes any handlers defined immediately on startup
-func (t *WsServerTrigger) Execute(handler *trigger.Handler) {
+func (t *WsServerTrigger) Execute(handler *trigger.Handler, wsmessage string, wschannel string) {
 	log.Debug("Starting process")
 
 	triggerData := map[string]interface{}{
-	//"triggerTime": time.Now().String(),
+		"message": wsmessage,
+		"channel": wschannel,
 	}
 
 	response, err := handler.Handle(context.Background(), triggerData)
