@@ -67,8 +67,7 @@ func (t *WsServerTrigger) handleWS(w http.ResponseWriter, r *http.Request) {
 	}
 	defer c.Close()
 	for {
-		//mt, message, err := c.ReadMessage()
-		_, message, err := c.ReadMessage()
+		mt, message, err := c.ReadMessage()
 		log.Debugf("RequestURI: %v", r.RequestURI)
 		if err != nil {
 			log.Errorf("read: %v", err)
@@ -79,22 +78,21 @@ func (t *WsServerTrigger) handleWS(w http.ResponseWriter, r *http.Request) {
 
 		for _, handler := range t.handlers {
 			channel := handler.GetStringSetting("channel")
-			//repeating := handler.Settings["repeating"]
 			log.Debugf("Checking URI aginst handler channel: %s", channel)
 			if r.RequestURI == channel {
 				log.Debug("Found matching handler, starting flow")
-				t.Execute(handler, string(message), channel)
+				response := t.Execute(handler, string(message), channel)
+				if response != nil {
+					log.Debugf("Got response message: %v", response)
+					responseMsg := []byte(response.(string))
+					err = c.WriteMessage(mt, responseMsg)
+					if err != nil {
+						log.Errorf("Error sending response: %v", err)
+					}
+				}
 			}
 		}
-		//TODO: Add code to something in reply of trigger call
 
-		/*
-			err = c.WriteMessage(mt, message)
-			if err != nil {
-				log.Errorf("write: %v", err)
-				break
-			}
-		*/
 	}
 }
 
@@ -122,7 +120,7 @@ func (t *WsServerTrigger) Stop() error {
 }
 
 // Execute executes any handlers defined immediately on startup
-func (t *WsServerTrigger) Execute(handler *trigger.Handler, wsmessage string, wschannel string) {
+func (t *WsServerTrigger) Execute(handler *trigger.Handler, wsmessage string, wschannel string) interface{} {
 	log.Debug("Starting process")
 
 	triggerData := map[string]interface{}{
@@ -134,7 +132,8 @@ func (t *WsServerTrigger) Execute(handler *trigger.Handler, wsmessage string, ws
 
 	if err != nil {
 		log.Error("Error starting action: ", err.Error())
-	} else {
-		log.Debugf("Action call successful: %v", response["response"].Value())
+		return nil
 	}
+	log.Debugf("Action call successful: %v", response)
+	return response["response"].Value()
 }
