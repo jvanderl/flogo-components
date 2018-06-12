@@ -59,7 +59,7 @@ The below example sends a message `Hello World`
   "name": "Send WebSocket Message",
   "description": "This activity sends a message to a WebSocket server",
   "activity": {
-    "ref": "github.com/TIBCOSoftware/flogo-contrib/activity/wsmessage",
+    "ref": "github.com/jvanderl/flogo-components/activity/wssend",
     "input": {
       "Server": "localhost:9191",
       "Channel": "/channel",
