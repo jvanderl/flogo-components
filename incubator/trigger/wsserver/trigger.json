@@ -1,0 +1,33 @@
+{
+  "name": "wsserver",
+  "type": "flogo:trigger",
+  "ref": "github.com/jvanderl/flogo-components/incubator/trigger/wsserver",
+  "version": "0.0.1",
+  "title": "Websocket Server",
+  "description": "Recieve WebSocket Message",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/incubator/trigger/wsserver",
+  "settings": [
+    {
+      "name": "port",
+      "type": "integer"
+    }
+  ],
+  "output": [
+    {
+      "name": "message",
+      "type": "object"
+    },
+    {
+      "name": "channel",
+      "type": "string"
+    }
+  ],
+  "handler": {
+    "settings": [
+        {
+          "name": "channel",
+          "type": "string"
+        }
+      ]
+  }
+}
