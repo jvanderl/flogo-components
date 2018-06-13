@@ -268,7 +268,6 @@ func (t *TimerTrigger) Execute(handler *trigger.Handler) {
 	log.Debug("Starting process")
 
 	triggerData := map[string]interface{}{
-		"params":      &handler,
 		"triggerTime": time.Now().String(),
 	}
 

@@ -10,10 +10,6 @@
   ],
   "output": [
     {
-      "name": "params",
-      "type": "params"
-    },
-    {
       "name": "triggerTime",
       "type": "string"
     }

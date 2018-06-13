@@ -21,12 +21,8 @@ Outputs and Endpoint:
   ],
   "output": [
     {
-      "name": "params",
-      "type": "params"
-    },
-    {
-      "name": "content",
-      "type": "object"
+      "name": "triggerTime",
+      "type": "string"
     }
   ],
   "handler": {
@@ -71,7 +67,6 @@ Outputs and Endpoint:
 ## Ouputs
 | Output   | Description    |
 |:----------|:---------------|
-| params    | The timer parameters used to trigger this flow |
 | triggerTime |  The date and time the trigger fired |
 
 ## Handlers
