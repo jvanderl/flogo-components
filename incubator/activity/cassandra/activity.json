@@ -4,31 +4,31 @@
   "type": "flogo:activity",
   "description": "Cassandra Query",
   "title": "Cassandra Query",
-  "ref": "ggithub.com/jvanderl/flogo-components/incubator/activity/cassandra",
+  "ref": "github.com/jvanderl/flogo-components/incubator/activity/cassandra",
   "homepage": "https://github.com/jvanderl/flogo-components/incubator/tree/master/activity/cassandra",
   "inputs":[
     {
-      "name": "ClusterIP",
+      "name": "clusterIP",
       "type": "string",
       "value": "localhost"
     },
 	{
-      "name": "Keyspace",
+      "name": "keySpace",
       "type": "string",
       "value": "sample"
     },
 	{
-      "name": "TableName",
+      "name": "tableName",
       "type": "string",
       "value": "employee"
     },
     {
-      "name": "Select",
+      "name": "select",
       "type": "string",
       "value": "*"
     },
     {
-      "name": "Where",
+      "name": "where",
       "type": "string",
       "value": ""
     }	
@@ -37,6 +37,10 @@
     {
       "name": "result",
       "type": "any"
+    },
+    {
+      "name": "rowCount",
+      "type": "int"
     }
   ]
 }

@@ -57,7 +57,10 @@ func TestCreate(t *testing.T) {
 	}
 }
 
-func TestEval(t *testing.T) {
+func TestOK(t *testing.T) {
+
+	fmt.Println("Setting up to succeed.")
+	fmt.Println("Expecting rowCount=1 and result='[map[empid:103 name:pqr salary:7000.5]]'")
 
 	defer func() {
 		if r := recover(); r != nil {
@@ -70,11 +73,11 @@ func TestEval(t *testing.T) {
 	tc := test.NewTestActivityContext(getActivityMetadata())
 
 	//setup attrs
-	tc.SetInput("ClusterIP", "127.0.0.1")
-	tc.SetInput("Keyspace", "sample")
-	tc.SetInput("TableName", "employee")
-	tc.SetInput("Select", "*")
-	tc.SetInput("Where", "empid=103")
+	tc.SetInput("clusterIP", "127.0.0.1")
+	tc.SetInput("keySpace", "sample")
+	tc.SetInput("tableName", "employee")
+	tc.SetInput("select", "*")
+	tc.SetInput("where", "empid=103")
 
 	act.Eval(tc)
 
@@ -90,7 +93,13 @@ func TestEval(t *testing.T) {
 	expected["empid"] = empid
 	expected["name"] = name
 	expected["salary"] = salary
+	rowCount := tc.GetOutput("rowCount")
+	fmt.Printf("rowCount: %v\n", rowCount)
 	result := tc.GetOutput("result")
+	fmt.Printf("result: %v\n", result)
+
+	assert.Equal(t, 1, rowCount)
+
 	switch v := result.(type) {
 	case []map[string]interface{}:
 		for s, a := range v {
@@ -98,5 +107,77 @@ func TestEval(t *testing.T) {
 			assert.Equal(t, expected, a)
 		}
 	}
+
+}
+
+func TestConnectError(t *testing.T) {
+
+	fmt.Println("Setting up to fail connection.")
+	fmt.Println("Expecting rowCount=0 and result='ERROR_CONNECT'")
+
+	defer func() {
+		if r := recover(); r != nil {
+			t.Failed()
+			t.Errorf("panic during execution: %v", r)
+		}
+	}()
+
+	act := NewActivity(getActivityMetadata())
+	tc := test.NewTestActivityContext(getActivityMetadata())
+
+	//setup attrs
+	tc.SetInput("clusterIP", "127.0.0.2")
+	tc.SetInput("keySpace", "sample")
+	tc.SetInput("tableName", "employee")
+	tc.SetInput("select", "*")
+	tc.SetInput("where", "empid=103")
+
+	act.Eval(tc)
+
+	//check result attr
+
+	rowCount := tc.GetOutput("rowCount")
+	fmt.Printf("rowCount: %v\n", rowCount)
+	result := tc.GetOutput("result")
+	fmt.Printf("result: %v\n", result)
+
+	assert.Equal(t, 0, rowCount)
+	assert.Equal(t, "ERROR_CONNECT", result)
+
+}
+
+func TestNoData(t *testing.T) {
+
+	fmt.Println("Setting up to return no data.")
+	fmt.Println("Expecting rowCount=0 and result='NO_DATA'")
+
+	defer func() {
+		if r := recover(); r != nil {
+			t.Failed()
+			t.Errorf("panic during execution: %v", r)
+		}
+	}()
+
+	act := NewActivity(getActivityMetadata())
+	tc := test.NewTestActivityContext(getActivityMetadata())
+
+	//setup attrs
+	tc.SetInput("clusterIP", "127.0.0.1")
+	tc.SetInput("keySpace", "sample")
+	tc.SetInput("tableName", "employeeeeee")
+	tc.SetInput("select", "*")
+	tc.SetInput("where", "empid=103")
+
+	act.Eval(tc)
+
+	//check result attr
+
+	rowCount := tc.GetOutput("rowCount")
+	fmt.Printf("rowCount: %v\n", rowCount)
+	result := tc.GetOutput("result")
+	fmt.Printf("result: %v\n", result)
+
+	assert.Equal(t, 0, rowCount)
+	assert.Equal(t, "NO_DATA", result)
 
 }

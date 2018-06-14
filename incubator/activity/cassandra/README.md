@@ -19,27 +19,27 @@ Inputs and Outputs:
 {
   "inputs":[
     {
-      "name": "ClusterIP",
+      "name": "clusterIP",
       "type": "string",
       "value": "localhost"
     },
 	{
-      "name": "Keyspace",
+      "name": "keySpace",
       "type": "string",
       "value": "sample"
     },
 	{
-      "name": "TableName",
+      "name": "tableName",
       "type": "string",
       "value": "employee"
     },
     {
-      "name": "Select",
+      "name": "select",
       "type": "string",
       "value": "*"
     },
     {
-      "name": "Where",
+      "name": "where",
       "type": "string",
       "value": ""
     }	
@@ -48,6 +48,10 @@ Inputs and Outputs:
     {
       "name": "result",
       "type": "any"
+    },
+    {
+      "name": "rowCount",
+      "type": "int"
     }
   ]
 }
@@ -56,14 +60,15 @@ Inputs and Outputs:
 ## Inputs
 | Input       | Description    |
 |:------------|:---------------|
-| ClusterIP   | The cluster to connect to |         
-| Keyspace    | The keyspace the table to query resides in  |
-| TableName   | The table to query |
-| Select      | The element to return from the query (can be "*") |
-| Where       | The selection criteria |
+| clusterIP   | The cluster to connect to |         
+| keySpace    | The keyspace the table to query resides in  |
+| tableName   | The table to query |
+| select      | The element to return from the query (can be "*") |
+| where       | The selection criteria |
 
 ## Outputs
 | Output       | Description    |
 |:------------|:---------------|
 | result   | The result of the query |  
+| rowCount   | The result of the query |  
 

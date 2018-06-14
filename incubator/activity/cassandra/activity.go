@@ -28,11 +28,11 @@ func (a *MyActivity) Metadata() *activity.Metadata {
 // Eval implements activity.Activity.Eval
 func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	// Get the activity data from the context
-	clusterIP := context.GetInput("ClusterIP").(string)
-	keySpace := context.GetInput("Keyspace").(string)
-	tableName := context.GetInput("TableName").(string)
-	selectElements := context.GetInput("Select").(string)
-	whereClause := context.GetInput("Where").(string)
+	clusterIP := context.GetInput("clusterIP").(string)
+	keySpace := context.GetInput("keySpace").(string)
+	tableName := context.GetInput("tableName").(string)
+	selectElements := context.GetInput("select").(string)
+	whereClause := context.GetInput("where").(string)
 
 	// Use the log object to log the greeting
 	//log.Debugf("The Flogo engine says [%s] to [%s] with table [%s]", clusterIP, keySpace, tableName)
@@ -49,6 +49,9 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	session, err := cluster.CreateSession()
 	if err != nil {
 		log.Debugf("Could not connect to cassandra cluster: ", err)
+		context.SetOutput("result", "ERROR_CONNECT")
+		context.SetOutput("rowCount", 0)
+		return true, err
 	}
 	log.Debugf("Session Created Sucessfully")
 
@@ -65,8 +68,14 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 
 	iter := session.Query(queryString).Iter()
 	log.Debugf("number of columns: %v", len(iter.Columns()))
-	var result []map[string]interface{}
 
+	context.SetOutput("rowCount", iter.NumRows())
+
+	if iter.NumRows() == 0 {
+		context.SetOutput("result", "NO_DATA")
+		return true, nil
+	}
+	var result []map[string]interface{}
 	for i := 0; i < iter.NumRows(); i++ {
 		row := make(map[string]interface{})
 		if !iter.MapScan(row) {

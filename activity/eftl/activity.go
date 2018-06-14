@@ -1,11 +1,12 @@
 package eftl
 
 import (
+	"github.com/TIBCOSoftware/eftl"
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
-	"github.com/jvanderl/tib-eftl"
-	"crypto/x509"
+
 	"crypto/tls"
+	"crypto/x509"
 	"encoding/base64"
 	"net/url"
 )
@@ -37,7 +38,7 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	wsChannel := context.GetInput("channel").(string)
 	wsDestination := context.GetInput("destination").(string)
 	wsSubject := context.GetInput("subject").(string)
-	wsMessage := context.GetInput("message").(string)
+	wsMessage := context.GetInput("message")
 	wsUser := context.GetInput("user").(string)
 	wsPassword := context.GetInput("password").(string)
 	wsSecure := context.GetInput("secure").(bool)
@@ -101,12 +102,17 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	compChan := make(chan *eftl.Completion, 1000)
 
 	// publish the message
-	conn.PublishAsync(eftl.Message{
-		"_dest": wsDestination,
-		"_cid" : wsClientID,
+	msg2 := eftl.Message{
+		"_cid":  wsClientID,
 		"_subj": wsSubject,
-		"text" : wsMessage,
-	}, compChan)
+		"_dest": wsDestination,
+	}
+	msg2 := append(msg2, wsMessage)
+	//"text":  wsMessage,
+	msg2["_dest"] = wsDestination
+	log.Infof("msg2: %v", msg2)
+
+	conn.PublishAsync(msg2, compChan)
 
 	for {
 		select {
