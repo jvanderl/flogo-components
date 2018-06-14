@@ -52,6 +52,7 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 			log.Debug("Got a match!")
 			match = find
 			response = element["resp"].(string)
+			break
 		}
 	}
 	context.SetOutput("match", match)
