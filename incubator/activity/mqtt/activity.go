@@ -1,7 +1,9 @@
 package mqtt
 
 import (
+	"encoding/json"
 	"fmt"
+
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 	"github.com/eclipse/paho.mqtt.golang"
@@ -57,14 +59,16 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	}
 
 	//payloadInput := context.GetInput(payload)
-	ivpayload := context.GetInput(payload)
+	payloadInput := context.GetInput(payload)
 
 	//ivpayload, ok := payloadInput.(string)
-	if ivpayload == nil {
-	//if !ok {
+	if payloadInput == nil {
+		//if !ok {
 		context.SetOutput("result", "PAYLOAD_NOT_SET")
 		return true, fmt.Errorf("payload not set")
 	}
+	ivpayload := makeMsg(payloadInput)
+	log.Debugf("Created Message: %v", ivpayload)
 
 	ivqos, ok := context.GetInput(qos).(int)
 
@@ -118,4 +122,15 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	context.SetOutput("result", "OK")
 
 	return true, nil
+}
+
+func makeMsg(msgData interface{}) string {
+
+	returnData := ""
+	b, _ := json.Marshal(msgData)
+	returnData = string(b)
+
+	log.Debugf("MakeMsg returning data: %v", returnData)
+
+	return returnData
 }
