@@ -108,12 +108,12 @@ func (a *MyActivity) Eval(context activity.Context) (done bool, err error) {
 	opts.SetPassword(ivPassword)
 	client := mqtt.NewClient(opts)
 
-	log.Debugf("MQTT Publisher connecting")
+	log.Debugf("MQTT Publisher connecting to broker %v using client ID %v", ivbroker, ivID)
 	if token := client.Connect(); token.Wait() && token.Error() != nil {
 		panic(token.Error())
 	}
 
-	log.Debugf("MQTT Publisher connected, sending message")
+	log.Debugf("MQTT Publisher connected, sending message on topic %v", ivtopic)
 	token := client.Publish(ivtopic, byte(ivqos), false, ivpayload)
 	token.Wait()
 
