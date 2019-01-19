@@ -77,8 +77,8 @@ Inputs and Outputs:
 | skipSsl     | False    | If set to true, skips the SSL validation (defaults to false)
 
 ## Outputs
-| SettiOutput | Description |
-|:------------|:---------|:------------|
+| Output | Description |
+|:------------|:------------|
 | serviceAccessToken  | Use this token in subsequent REST calls to the platform |         
 | serviceRedirectURL   | The URL to login to the service area with the token provided |
 | status       | Login Status, 0 if all is OK |
