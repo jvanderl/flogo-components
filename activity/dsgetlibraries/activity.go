@@ -57,17 +57,7 @@ func (a *RESTActivity) Eval(context activity.Context) (done bool, err error) {
 	skipSsl, _ := context.GetInput(ivSkipSsl).(bool)
 	serviceAccessToken, _ := context.GetInput(ivAccessToken).(string)
 
-	//Do Service Login
-	/*loginResponse, err := doServiceLogin(context.GetInput(iv3DPassportURL).(string),
-		context.GetInput(iv3DServiceURL).(string),
-		serviceAccessToken, skipSsl)
-	if err != nil {
-		return false, err
-	}
-	log.Infof("Login Response: %v", loginResponse)
-	*/
-
-	//Now call Service
+	//Call Service
 	serviceResponse, err := callService(context.GetInput(iv3DServiceURL).(string),
 		serviceAccessToken,
 		skipSsl)
@@ -80,60 +70,6 @@ func (a *RESTActivity) Eval(context activity.Context) (done bool, err error) {
 	context.SetOutput(ovStatus, "0")
 	return true, nil
 }
-
-/*func doServiceLogin(passportURI string, serviceURI string, scvAccessToken string, skipSSL bool) (response interface{}, err error) {
-
-	method := "GET"
-	uri := passportURI
-	uri += "/login"
-	pathParams := make(map[string]string)
-	pathParams["service"] = serviceURI
-	pathParams["ticket"] = scvAccessToken
-	uri = BuildURI(uri, pathParams)
-	log.Debugf("REST Call: [%s] %s\n", method, uri)
-	var reqBody io.Reader
-	contentType := "application/json; charset=UTF-8"
-	reqBody = nil
-	req, err := http.NewRequest(method, uri, reqBody)
-	if err != nil {
-		return nil, err
-	}
-	if reqBody != nil {
-		req.Header.Set("Content-Type", contentType)
-	}
-	req.Header.Set("Accept", "application/json")
-
-	restoreCookies(req)
-
-	httpTransportSettings := &http.Transport{}
-	var client *http.Client
-
-	// Skip ssl validation
-	if skipSSL {
-		httpTransportSettings.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	}
-
-	client = &http.Client{Transport: httpTransportSettings}
-
-	resp, err := client.Do(req)
-	defer resp.Body.Close()
-
-	if err != nil {
-		return nil, err
-	}
-	log.Infof("response Status: %v", resp.Status)
-	respBody, _ := ioutil.ReadAll(resp.Body)
-
-	saveCookies(resp)
-
-	var result interface{}
-
-	d := json.NewDecoder(bytes.NewReader(respBody))
-	d.UseNumber()
-	err = d.Decode(&result)
-
-	return result, nil
-}*/
 
 func callService(serviceURI string, serviceAccessToken string, skipSSL bool) (response interface{}, err error) {
 

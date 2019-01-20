@@ -1,16 +1,16 @@
 ---
-title: 3DS Login
+title: 3DS Get Classification Libraries
 ---
 
 # 3DS Login
-This activity allows you to login to the Dassault Systemes 3DEXPERIENCE Platform.
+This activity allows you to get Classification Libraries from the Dassault Systemes 3DEXPERIENCE Platform.
 
 ## Installation
 ### Flogo Web
-https://github.com/jvanderl/flogo-components/activity/dslogin
+https://github.com/jvanderl/flogo-components/activity/dsgetlibraries
 ### Flogo CLI
 ```bash
-flogo add activity github.com/jvanderl/flogo-components/activity/dslogin
+flogo add activity github.com/jvanderl/flogo-components/activity/dsgetlibraries
 ```
 
 ## Schema
@@ -20,27 +20,12 @@ Inputs and Outputs:
 {
   "input":[
     {
-      "name": "3DPassportURL",
-      "type": "string",
-      "required": true
-    },
-    {
       "name": "3DServiceURL",
       "type": "string",
       "required": true
     },
     {
-      "name": "userName",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "serviceName",
-      "type": "string",
-      "required": true
-    },
-    {
-      "name": "serviceSecret",
+      "name": "accessToken",
       "type": "string",
       "required": true
     },
@@ -52,12 +37,8 @@ Inputs and Outputs:
   ],
   "output": [
     {
-      "name": "serviceAccessToken",
-      "type": "string"
-    },
-    {
-      "name": "serviceRedirectURL",
-      "type": "string"
+      "name": "result",
+      "type": "any"
     },
     {
       "name": "status",
@@ -69,18 +50,14 @@ Inputs and Outputs:
 ## Inputs
 | Input     | Required | Description |
 |:------------|:---------|:------------|
-| 3DPassportURL | True     | the URL for the platform 3DPassport Service |         
 | 3DServiceURL   | True     | The URL for the service area to call |
-| userName       | True    | The User Name to logon the the platform |
-| serviceName  | True    | The Service Name from 3DPassport Integration configuration|
-| serviceSecret | True    | TThe Service Secret from 3DPassport Integration configuration |
+| accessToken  | True    | The service access token (get from 3dslogin) |
 | skipSsl     | False    | If set to true, skips the SSL validation (defaults to false)
 
 ## Outputs
 | Output | Description |
 |:------------|:------------|
-| serviceAccessToken  | Use this token in subsequent REST calls to the platform |         
-| serviceRedirectURL   | The URL to login to the service area with the token provided |
+| result  | The service response |         
 | status       | Login Status, 0 if all is OK |
 
 ## Examples
@@ -89,17 +66,14 @@ The below example logs in to 3DEXPERIENCE platform as user 'demoleader' for serv
 
 ```json
 {
-  "id": "dslogin",
-  "name": "Login to 3DS Platform",
-  "description": "Login to 3DS Platform",
+  "id": "dsgetlibraries",
+  "name": "Get Libraries",
+  "description": "Get Classification Libraroes from 3DS Platform",
   "activity": {
-    "ref": "github.com/jvanderl/flogo-components/activity/dslogin",
+    "ref": "github.com/jvanderl/flogo-components/activity/dsgetlibraries",
     "input": {
-      "3DPassportURL": "http://localhost/3DPassport",
       "3DServiceURL": "http://localhost/3DSpace",
-      "userName": "demoleader",
-      "serviceName": "flogo",
-      "serviceName": "<servicesecret>",
+      "userName": "<token>",
       "skipSsl": "true"
     }
   }
