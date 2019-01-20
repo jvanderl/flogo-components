@@ -15,7 +15,7 @@ import (
 )
 
 // log is the default package logger
-var log = logger.GetLogger("activity-tibco-rest")
+var log = logger.GetLogger("activity-jvanderl-dslogin")
 
 var savedCookies []http.Cookie
 
@@ -90,23 +90,15 @@ func (a *RESTActivity) Eval(context activity.Context) (done bool, err error) {
 	log.Infof("Service Redirect URL: %v", serviceRedirectURL)
 
 	//Now do Service Login
-	loginResponse, err := doServiceLogin(context.GetInput(iv3DPassportURL).(string),
-		context.GetInput(iv3DServiceURL).(string),
-		serviceAccessToken, skipSsl)
-	if err != nil {
-		return false, err
-	}
-	log.Infof("Login Response: %v", loginResponse)
-
-	//Now call Test Service
-	/*serviceResponse, err := callTestService(context.GetInput(iv3DServiceURL).(string),
-		serviceAccessToken,
-		skipSsl)
-	if err != nil {
-		return false, err
-	}
-	log.Infof("Service Response: %v", serviceResponse)*/
-
+	/*
+		loginResponse, err := doServiceLogin(context.GetInput(iv3DPassportURL).(string),
+			context.GetInput(iv3DServiceURL).(string),
+			serviceAccessToken, skipSsl)
+		if err != nil {
+			return false, err
+		}
+		log.Infof("Login Response: %v", loginResponse)
+	*/
 	context.SetOutput(ovServiceAccessToken, serviceAccessToken)
 	context.SetOutput(ovServiceRedirectURL, serviceRedirectURL)
 	context.SetOutput(ovStatus, "0")
@@ -120,7 +112,10 @@ func getCASTransientToken(passportURI string, userName string, serviceName strin
 	uri += "/api/v2/batch/ticket"
 	pathParams := make(map[string]string)
 	pathParams["identifier"] = userName
-	uri = BuildURI(uri, pathParams)
+	uri, err = BuildURI(uri, pathParams)
+	if err != nil {
+		return "", "", err
+	}
 	log.Debugf("REST Call: [%s] %s\n", method, uri)
 	var reqBody io.Reader
 	contentType := "application/json; charset=UTF-8"
@@ -172,7 +167,10 @@ func doCASLoginForService(passportURI string, serviceURI string, accessToken str
 	pathParams := make(map[string]string)
 	pathParams["tgt"] = accessToken
 	pathParams["service"] = serviceURI
-	uri = BuildURI(uri, pathParams)
+	uri, err = BuildURI(uri, pathParams)
+	if err != nil {
+		return "", "", err
+	}
 	log.Debugf("REST Call: [%s] %s\n", method, uri)
 	var reqBody io.Reader
 	contentType := "application/json; charset=UTF-8"
@@ -226,7 +224,10 @@ func doServiceLogin(passportURI string, serviceURI string, scvAccessToken string
 	pathParams := make(map[string]string)
 	pathParams["service"] = serviceURI
 	pathParams["ticket"] = scvAccessToken
-	uri = BuildURI(uri, pathParams)
+	uri, err = BuildURI(uri, pathParams)
+	if err != nil {
+		return nil, err
+	}
 	log.Debugf("REST Call: [%s] %s\n", method, uri)
 	var reqBody io.Reader
 	contentType := "application/json; charset=UTF-8"
@@ -272,56 +273,6 @@ func doServiceLogin(passportURI string, serviceURI string, scvAccessToken string
 	return result, nil
 }
 
-/*
-func callTestService(serviceURI string, serviceAccessToken string, skipSSL bool) (response interface{}, err error) {
-
-	method := "GET"
-	uri := serviceURI
-	uri += "/resources/IPClassificationReuse/library/libraries"
-	pathParams := make(map[string]string)
-	pathParams["ticket"] = serviceAccessToken
-	uri = BuildURI(uri, pathParams)
-	log.Debugf("REST Call: [%s] %s\n", method, uri)
-	var reqBody io.Reader
-	contentType := "application/json; charset=UTF-8"
-	reqBody = nil
-	req, err := http.NewRequest(method, uri, reqBody)
-	if err != nil {
-		return nil, err
-	}
-	if reqBody != nil {
-		req.Header.Set("Content-Type", contentType)
-	}
-	req.Header.Set("Accept", "application/json")
-
-	httpTransportSettings := &http.Transport{}
-	var client *http.Client
-
-	// Skip ssl validation
-	if skipSSL {
-		httpTransportSettings.TLSClientConfig = &tls.Config{InsecureSkipVerify: true}
-	}
-
-	client = &http.Client{Transport: httpTransportSettings}
-
-	resp, err := client.Do(req)
-	defer resp.Body.Close()
-
-	if err != nil {
-		return nil, err
-	}
-	log.Debugf("response Status: %v", resp.Status)
-	respBody, _ := ioutil.ReadAll(resp.Body)
-
-	var result interface{}
-
-	d := json.NewDecoder(bytes.NewReader(respBody))
-	d.UseNumber()
-	err = d.Decode(&result)
-
-	return result, nil
-}
-*/
 ////////////////////////////////////////////////////////////////////////////////////////
 // Utils
 func saveCookies(resp *http.Response) {

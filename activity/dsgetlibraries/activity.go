@@ -15,7 +15,7 @@ import (
 )
 
 // log is the default package logger
-var log = logger.GetLogger("activity-tibco-rest")
+var log = logger.GetLogger("activity-jvanderl-dsgetlibraries")
 
 var savedCookies []http.Cookie
 
