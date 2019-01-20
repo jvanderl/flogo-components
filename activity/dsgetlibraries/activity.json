@@ -3,7 +3,7 @@
   "type": "flogo:activity",
   "ref": "github.com/jvanderl/flogo-components/activity/dsgetlibraries",
   "version": "0.0.1",
-  "title": "3DS Login",
+  "title": "3DS Get Libraries",
   "description": "Get Classification Libraries from the Dassault 3DEXPERIENCE Platform",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/dsgetlibraries",
   "input":[
