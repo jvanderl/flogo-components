@@ -7,7 +7,6 @@ Collection of custom built flogo components
 * [blewrite](activity/blewrite): Write data to a Bluetooth BLE Device
 * [checkiban](activity/checkiban): Validates an International Bank Account Number
 * [combine](activity/combine): Combine separate parts into a single string
-* [dslogin](activity/dslogin): Login to the Dassault 3DExperience Platform
 * [eftl](activity/eftl): Send message to eFTL
 * [encoder](activity/encoder): Encode en decode strings using Base64, Base32
 * [filter](activity/filter): Filter out unwanted data
