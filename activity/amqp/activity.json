@@ -1,0 +1,87 @@
+{
+  "name": "amqp",
+  "version": "0.0.1",
+  "type": "flogo:activity",
+  "description": "Publish AMQP message",
+  "ref": "github.com/jvanderl/flogo-components/activity/amqp",
+  "author": "Jan van der Lugt <jvanderl@outlook.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/amqp" ,
+  "inputs":[
+    {
+      "name": "server",
+      "type": "string",
+      "required": true,
+      "value" : "localhost"
+    },
+    {
+      "name": "port",
+      "type": "string",
+      "required": true,
+      "value" : "5672"
+    },
+    {
+      "name": "userID",
+      "type": "string",
+      "required": true,
+      "value" : "guest"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "required": true,
+      "value" : "guest"
+    },
+    {
+      "name": "message",
+      "type": "any",
+      "required": true
+    },
+    {
+      "name": "exchange",
+      "type": "string",
+      "required": false,
+      "value" : ""
+    },
+    {
+      "name": "routingKey",
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "routingType",
+      "type": "string",
+      "required": true,
+      "allowed" : ["queue", "topic"]
+    },
+    {
+      "name": "durable",
+      "type": "boolean",
+      "required": false,
+      "value" : "false"
+    },
+    {
+      "name": "autoDelete",
+      "type": "boolean",
+      "required": false,
+      "value" : "false"
+    },
+    {
+      "name": "exclusive",
+      "type": "boolean",
+      "required": false,
+      "value" : "false"
+    },
+    {
+      "name": "noWait",
+      "type": "boolean",
+      "required": true,
+      "value" : "false"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "result",
+      "type": "any"
+    }
+  ]
+}

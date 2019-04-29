@@ -4,6 +4,7 @@ Collection of custom built flogo components
 ## Components
 
 ### Activities
+* [amqp](activity/amqp): Publishes a message on AMQP queue or topic
 * [blewrite](activity/blewrite): Write data to a Bluetooth BLE Device
 * [checkiban](activity/checkiban): Validates an International Bank Account Number
 * [combine](activity/combine): Combine separate parts into a single string
