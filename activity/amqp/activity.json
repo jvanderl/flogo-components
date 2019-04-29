@@ -2,7 +2,8 @@
   "name": "amqp",
   "version": "0.0.1",
   "type": "flogo:activity",
-  "description": "Publish AMQP message",
+  "title": "Publish AMQP message",
+  "description": "Publishes a message on an AMQP queue or topic",
   "ref": "github.com/jvanderl/flogo-components/activity/amqp",
   "author": "Jan van der Lugt <jvanderl@outlook.com>",
   "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/amqp" ,
@@ -51,7 +52,8 @@
       "name": "routingType",
       "type": "string",
       "required": true,
-      "allowed" : ["queue", "topic"]
+      "allowed" : ["queue", "topic"],
+      "value" : "queue"
     },
     {
       "name": "durable",
