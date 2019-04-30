@@ -1,0 +1,50 @@
+{
+  "name": "amqp",
+  "type": "flogo:trigger",
+  "ref": "github.com/jvanderl/flogo-components/trigger/amqp",
+  "version": "0.0.1",
+  "title": "Receive AMQP Message",
+  "description": "AQMP Subscriber",
+  "author": "Jan van der Lugt <jvanderl@outlook.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/amqp",
+  "settings":[
+    {
+      "name": "server",
+      "type": "string",
+      "required": true,
+      "value" : "localhost"
+    },
+    {
+      "name": "port",
+      "type": "string",
+      "required": true,
+      "value" : "5672"
+    },
+    {
+      "name": "userID",
+      "type": "string",
+      "required": true,
+      "value" : "guest"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "required": true,
+      "value" : "guest"
+    }
+  ],
+  "output": [
+    {
+      "name": "message",
+      "type": "any"
+    }
+  ],
+  "handler": {
+    "settings": [
+      {
+        "name": "queueName",
+        "type": "string"
+      }
+    ]
+  }
+}
