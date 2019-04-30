@@ -29,6 +29,7 @@ Collection of custom built flogo components
 * [wsmessage](activity/wsmessage): Send message over WebSockets
 
 ### Triggers
+* [amqp](trigger/amqp):Receive messages from AMQP
 * [blemaster](trigger/blemaster):Receive BLE Data (Master)
 * [eftl](trigger/eftl): Receive messages from TIBCO eFTL
 * [gpio](trigger/gpio): Use GPIO pin to start flows
