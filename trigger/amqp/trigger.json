@@ -37,6 +37,14 @@
     {
       "name": "message",
       "type": "any"
+    },
+    {
+      "name": "contentType",
+      "type": "string"
+    },
+    {
+      "name": "routingKey",
+      "type": "string"
     }
   ],
   "handler": {
