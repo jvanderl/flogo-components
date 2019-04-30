@@ -240,9 +240,11 @@ func (t *AMQPTrigger) handle(deliveries <-chan amqp.Delivery, done chan error, a
 			d.DeliveryTag,
 			d.Body,
 		)
-		//		log.Infof("Content Type: %s ", d.ContentType)
-		//		log.Infof("Routing Key: %s ", d.RoutingKey)
-		t.RunAction(actionID, string(d.Body), d.ContentType, d.RoutingKey)
+		log.Infof("Content Type: %s ", d.ContentType)
+		log.Infof("Routing Key: %s ", d.RoutingKey)
+		log.Infof("actionID: %s ", actionID)
+		t.RunAction(actionID, "tesmessage", d.ContentType, d.RoutingKey)
+		//		t.RunAction(actionID, string(d.Body), d.ContentType, d.RoutingKey)
 		d.Ack(false)
 	}
 	//**** TODO add actual response runaction here ****
