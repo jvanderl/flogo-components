@@ -57,7 +57,40 @@ func TestPublishQueue(t *testing.T) {
 	tc.SetInput("routingKey", "hello")
 	tc.SetInput("routingType", "queue")
 	tc.SetInput("message", "Hello World, from Flogo!")
-	tc.SetInput("durable", "false")
+	tc.SetInput("durable", "true")
+	tc.SetInput("autoDelete", "false")
+	tc.SetInput("exclusive", "false")
+	tc.SetInput("noWait", "false")
+
+	act.Eval(tc)
+
+	//check result attr
+	val := tc.GetOutput("result")
+	fmt.Printf("result: %v\n", val)
+}
+
+func TestPublishQueue2(t *testing.T) {
+
+	defer func() {
+		if r := recover(); r != nil {
+			t.Failed()
+			t.Errorf("panic during execution: %v", r)
+		}
+	}()
+
+	act := NewActivity(getActivityMetadata())
+	tc := test.NewTestActivityContext(getActivityMetadata())
+
+	//setup attrs
+	tc.SetInput("server", "localhost")
+	tc.SetInput("port", "5672")
+	tc.SetInput("userID", "test")
+	tc.SetInput("password", "test")
+	tc.SetInput("exchange", "")
+	tc.SetInput("routingKey", "goodbye")
+	tc.SetInput("routingType", "queue")
+	tc.SetInput("message", "Goodbye, from Flogo!")
+	tc.SetInput("durable", "true")
 	tc.SetInput("autoDelete", "false")
 	tc.SetInput("exclusive", "false")
 	tc.SetInput("noWait", "false")
