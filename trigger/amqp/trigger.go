@@ -31,11 +31,11 @@ const (
 )
 
 type Consumer struct {
-	conn     *amqp.Connection
-	channel  *amqp.Channel
-	tag      string
-	done     chan error
-	actionID string
+	conn    *amqp.Connection
+	channel *amqp.Channel
+	tag     string
+	done    chan error
+	handler *trigger.Handler
 }
 
 var Consumers []Consumer
@@ -93,16 +93,15 @@ func (t *AMQPTrigger) Start() error {
 
 	uri := "amqp://" + userID + ":" + password + "@" + serverName + ":" + serverPort + "/"
 	log.Info("Adding Listeners")
-	for _, handler := range t.config.Handlers {
+	for i, handler := range t.config.Handlers {
 		log.Info("Creating new Consumer...")
 		exchange := handler.GetSetting("exchange")
 		exchangeType := handler.GetSetting("exchangeType")
 		queueName := handler.GetSetting("queueName")
 		bindingKey := handler.GetSetting("bindingKey")
 		consumerTag := handler.GetSetting("consumerTag")
-		actionID := handler.ActionId
 
-		consumer, err := t.NewConsumer(uri, exchange, exchangeType, queueName, bindingKey, consumerTag, actionID)
+		consumer, err := t.NewConsumer(uri, exchange, exchangeType, queueName, bindingKey, consumerTag, t.handlers[i])
 		if err != nil {
 			log.Error("Error Creating Consumer")
 			return err
@@ -131,13 +130,13 @@ func (t *AMQPTrigger) Stop() error {
 	return nil
 }
 
-func (t *AMQPTrigger) NewConsumer(amqpURI, exchange, exchangeType, queueName, key, ctag string, actionID string) (*Consumer, error) {
+func (t *AMQPTrigger) NewConsumer(amqpURI, exchange, exchangeType, queueName, key, ctag string, handler *trigger.Handler) (*Consumer, error) {
 	c := &Consumer{
-		conn:     nil,
-		channel:  nil,
-		tag:      ctag,
-		done:     make(chan error),
-		actionID: actionID,
+		conn:    nil,
+		channel: nil,
+		tag:     ctag,
+		done:    make(chan error),
+		handler: handler,
 	}
 
 	var err error
@@ -211,7 +210,7 @@ func (t *AMQPTrigger) NewConsumer(amqpURI, exchange, exchangeType, queueName, ke
 		return nil, fmt.Errorf("Queue Consume: %s", err)
 	}
 
-	go t.handle(deliveries, c.done, actionID)
+	go t.handle(deliveries, c.done, handler)
 
 	return c, nil
 }
@@ -232,7 +231,7 @@ func (c *Consumer) Shutdown() error {
 	return <-c.done
 }
 
-func (t *AMQPTrigger) handle(deliveries <-chan amqp.Delivery, done chan error, actionID string) {
+func (t *AMQPTrigger) handle(deliveries <-chan amqp.Delivery, done chan error, handler *trigger.Handler) {
 	for d := range deliveries {
 		log.Infof(
 			"got %dB delivery: [%v] %q",
@@ -242,8 +241,8 @@ func (t *AMQPTrigger) handle(deliveries <-chan amqp.Delivery, done chan error, a
 		)
 		log.Infof("Content Type: %s ", d.ContentType)
 		log.Infof("Routing Key: %s ", d.RoutingKey)
-		log.Infof("actionID: %s ", actionID)
-		t.RunAction(actionID, "tesmessage", d.ContentType, d.RoutingKey)
+		t.Execute(handler, d.Body, d.ContentType, d.RoutingKey)
+		//		t.RunAction(actionID, "tesmessage", d.ContentType, d.RoutingKey)
 		//		t.RunAction(actionID, string(d.Body), d.ContentType, d.RoutingKey)
 		d.Ack(false)
 	}
@@ -253,48 +252,21 @@ func (t *AMQPTrigger) handle(deliveries <-chan amqp.Delivery, done chan error, a
 	done <- nil
 }
 
-// RunAction starts a new Process Instance
-func (t *AMQPTrigger) RunAction(actionID string, payload string, contentType string, routingKey string) {
+// Execute executes any handlers defined immediately on startup
+func (t *AMQPTrigger) Execute(handler *trigger.Handler, payload []byte, contentType string, routingKey string) {
+	log.Debug("Starting process")
 
-	log.Debug("Starting new Process Instance")
-	log.Debugf("Action Id: %s", actionID)
-	log.Debugf("Payload: %s", payload)
-	log.Debugf("Content Type: %s ", contentType)
-	log.Debugf("Routing Key: %s ", routingKey)
-
-	req := t.constructStartRequest(payload, contentType, routingKey)
-
-	startAttrs, _ := t.metadata.OutputsToAttrs(req.Data, false)
-
-	action := action.Get(actionID)
-
-	context := trigger.NewContext(context.Background(), startAttrs)
-
-	_, replyData, err := t.runner.Run(context, action, actionID, nil)
-	if err != nil {
-		log.Error(err)
+	triggerData := map[string]interface{}{
+		"message":     payload,
+		"contentType": contentType,
+		"routingKey":  routingKey,
 	}
 
-	log.Debugf("Ran action: [%s]", actionID)
-	log.Debugf("Reply data: [%s]", replyData)
+	response, err := handler.Handle(context.Background(), triggerData)
 
-}
-
-func (t *AMQPTrigger) constructStartRequest(message string, contentType string, routingKey string) *StartRequest {
-
-	//TODO how to handle reply to, reply feature
-	req := &StartRequest{}
-	data := make(map[string]interface{})
-	data["message"] = message
-	data["contentType"] = contentType
-	data["routingKey"] = routingKey
-	req.Data = data
-	return req
-}
-
-// StartRequest describes a request for starting a ProcessInstance
-type StartRequest struct {
-	ProcessURI string                 `json:"flowUri"`
-	Data       map[string]interface{} `json:"data"`
-	ReplyTo    string                 `json:"replyTo"`
+	if err != nil {
+		log.Error("Error starting action: ", err.Error())
+	} else {
+		log.Debugf("Action call successful: %v", response)
+	}
 }
