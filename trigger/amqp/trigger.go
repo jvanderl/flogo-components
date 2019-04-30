@@ -264,7 +264,7 @@ func (t *AMQPTrigger) handle(deliveries <-chan amqp.Delivery, done chan error, h
 			d.Body,
 		)
 		log.Debugf("Content Type: %s ", d.ContentType)
-		log.InfDebugfof("Routing Key: %s ", d.RoutingKey)
+		log.Debugf("Routing Key: %s ", d.RoutingKey)
 		t.Execute(handler, d.Body, d.ContentType, d.RoutingKey)
 		d.Ack(false)
 	}
