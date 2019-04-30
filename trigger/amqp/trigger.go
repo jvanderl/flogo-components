@@ -3,6 +3,7 @@ package amqp
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
@@ -14,20 +15,24 @@ import (
 var log = logger.GetLogger("trigger-jvanderl-amqp")
 
 const (
-	ivServer   = "server"
-	ivPort     = "port"
-	ivUserID   = "userID"
-	ivPassword = "password"
-	//	ivExchange    = "exchange"
-	//	ivRoutingKey  = "routingKey"
-	//	ivRoutingType = "routingType"
-	//	ivMessage     = "message"
-	//	ivDurable     = "durable"
-	//	ivAutoDelete  = "autoDelete"
-	//	ivExclusive   = "exclusive"
-	//	ivNoWait      = "noWait"
+	ivServer       = "server"
+	ivPort         = "port"
+	ivUserID       = "userID"
+	ivPassword     = "password"
+	ivExchange     = "exchange"
+	ivExchangeType = "exchangeType"
+	ivQueueName    = "queueName"
+	ivBindingKey   = "bindingKey"
+	ivConsumerTag  = "consumerTag"
+	ivDurable      = "durable"
+	ivAutoDelete   = "autoDelete"
+	ivExclusive    = "exclusive"
+	ivNoWait       = "noWait"
+	ivNoAck        = "noAck"
 
-	ovMessage = "message"
+	ovMessage     = "message"
+	ovContentType = "contentType"
+	ovRoutingKey  = "routingKey"
 )
 
 type Consumer struct {
@@ -95,13 +100,32 @@ func (t *AMQPTrigger) Start() error {
 	log.Info("Adding Listeners")
 	for i, handler := range t.config.Handlers {
 		log.Info("Creating new Consumer...")
-		exchange := handler.GetSetting("exchange")
-		exchangeType := handler.GetSetting("exchangeType")
-		queueName := handler.GetSetting("queueName")
-		bindingKey := handler.GetSetting("bindingKey")
-		consumerTag := handler.GetSetting("consumerTag")
-
-		consumer, err := t.NewConsumer(uri, exchange, exchangeType, queueName, bindingKey, consumerTag, t.handlers[i])
+		exchange := handler.GetSetting(ivExchange)
+		exchangeType := handler.GetSetting(ivExchangeType)
+		queueName := handler.GetSetting(ivQueueName)
+		bindingKey := handler.GetSetting(ivBindingKey)
+		consumerTag := handler.GetSetting(ivConsumerTag)
+		durable, err := strconv.ParseBool(handler.GetSetting(ivDurable))
+		if err != nil {
+			return err
+		}
+		autoDelete, err := strconv.ParseBool(handler.GetSetting(ivAutoDelete))
+		if err != nil {
+			return err
+		}
+		exclusive, err := strconv.ParseBool(handler.GetSetting(ivExclusive))
+		if err != nil {
+			return err
+		}
+		noWait, err := strconv.ParseBool(handler.GetSetting(ivNoWait))
+		if err != nil {
+			return err
+		}
+		noAck, err := strconv.ParseBool(handler.GetSetting(ivNoAck))
+		if err != nil {
+			return err
+		}
+		consumer, err := t.NewConsumer(uri, exchange, exchangeType, queueName, bindingKey, consumerTag, durable, autoDelete, exclusive, noWait, noAck, t.handlers[i])
 		if err != nil {
 			log.Error("Error Creating Consumer")
 			return err
@@ -130,7 +154,7 @@ func (t *AMQPTrigger) Stop() error {
 	return nil
 }
 
-func (t *AMQPTrigger) NewConsumer(amqpURI, exchange, exchangeType, queueName, key, ctag string, handler *trigger.Handler) (*Consumer, error) {
+func (t *AMQPTrigger) NewConsumer(amqpURI, exchange, exchangeType, queueName, key, ctag string, durable bool, autoDelete bool, exclusive bool, noWait bool, noAck bool, handler *trigger.Handler) (*Consumer, error) {
 	c := &Consumer{
 		conn:    nil,
 		channel: nil,
@@ -161,10 +185,10 @@ func (t *AMQPTrigger) NewConsumer(amqpURI, exchange, exchangeType, queueName, ke
 	if err = c.channel.ExchangeDeclare(
 		exchange,     // name of the exchange
 		exchangeType, // type
-		true,         // durable
-		false,        // delete when complete
-		false,        // internal
-		false,        // noWait
+		durable,      // durable
+		autoDelete,   // delete when complete
+		exclusive,    // internal
+		noWait,       // noWait
 		nil,          // arguments
 	); err != nil {
 		return nil, fmt.Errorf("Exchange Declare: %s", err)
@@ -172,12 +196,12 @@ func (t *AMQPTrigger) NewConsumer(amqpURI, exchange, exchangeType, queueName, ke
 
 	log.Infof("declared Exchange, declaring Queue %q", queueName)
 	queue, err := c.channel.QueueDeclare(
-		queueName, // name of the queue
-		true,      // durable
-		false,     // delete when unused
-		false,     // exclusive
-		false,     // noWait
-		nil,       // arguments
+		queueName,  // name of the queue
+		durable,    // durable
+		autoDelete, // delete when unused
+		exclusive,  // exclusive
+		noWait,     // noWait
+		nil,        // arguments
 	)
 	if err != nil {
 		return nil, fmt.Errorf("Queue Declare: %s", err)
@@ -190,7 +214,7 @@ func (t *AMQPTrigger) NewConsumer(amqpURI, exchange, exchangeType, queueName, ke
 		queue.Name, // name of the queue
 		key,        // bindingKey
 		exchange,   // sourceExchange
-		false,      // noWait
+		noWait,     // noWait
 		nil,        // arguments
 	); err != nil {
 		return nil, fmt.Errorf("Queue Bind: %s", err)
@@ -200,10 +224,10 @@ func (t *AMQPTrigger) NewConsumer(amqpURI, exchange, exchangeType, queueName, ke
 	deliveries, err := c.channel.Consume(
 		queue.Name, // name
 		c.tag,      // consumerTag,
-		false,      // noAck
-		false,      // exclusive
+		noAck,      // noAck
+		exclusive,  // exclusive
 		false,      // noLocal
-		false,      // noWait
+		noWait,     // noWait
 		nil,        // arguments
 	)
 	if err != nil {

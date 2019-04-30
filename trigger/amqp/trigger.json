@@ -70,6 +70,26 @@
       {
         "name": "consumerTag",
         "type": "string"
+      },
+      {
+        "name": "durable",
+        "type": "boolean"
+      },
+      {
+        "name": "autoDelete",
+        "type": "boolean"
+      },
+      {
+        "name": "exclusive",
+        "type": "boolean"
+      },
+      {
+        "name": "noWait",
+        "type": "boolean"
+      },
+      {
+        "name": "noAck",
+        "type": "boolean"
       }
     ]
   }
