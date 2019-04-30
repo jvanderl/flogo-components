@@ -100,16 +100,19 @@ func (t *AMQPTrigger) Start() error {
 
 	log.Info("Adding Listeners")
 	for i, handler := range t.config.Handlers {
+		log.Info("Creating new Consumer...")
+		tag := "tag" + string(i)
+		consumer := AMQPConsumer{nil, nil, tag, make(chan error)}
 		log.Info("Creating new Channel...")
-		ch, err := conn.Channel()
+		consumer.channel, err = conn.Channel()
 		if err != nil {
 			log.Error("Error Creating Channel")
 			return err
 		}
-		defer ch.Close()
+		defer consumer.channel.Close()
 		queueName := handler.GetSetting("queueName")
 		log.Infof("Declaring queue %s...", queueName)
-		q, err := ch.QueueDeclare(
+		q, err := consumer.channel.QueueDeclare(
 			queueName, // name
 			false,     // durable
 			false,     // delete when unused
@@ -122,7 +125,7 @@ func (t *AMQPTrigger) Start() error {
 			return err
 		}
 		log.Info("Creating consumer for queue")
-		msgs, err := ch.Consume(
+		consumer.msgs, err = consumer.channel.Consume(
 			q.Name, // queue
 			"",     // consumer
 			true,   // auto-ack
@@ -135,8 +138,6 @@ func (t *AMQPTrigger) Start() error {
 			log.Error("Failed to register a consumer")
 			return err
 		}
-		tag := "tag" + string(i)
-		consumer := AMQPConsumer{ch, msgs, tag, make(chan error)}
 		Consumers = append(Consumers, consumer)
 	}
 	log.Info("Done. Starting listener.")
