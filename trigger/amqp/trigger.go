@@ -242,12 +242,8 @@ func (t *AMQPTrigger) handle(deliveries <-chan amqp.Delivery, done chan error, h
 		log.Infof("Content Type: %s ", d.ContentType)
 		log.Infof("Routing Key: %s ", d.RoutingKey)
 		t.Execute(handler, d.Body, d.ContentType, d.RoutingKey)
-		//		t.RunAction(actionID, "tesmessage", d.ContentType, d.RoutingKey)
-		//		t.RunAction(actionID, string(d.Body), d.ContentType, d.RoutingKey)
 		d.Ack(false)
 	}
-	//**** TODO add actual response runaction here ****
-
 	log.Infof("handle: deliveries channel closed")
 	done <- nil
 }
@@ -257,7 +253,7 @@ func (t *AMQPTrigger) Execute(handler *trigger.Handler, payload []byte, contentT
 	log.Debug("Starting process")
 
 	triggerData := map[string]interface{}{
-		"message":     payload,
+		"message":     string(payload),
 		"contentType": contentType,
 		"routingKey":  routingKey,
 	}
