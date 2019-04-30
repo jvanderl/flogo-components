@@ -149,7 +149,7 @@ Configure the Trigger to start "testFlow". So in this case the "endpoints" "sett
 
 ```json
 {
-  "name": "eftl",
+  "name": "amqp",
   "settings": {
         "server": "localhost",
         "port": "5672",

@@ -97,9 +97,9 @@ func (t *AMQPTrigger) Start() error {
 	password := t.config.GetSetting(ivPassword)
 
 	uri := "amqp://" + userID + ":" + password + "@" + serverName + ":" + serverPort + "/"
-	log.Info("Adding Listeners")
+	log.Debug("Adding Listeners")
 	for i, handler := range t.config.Handlers {
-		log.Info("Creating new Consumer...")
+		log.Debug("Creating new Consumer...")
 		exchange := handler.GetSetting(ivExchange)
 		exchangeType := handler.GetSetting(ivExchangeType)
 		queueName := handler.GetSetting(ivQueueName)
@@ -144,7 +144,7 @@ func (t *AMQPTrigger) Start() error {
 func (t *AMQPTrigger) Stop() error {
 	// stop the trigger
 
-	log.Infof("shutting down")
+	log.Debugf("shutting down")
 	for _, c := range Consumers {
 		if err := c.Shutdown(); err != nil {
 			log.Errorf("error during shutdown: %s", err)
@@ -165,7 +165,7 @@ func (t *AMQPTrigger) NewConsumer(amqpURI, exchange, exchangeType, queueName, ke
 
 	var err error
 
-	log.Infof("dialing %q", amqpURI)
+	log.Debugf("dialing %q", amqpURI)
 	c.conn, err = amqp.Dial(amqpURI)
 	if err != nil {
 		return nil, fmt.Errorf("Dial: %s", err)
@@ -175,13 +175,13 @@ func (t *AMQPTrigger) NewConsumer(amqpURI, exchange, exchangeType, queueName, ke
 		fmt.Printf("closing: %s", <-c.conn.NotifyClose(make(chan *amqp.Error)))
 	}()
 
-	log.Infof("got Connection, getting Channel")
+	log.Debugf("got Connection, getting Channel")
 	c.channel, err = c.conn.Channel()
 	if err != nil {
 		return nil, fmt.Errorf("Channel: %s", err)
 	}
 
-	log.Infof("got Channel, declaring Exchange (%q)", exchange)
+	log.Debugf("got Channel, declaring Exchange (%q)", exchange)
 	if err = c.channel.ExchangeDeclare(
 		exchange,     // name of the exchange
 		exchangeType, // type
@@ -194,7 +194,7 @@ func (t *AMQPTrigger) NewConsumer(amqpURI, exchange, exchangeType, queueName, ke
 		return nil, fmt.Errorf("Exchange Declare: %s", err)
 	}
 
-	log.Infof("declared Exchange, declaring Queue %q", queueName)
+	log.Debugf("declared Exchange, declaring Queue %q", queueName)
 	queue, err := c.channel.QueueDeclare(
 		queueName,  // name of the queue
 		durable,    // durable
@@ -207,7 +207,7 @@ func (t *AMQPTrigger) NewConsumer(amqpURI, exchange, exchangeType, queueName, ke
 		return nil, fmt.Errorf("Queue Declare: %s", err)
 	}
 
-	log.Infof("declared Queue (%q %d messages, %d consumers), binding to Exchange (key %q)",
+	log.Debugf("declared Queue (%q %d messages, %d consumers), binding to Exchange (key %q)",
 		queue.Name, queue.Messages, queue.Consumers, key)
 
 	if err = c.channel.QueueBind(
@@ -220,7 +220,7 @@ func (t *AMQPTrigger) NewConsumer(amqpURI, exchange, exchangeType, queueName, ke
 		return nil, fmt.Errorf("Queue Bind: %s", err)
 	}
 
-	log.Infof("Queue bound to Exchange, starting Consume (consumer tag %q)", c.tag)
+	log.Debugf("Queue bound to Exchange, starting Consume (consumer tag %q)", c.tag)
 	deliveries, err := c.channel.Consume(
 		queue.Name, // name
 		c.tag,      // consumerTag,
@@ -263,12 +263,12 @@ func (t *AMQPTrigger) handle(deliveries <-chan amqp.Delivery, done chan error, h
 			d.DeliveryTag,
 			d.Body,
 		)
-		log.Infof("Content Type: %s ", d.ContentType)
-		log.Infof("Routing Key: %s ", d.RoutingKey)
+		log.Debugf("Content Type: %s ", d.ContentType)
+		log.InfDebugfof("Routing Key: %s ", d.RoutingKey)
 		t.Execute(handler, d.Body, d.ContentType, d.RoutingKey)
 		d.Ack(false)
 	}
-	log.Infof("handle: deliveries channel closed")
+	log.Debugf("handle: deliveries channel closed")
 	done <- nil
 }
 
