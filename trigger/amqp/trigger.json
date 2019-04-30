@@ -42,7 +42,25 @@
   "handler": {
     "settings": [
       {
+        "name": "exchange",
+        "type": "string"
+      },
+      {
+        "name": "exchangeType",
+        "type": "string",
+        "allowed" : ["direct", "fanout", "topic", "x-custom"],
+        "value" : "direct"
+      },
+      {
         "name": "queueName",
+        "type": "string"
+      },
+      {
+        "name": "bindingKey",
+        "type": "string"
+      },
+      {
+        "name": "consumerTag",
         "type": "string"
       }
     ]

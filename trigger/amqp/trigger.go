@@ -1,6 +1,8 @@
 package amqp
 
 import (
+	"fmt"
+
 	"github.com/TIBCOSoftware/flogo-lib/core/action"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
@@ -27,13 +29,20 @@ const (
 	ovMessage = "message"
 )
 
-type AMQPConsumer struct {
+type Consumer struct {
+	conn    *amqp.Connection
 	channel *amqp.Channel
-	queue   amqp.Queue
-	msgs    <-chan amqp.Delivery
 	tag     string
 	done    chan error
 }
+
+/*type AMQPConsumer struct {
+	channel *amqp.Channel
+	msgs    <-chan amqp.Delivery
+	tag     string
+	done    chan error
+}*/
+var Consumers []Consumer
 
 // AMQPTriggerFactory AMQP Trigger factory
 type AMQPTriggerFactory struct {
@@ -85,78 +94,95 @@ func (t *AMQPTrigger) Start() error {
 	userID := t.config.GetSetting(ivUserID)
 	password := t.config.GetSetting(ivPassword)
 
-	amqpURI := "amqp://" + userID + ":" + password + "@" + serverName + ":" + serverPort + "/"
-	log.Infof("Connecting to AMQP server %s...", amqpURI)
-	conn, err := amqp.Dial(amqpURI)
-	if err != nil {
-		log.Error("Error connecting to AMQP server")
-		return err
-	}
-	log.Info("Connected")
-	defer conn.Close()
+	uri := "amqp://" + userID + ":" + password + "@" + serverName + ":" + serverPort + "/"
+	/*
+		log.Infof("Connecting to AMQP server %s...", amqpURI)
+		conn, err := amqp.Dial(amqpURI)
+		if err != nil {
+			log.Error("Error connecting to AMQP server")
+			return err
+		}
+		log.Info("Connected")
+		defer conn.Close()
 
-	// Create array of channels for all handlers
+		// Create array of channels for all handlers
 
-	var Consumers []AMQPConsumer
-
+		var Consumers []AMQPConsumer
+	*/
 	log.Info("Adding Listeners")
-	for i, handler := range t.config.Handlers {
+	for _, handler := range t.config.Handlers {
 		log.Info("Creating new Consumer...")
-		tag := "tag" + string(i)
-		var queue amqp.Queue
-		consumer := AMQPConsumer{nil, queue, nil, tag, make(chan error)}
-		log.Info("Creating new Channel...")
-		consumer.channel, err = conn.Channel()
-		if err != nil {
-			log.Error("Error Creating Channel")
-			return err
-		}
-		defer consumer.channel.Close()
+		//tag := "tag" + string(i)
+
+		//		consumer := AMQPConsumer{nil,  nil, tag, make(chan error)}
+		exchange := handler.GetSetting("exchange")
+		exchangeType := handler.GetSetting("exchangeType")
 		queueName := handler.GetSetting("queueName")
-		log.Infof("Declaring queue %s...", queueName)
-		consumer.queue, err = consumer.channel.QueueDeclare(
-			queueName, // name
-			false,     // durable
-			false,     // delete when unused
-			false,     // exclusive
-			false,     // no-wait
-			nil,       // arguments
-		)
+		bindingKey := handler.GetSetting("bindingKey")
+		consumerTag := handler.GetSetting("consumerTag")
+
+		//		consumer, err := NewConsumer(*uri, *exchange, *exchangeType, *queueName, *bindingKey, *consumerTag)
+		consumer, err := NewConsumer(uri, exchange, exchangeType, queueName, bindingKey, consumerTag)
 		if err != nil {
-			log.Error("Failed to declare a queue")
+			log.Error("Error Creating Consumer")
 			return err
 		}
-		log.Info("Creating consumer for queue")
-		consumer.msgs, err = consumer.channel.Consume(
-			consumer.queue.Name, // queue
-			"",                  // consumer
-			true,                // auto-ack
-			false,               // exclusive
-			false,               // no-local
-			false,               // no-wait
-			nil,                 // args
-		)
-		if err != nil {
-			log.Error("Failed to register a consumer")
-			return err
-		}
-		Consumers = append(Consumers, consumer)
+
+		/*		log.Info("Creating new Channel...")
+				consumer.channel, err = conn.Channel()
+				if err != nil {
+					log.Error("Error Creating Channel")
+					return err
+				}
+				defer consumer.channel.Close()
+				queueName := handler.GetSetting("queueName")
+				log.Infof("Declaring queue %s...", queueName)
+				q, err := consumer.channel.QueueDeclare(
+					queueName, // name
+					false,     // durable
+					false,     // delete when unused
+					q
+					false,     // no-wait
+					nil,       // arguments
+				)
+				if err != nil {
+					log.Error("Failed to declare a queue")
+					return err
+				}
+				log.Info("Creating consumer for queue")
+				consumer.msgs, err = consumer.channel.Consume(
+					q.Name, // queue
+					"",                  // consumer
+					true,                // auto-ack
+					false,               // exclusive
+					false,               // no-local
+					false,               // no-wait
+					nil,                 // args
+				)
+				if err != nil {
+					log.Error("Failed to register a consumer")
+					return err
+				}
+		*/Consumers = append(Consumers, *consumer)
 	}
-	log.Info("Done. Starting listener.")
+	//log.Info("Done. Starting listener.")
 
-	forever := make(chan bool)
+	select {}
 
-	go func() {
-		for i := range Consumers {
-			for d := range Consumers[i].msgs {
-				log.Infof("Received AMQP Message: %s", d.Body)
-				//**** TODO add actual response runaction here ****
+	/*
+		forever := make(chan bool)
+
+		go func() {
+			for i := range Consumers {
+				for d := range Consumers[i].msgs {
+					log.Infof("Received AMQP Message: %s", d.Body)
+					//**** TODO add actual response runaction here ****
+				}
 			}
-		}
-	}()
+		}()
 
-	<-forever
-
+		<-forever
+	*/
 	return nil
 
 }
@@ -164,5 +190,128 @@ func (t *AMQPTrigger) Start() error {
 // Stop implements trigger.Trigger.Start
 func (t *AMQPTrigger) Stop() error {
 	// stop the trigger
+
+	log.Infof("shutting down")
+	for _, c := range Consumers {
+		if err := c.Shutdown(); err != nil {
+			log.Errorf("error during shutdown: %s", err)
+		}
+	}
+
 	return nil
+}
+
+func NewConsumer(amqpURI, exchange, exchangeType, queueName, key, ctag string) (*Consumer, error) {
+	c := &Consumer{
+		conn:    nil,
+		channel: nil,
+		tag:     ctag,
+		done:    make(chan error),
+	}
+
+	var err error
+
+	log.Infof("dialing %q", amqpURI)
+	c.conn, err = amqp.Dial(amqpURI)
+	if err != nil {
+		return nil, fmt.Errorf("Dial: %s", err)
+	}
+
+	go func() {
+		fmt.Printf("closing: %s", <-c.conn.NotifyClose(make(chan *amqp.Error)))
+	}()
+
+	log.Infof("got Connection, getting Channel")
+	c.channel, err = c.conn.Channel()
+	if err != nil {
+		return nil, fmt.Errorf("Channel: %s", err)
+	}
+
+	log.Infof("got Channel, declaring Exchange (%q)", exchange)
+	if err = c.channel.ExchangeDeclare(
+		exchange,     // name of the exchange
+		exchangeType, // type
+		true,         // durable
+		false,        // delete when complete
+		false,        // internal
+		false,        // noWait
+		nil,          // arguments
+	); err != nil {
+		return nil, fmt.Errorf("Exchange Declare: %s", err)
+	}
+
+	log.Infof("declared Exchange, declaring Queue %q", queueName)
+	queue, err := c.channel.QueueDeclare(
+		queueName, // name of the queue
+		true,      // durable
+		false,     // delete when unused
+		false,     // exclusive
+		false,     // noWait
+		nil,       // arguments
+	)
+	if err != nil {
+		return nil, fmt.Errorf("Queue Declare: %s", err)
+	}
+
+	log.Infof("declared Queue (%q %d messages, %d consumers), binding to Exchange (key %q)",
+		queue.Name, queue.Messages, queue.Consumers, key)
+
+	if err = c.channel.QueueBind(
+		queue.Name, // name of the queue
+		key,        // bindingKey
+		exchange,   // sourceExchange
+		false,      // noWait
+		nil,        // arguments
+	); err != nil {
+		return nil, fmt.Errorf("Queue Bind: %s", err)
+	}
+
+	log.Infof("Queue bound to Exchange, starting Consume (consumer tag %q)", c.tag)
+	deliveries, err := c.channel.Consume(
+		queue.Name, // name
+		c.tag,      // consumerTag,
+		false,      // noAck
+		false,      // exclusive
+		false,      // noLocal
+		false,      // noWait
+		nil,        // arguments
+	)
+	if err != nil {
+		return nil, fmt.Errorf("Queue Consume: %s", err)
+	}
+
+	go handle(deliveries, c.done)
+
+	return c, nil
+}
+
+func (c *Consumer) Shutdown() error {
+	// will close() the deliveries channel
+	if err := c.channel.Cancel(c.tag, true); err != nil {
+		return fmt.Errorf("Consumer cancel failed: %s", err)
+	}
+
+	if err := c.conn.Close(); err != nil {
+		return fmt.Errorf("AMQP connection close error: %s", err)
+	}
+
+	defer log.Infof("AMQP shutdown OK")
+
+	// wait for handle() to exit
+	return <-c.done
+}
+
+func handle(deliveries <-chan amqp.Delivery, done chan error) {
+	for d := range deliveries {
+		log.Infof(
+			"got %dB delivery: [%v] %q",
+			len(d.Body),
+			d.DeliveryTag,
+			d.Body,
+		)
+		d.Ack(false)
+	}
+	//**** TODO add actual response runaction here ****
+	log.Infof("handle: deliveries channel closed")
+	done <- nil
 }
