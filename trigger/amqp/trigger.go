@@ -29,6 +29,7 @@ const (
 
 type AMQPConsumer struct {
 	channel *amqp.Channel
+	queue   amqp.Queue
 	msgs    <-chan amqp.Delivery
 	tag     string
 	done    chan error
@@ -102,7 +103,8 @@ func (t *AMQPTrigger) Start() error {
 	for i, handler := range t.config.Handlers {
 		log.Info("Creating new Consumer...")
 		tag := "tag" + string(i)
-		consumer := AMQPConsumer{nil, nil, tag, make(chan error)}
+		var queue amqp.Queue
+		consumer := AMQPConsumer{nil, queue, nil, tag, make(chan error)}
 		log.Info("Creating new Channel...")
 		consumer.channel, err = conn.Channel()
 		if err != nil {
@@ -112,7 +114,7 @@ func (t *AMQPTrigger) Start() error {
 		defer consumer.channel.Close()
 		queueName := handler.GetSetting("queueName")
 		log.Infof("Declaring queue %s...", queueName)
-		q, err := consumer.channel.QueueDeclare(
+		consumer.queue, err = consumer.channel.QueueDeclare(
 			queueName, // name
 			false,     // durable
 			false,     // delete when unused
@@ -126,13 +128,13 @@ func (t *AMQPTrigger) Start() error {
 		}
 		log.Info("Creating consumer for queue")
 		consumer.msgs, err = consumer.channel.Consume(
-			q.Name, // queue
-			"",     // consumer
-			true,   // auto-ack
-			false,  // exclusive
-			false,  // no-local
-			false,  // no-wait
-			nil,    // args
+			consumer.queue.Name, // queue
+			"",                  // consumer
+			true,                // auto-ack
+			false,               // exclusive
+			false,               // no-local
+			false,               // no-wait
+			nil,                 // args
 		)
 		if err != nil {
 			log.Error("Failed to register a consumer")
