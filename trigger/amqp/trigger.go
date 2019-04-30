@@ -240,7 +240,9 @@ func (t *AMQPTrigger) handle(deliveries <-chan amqp.Delivery, done chan error, a
 			d.DeliveryTag,
 			d.Body,
 		)
-		t.RunAction(actionID, d.Body, d.ContentType, d.RoutingKey)
+		log.Infof("Content Type: %s ", d.ContentType)
+		log.Infof("Routing Key: %s ", d.RoutingKey)
+		t.RunAction(actionID, &d.Body, d.ContentType, d.RoutingKey)
 		d.Ack(false)
 	}
 	//**** TODO add actual response runaction here ****
@@ -250,7 +252,7 @@ func (t *AMQPTrigger) handle(deliveries <-chan amqp.Delivery, done chan error, a
 }
 
 // RunAction starts a new Process Instance
-func (t *AMQPTrigger) RunAction(actionID string, payload []byte, contentType string, routingKey string) {
+func (t *AMQPTrigger) RunAction(actionID string, payload *[]byte, contentType string, routingKey string) {
 
 	log.Debug("Starting new Process Instance")
 	log.Debugf("Action Id: %s", actionID)
@@ -276,7 +278,7 @@ func (t *AMQPTrigger) RunAction(actionID string, payload []byte, contentType str
 
 }
 
-func (t *AMQPTrigger) constructStartRequest(message []byte, contentType string, routingKey string) *StartRequest {
+func (t *AMQPTrigger) constructStartRequest(message *[]byte, contentType string, routingKey string) *StartRequest {
 
 	//TODO how to handle reply to, reply feature
 	req := &StartRequest{}
