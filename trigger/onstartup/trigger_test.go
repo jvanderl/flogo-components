@@ -1,6 +1,81 @@
 package onstartup
 
 import (
+	"encoding/json"
+	"testing"
+
+	"github.com/project-flogo/core/action"
+	"github.com/project-flogo/core/support/test"
+	"github.com/project-flogo/core/trigger"
+	"github.com/stretchr/testify/assert"
+)
+
+const testConfig string = `{
+	"id": "onstartup",
+	"ref": "github.com/jvanderl/flogo-components/trigger/onstartup",
+	"handlers": [
+	  {
+		"settings":{
+		},
+		"action":{
+			"id":"dummy"
+		}
+	  }
+	]
+  }
+  `
+
+func TestInitOk(t *testing.T) {
+	f := &Factory{}
+	tgr, err := f.New(nil)
+	assert.Nil(t, err)
+	assert.NotNil(t, tgr)
+}
+
+func TestSingle(t *testing.T) {
+	f := &Factory{}
+
+	config := &trigger.Config{}
+	err := json.Unmarshal([]byte(testConfig), config)
+	assert.Nil(t, err)
+
+	actions := map[string]action.Action{"dummy": test.NewDummyAction(func() {
+		//do nothing
+	})}
+
+	trg, err := test.InitTrigger(f, config, actions)
+	assert.Nil(t, err)
+	assert.NotNil(t, trg)
+
+	trg.Start()
+	trg.Stop()
+}
+
+/*
+func TestTimerTrigger_Initialize(t *testing.T) {
+	f := &Factory{}
+
+	config := &trigger.Config{}
+	err := json.Unmarshal([]byte(testConfig), config)
+	assert.Nil(t, err)
+
+	actions := map[string]action.Action{"dummy": test.NewDummyAction(func() {
+		//do nothing
+	})}
+
+	trg, err := test.InitTrigger(f, config, actions)
+	assert.Nil(t, err)
+	assert.NotNil(t, trg)
+
+	err = trg.Start()
+	assert.Nil(t, err)
+	err = trg.Stop()
+	assert.Nil(t, err)
+
+}
+*/
+/*
+import (
 	"context"
 	"encoding/json"
 	"io/ioutil"
@@ -37,7 +112,7 @@ const testConfig1 string = `{
 
 // Multiple flows configurations
 const testConfig2 string = `{
-  "name": "timer2",
+  "name": "onstartup",
   "settings": {
   },
   "handlers": [
@@ -95,3 +170,4 @@ func TestSingle(t *testing.T) {
 	for {
 	}
 }
+*/

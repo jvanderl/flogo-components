@@ -3,85 +3,78 @@ package onstartup
 import (
 	"context"
 	"time"
-	//"math"
-	//"strconv"
-	//"strings"
-	//"time"
 
-	"github.com/TIBCOSoftware/flogo-lib/core/action"
-	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
-	"github.com/TIBCOSoftware/flogo-lib/logger"
-	//"github.com/carlescere/scheduler"
+	"github.com/project-flogo/core/support/log"
+	"github.com/project-flogo/core/trigger"
 )
 
-// log is the default package logger
-var log = logger.GetLogger("trigger-jvanderl-onstartup")
+var triggerMd = trigger.NewMetadata(&Output{})
 
-//OnStartupTrigger is th main structure for this trigger
-type OnStartupTrigger struct {
-	metadata *trigger.Metadata
-	//runner   action.Runner
-	config   *trigger.Config
-	handlers []*trigger.Handler
-	//timers map[string]*scheduler.Job
+func init() {
+	_ = trigger.Register(&Trigger{}, &Factory{})
 }
 
-//NewFactory create a new Trigger factory
-func NewFactory(md *trigger.Metadata) trigger.Factory {
-	return &OnStartupFactory{metadata: md}
+type Factory struct {
+}
+type Trigger struct {
+	handlers []trigger.Handler
+	logger   log.Logger
 }
 
-// OnStartupFactory Trigger factory
-type OnStartupFactory struct {
-	metadata *trigger.Metadata
+// New implements trigger.Factory.New
+func (*Factory) New(config *trigger.Config) (trigger.Trigger, error) {
+	return &Trigger{}, nil
 }
 
-//New Creates a new trigger instance for a given id
-func (t *OnStartupFactory) New(config *trigger.Config) trigger.Trigger {
-	return &OnStartupTrigger{metadata: t.metadata, config: config}
+func (f *Factory) Metadata() *trigger.Metadata {
+	return triggerMd
 }
 
 // Metadata implements trigger.Trigger.Metadata
-func (t *OnStartupTrigger) Metadata() *trigger.Metadata {
-	return t.metadata
+func (t *Trigger) Metadata() *trigger.Metadata {
+	return triggerMd
 }
 
-// Init implements ext.Trigger.Init
-func (t *OnStartupTrigger) Init(runner action.Runner) {
-	log.Debug("Trigger Init called")
-	//	t.runner = runner
-	//	log.Infof("In init, id: '%s', Metadata: '%+v', Config: '%+v'", t.config.Id, t.metadata, t.config)
+// registerDummyEventHandler is used for dummy event handler registration, this should be replaced
+// with the appropriate event handling mechanism for the trigger.  Some form of a discriminator
+// should be used for dispatching to different handlers.  For example a REST based trigger might
+// dispatch based on the method and path.
+func registerDummyEventHandler(discriminator string, onEvent dummyOnEvent) {
+	//ignore
 }
 
-// Initialize implements ext.Trigger.Initialize
-func (t *OnStartupTrigger) Initialize(ctx trigger.InitContext) error {
-	log.Debug("Trigger Initialize called")
+// dummyOnEvent is a dummy event handler for our dummy event source
+type dummyOnEvent func(interface{})
+
+// Init implements trigger.Init
+func (t *Trigger) Initialize(ctx trigger.InitContext) error {
 
 	t.handlers = ctx.GetHandlers()
+	t.logger = ctx.Logger()
+	t.logger.Info("Trigger Init Called")
 
 	return nil
 }
 
-// Start implements ext.Trigger.Start
-func (t *OnStartupTrigger) Start() error {
-
-	log.Debug("Trigger Start Called")
-
+// Start implements util.Managed.Start
+func (t *Trigger) Start() error {
+	t.logger.Info("Trigger Start Called")
 	for _, handler := range t.handlers {
+		t.logger.Infof("Executing Handler %v", handler)
 		t.Execute(handler)
 	}
 	return nil
 }
 
-// Stop implements ext.Trigger.Stop
-func (t *OnStartupTrigger) Stop() error {
-
+// Stop implements util.Managed.Stop
+func (t *Trigger) Stop() error {
+	//stop servers/services if necessary
 	return nil
 }
 
 // Execute executes any handlers defined immediately on startup
-func (t *OnStartupTrigger) Execute(handler *trigger.Handler) {
-	log.Debug("Starting process")
+func (t *Trigger) Execute(handler trigger.Handler) {
+	t.logger.Debug("Starting process")
 
 	triggerData := map[string]interface{}{
 		"triggerTime": time.Now().String(),
@@ -90,8 +83,8 @@ func (t *OnStartupTrigger) Execute(handler *trigger.Handler) {
 	response, err := handler.Handle(context.Background(), triggerData)
 
 	if err != nil {
-		log.Error("Error starting action: ", err.Error())
+		t.logger.Error("Error starting action: ", err.Error())
 	} else {
-		log.Debugf("Action call successful: %v", response)
+		t.logger.Debugf("Action call successful: %v", response)
 	}
 }
