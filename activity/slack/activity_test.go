@@ -1,5 +1,6 @@
 package slack
 
+/*
 import (
 	"fmt"
 	"io/ioutil"
@@ -8,54 +9,41 @@ import (
 	"github.com/TIBCOSoftware/flogo-contrib/action/flow/test"
 	"github.com/TIBCOSoftware/flogo-lib/core/activity"
 )
+*/
+import (
+	"testing"
 
-var activityMetadata *activity.Metadata
+	"github.com/project-flogo/core/activity"
+	"github.com/project-flogo/core/support/test"
+	"github.com/stretchr/testify/assert"
+)
 
-func getActivityMetadata() *activity.Metadata {
-	if activityMetadata == nil {
-		jsonMetadataBytes, err := ioutil.ReadFile("activity.json")
-		if err != nil {
-			panic("No Json Metadata found for activity.json path")
-		}
-		activityMetadata = activity.NewMetadata(string(jsonMetadataBytes))
-	}
-	return activityMetadata
-}
+func TestRegister(t *testing.T) {
 
-func TestCreate(t *testing.T) {
-	act := NewActivity(getActivityMetadata())
-	if act == nil {
-		t.Error("Activity Not Created")
-		t.Fail()
-		return
-	}
+	ref := activity.GetRef(&Activity{})
+	act := activity.Get(ref)
+
+	assert.NotNil(t, act)
 }
 
 func TestEval(t *testing.T) {
 
-	defer func() {
-		if r := recover(); r != nil {
-			t.Failed()
-			t.Errorf("panic during execution: %v", r)
-		}
-	}()
-	act := NewActivity(getActivityMetadata())
-	tc := test.NewTestActivityContext(getActivityMetadata())
-	//setup attrs
+	act := &Activity{}
+	tc := test.NewActivityContext(act.Metadata())
+	input := &Input{}
+	input.Token = "<YOUR_TOKEN_HERE>"
+	input.Channel = "flogo"
+	input.Message = "Hello from FLOGO!"
 
-	fmt.Println("Publishing a flogo test message to Slack")
+	err := tc.SetInputObject(input)
+	assert.Nil(t, err)
 
-	tc.SetInput("token", "<your token here>")
-	tc.SetInput("channel", "sbb")
-	tc.SetInput("message", "Hello from FLOGO 2")
+	done, err := act.Eval(tc)
+	assert.True(t, done)
+	assert.Nil(t, err)
 
-	act.Eval(tc)
-
-	result := tc.GetOutput("result")
-	fmt.Println("result: ", result)
-
-	if result == nil {
-		t.Fail()
-	}
-
+	output := &Output{}
+	err = tc.GetOutputObject(output)
+	assert.Nil(t, err)
+	assert.Equal(t, "OK", output.Result)
 }
