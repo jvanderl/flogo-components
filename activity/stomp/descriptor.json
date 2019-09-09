@@ -1,0 +1,33 @@
+{
+  "name": "stomp",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/stomp",
+  "version": "0.0.1",
+  "title": "Send Stomp Message",
+  "description": "Sends a message using Stomp",
+  "author": "Jan van der Lugt <jvanderl@tibco.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/activity/stomp" ,
+  "input":[
+    {
+      "name": "address",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "destination",
+      "type": "string",
+      "value": ""
+    },
+    {
+      "name": "message",
+      "type": "string",
+      "value": ""
+    }
+  ],
+  "output": [
+    {
+      "name": "result",
+      "type": "string"
+    }
+  ]
+}
