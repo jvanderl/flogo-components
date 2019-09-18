@@ -5,7 +5,9 @@ import (
 )
 
 type Settings struct {
-	Address string `md:"address"` // The address of the stomp server. Example: localhost:61613
+	Address  string `md:"address"`  // The address of the stomp server. Example: localhost:61613
+	UserName string `md:"username"` // The username used to login to the Stomp server. Example admin
+	Password string `md:"password"` // The password used to login to the Stomp server. Example admin
 }
 
 type HandlerSettings struct {

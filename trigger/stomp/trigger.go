@@ -56,9 +56,20 @@ func (f *Factory) Metadata() *trigger.Metadata {
 // Init implements trigger.Init
 func (t *Trigger) Initialize(ctx trigger.InitContext) error {
 
+	//Stomp Connection Options
+
+	var options []func(*stomp.Conn) error = []func(*stomp.Conn) error{
+		stomp.ConnOpt.Login(t.settings.UserName, t.settings.Password),
+		stomp.ConnOpt.Host(t.settings.Address),
+		stomp.ConnOpt.HeartBeat(0, 0),
+	}
+
 	t.logger = ctx.Logger()
 
-	conn, err := connectStomp(t.settings.Address)
+	t.logger.Infof("Connecting to Stomp server: %v", t.settings.Address)
+
+	//conn, err := connectStomp(t.settings.Address)
+	conn, err := stomp.Dial("tcp", t.settings.Address, options...)
 	if err != nil {
 		t.logger.Errorf("Error connecting to Stomp: %v", err)
 		return err
@@ -77,7 +88,6 @@ func (t *Trigger) Initialize(ctx trigger.InitContext) error {
 // NewStompHandler creates a new stomp handler to handle a topic
 func (t *Trigger) NewStompHandler(handler trigger.Handler) (*StompHandler, error) {
 
-	t.logger.Info("Inside NewStompHandler")
 	stompHandler := &StompHandler{logger: t.logger, handler: handler}
 
 	handlerSetting := &HandlerSettings{}
@@ -90,7 +100,7 @@ func (t *Trigger) NewStompHandler(handler trigger.Handler) (*StompHandler, error
 		return nil, fmt.Errorf("source string was not provided for handler: [%s]", handler)
 	}
 
-	t.logger.Infof("Initializing subscription to source [%s]", handlerSetting.Source)
+	t.logger.Debugf("Initializing subscription to source [%s]", handlerSetting.Source)
 
 	return stompHandler, nil
 }
@@ -108,7 +118,7 @@ type dummyOnEvent func(interface{})
 
 // Start implements util.Managed.Start
 func (t *Trigger) Start() error {
-	t.logger.Info("Inside Trigger Start")
+	t.logger.Debug("Trigger Starting")
 	for _, stompHandler := range t.stompHandlers {
 		// start subscribing
 
@@ -125,7 +135,6 @@ func (t *Trigger) Start() error {
 			t.logger.Info("Error subscribing to destination")
 			return err
 		}
-		t.logger.Infof("Subscription to '%v' active: %v", stompHandler.subscription, stompHandler.subscription.Active())
 
 	}
 
@@ -143,6 +152,7 @@ func (t *Trigger) Start() error {
 // Stop implements util.Managed.Stop
 func (t *Trigger) Stop() error {
 	//stop servers/services if necessary
+	t.logger.Debug("Trigger Stopping")
 	for _, handler := range t.stompHandlers {
 		err := handler.subscription.Unsubscribe()
 		if err != nil {

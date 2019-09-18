@@ -11,6 +11,16 @@
       "name": "address",
       "type": "string",
       "description": "The address of the Stomp server to connect to"
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "description": "The username used to login to the Stomp server"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "description": "The password used to login to the Stomp server"
     }
   ],
   "output": [

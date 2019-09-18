@@ -19,7 +19,18 @@ Outputs and Endpoint:
   "settings":[
     {
       "name": "address",
-      "type": "string"
+      "type": "string",
+      "description": "The address of the Stomp server to connect to"
+    },
+    {
+      "name": "username",
+      "type": "string",
+      "description": "The username used to login to the Stomp server"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "description": "The password used to login to the Stomp server"
     }
   ],
   "output": [
@@ -47,6 +58,8 @@ Outputs and Endpoint:
 | Setting   | Description    |
 |:----------|:---------------|
 | address |  The address to connect to Stomp server. Example: localhost:61613 |
+| username |  The username used to login to the Stomp server. Example admin |
+| password |  The password used to login to the Stomp server. Example admin |
 
 ## Ouputs
 | Output   | Description    |
@@ -68,6 +81,8 @@ Subscribe to messages on source `flogo` on stomp server `localhost:61613`
   "name": "stomp",
   "settings": {
     "address": "localhost:61613",
+    "username": "admin",
+    "password": "admin",
   },
   "handlers": [
     {
