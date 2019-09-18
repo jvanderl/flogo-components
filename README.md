@@ -36,6 +36,7 @@ Collection of custom built flogo components
 * [kafka](trigger/kafka): Receive messages from Kafka
 * [mqtt2](trigger/mqtt2): Receive messages from MQTT
 * [slack](trigger/slack): Receive messages from Slack
+* [slack](trigger/stomp): Receive messages from Stomp
 * [tcmsub](trigger/tcmsub): Receive messages from TIBCO Cloud Messaging
 * [timer2](trigger/timer2): Start flow from timer
 * [wsserver](trigger/wsserver): Receive messages on built-in WebSocket server
