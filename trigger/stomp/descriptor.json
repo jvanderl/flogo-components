@@ -1,0 +1,38 @@
+{
+  "name": "stomp",
+  "type": "flogo:trigger",
+  "ref": "github.com/jvanderl/flogo-components/trigger/stomp",
+  "version": "0.0.1",
+  "title": "Stomp",
+  "description": "Subscribe to Stomp",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/stomp",
+  "settings":[
+    {
+      "name": "address",
+      "type": "string",
+      "description": "The address of the Stomp server to connect to"
+    }
+  ],
+  "output": [
+    {
+      "name": "message",
+      "type": "any",
+      "description": "The message that was received"
+    },
+    {
+      "name": "originalSource",
+      "type": "string",
+      "description": "The original topic or queue the message was received on"
+    }
+  ],
+  "handler": {
+    "settings": [
+      {
+        "name": "source",
+        "type": "string",
+        "required": "true",
+        "description": "The Stomp topic or queue on which to listen for messages"        
+      }
+    ]
+  }
+}
