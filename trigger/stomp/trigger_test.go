@@ -54,7 +54,7 @@ const testConfig2 string = `{
 	]
   }`
 
-func TestRestTrigger_Initialize(t *testing.T) {
+func TestTrigger_Init(t *testing.T) {
 
 	f := &Factory{}
 
@@ -72,7 +72,7 @@ func TestRestTrigger_Initialize(t *testing.T) {
 
 }
 
-func TestSingle(t *testing.T) {
+func TestTrigger_Single(t *testing.T) {
 	f := &Factory{}
 
 	config := &trigger.Config{}
@@ -89,10 +89,9 @@ func TestSingle(t *testing.T) {
 
 	trg.Start()
 	trg.Stop()
-
 }
 
-func TestMulti(t *testing.T) {
+func TestTrigger_Multi(t *testing.T) {
 	f := &Factory{}
 
 	config := &trigger.Config{}

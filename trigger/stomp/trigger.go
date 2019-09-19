@@ -35,7 +35,7 @@ type Trigger struct {
 type StompHandler struct {
 	logger       log.Logger
 	handler      trigger.Handler
-	subscription stomp.Subscription
+	subscription *stomp.Subscription
 }
 
 // New implements trigger.Factory.New
@@ -130,7 +130,8 @@ func (t *Trigger) Start() error {
 		}
 		destination := handlerSetting.Source
 		t.logger.Infof("Subscribing to destination: '%v'", destination)
-		err = t.Subscribe(destination, stompHandler)
+
+		stompHandler.subscription, err = t.conn.Subscribe(handlerSetting.Source, stomp.AckAuto)
 		if err != nil {
 			t.logger.Info("Error subscribing to destination")
 			return err
@@ -179,23 +180,4 @@ func newActionHandler(t *Trigger, handler trigger.Handler, msg interface{}, dest
 	} else {
 		t.logger.Debugf("Action call successful: %v", response)
 	}
-}
-
-// Connect to Stomp
-func connectStomp(address string) (*stomp.Conn, error) {
-	return stomp.Dial("tcp", address)
-}
-
-// Subscribe Message from destination
-// func handler handle msg reveived from destination
-//func (t *Trigger) Subscribe(destination string, stompHandler *StompHandler, handler func(tr *Trigger, sh *trigger.Handler, msg string, destination string, err error)) error {
-func (t *Trigger) Subscribe(destination string, stompHandler *StompHandler) error {
-
-	sub, err := t.conn.Subscribe(destination, stomp.AckAuto)
-
-	if err != nil {
-		return err
-	}
-	stompHandler.subscription = *sub
-	return err
 }
