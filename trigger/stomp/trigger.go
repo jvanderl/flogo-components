@@ -119,7 +119,8 @@ type dummyOnEvent func(interface{})
 // Start implements util.Managed.Start
 func (t *Trigger) Start() error {
 	t.logger.Debug("Trigger Starting")
-	for _, stompHandler := range t.stompHandlers {
+
+	for i, stompHandler := range t.stompHandlers {
 		// start subscribing
 
 		handlerSetting := &HandlerSettings{}
@@ -131,7 +132,7 @@ func (t *Trigger) Start() error {
 		destination := handlerSetting.Source
 		t.logger.Infof("Subscribing to destination: '%v'", destination)
 
-		stompHandler.subscription, err = t.conn.Subscribe(handlerSetting.Source, stomp.AckAuto)
+		stompHandler.subscription, err = t.conn.Subscribe(handlerSetting.Source, stomp.AckAuto, stomp.SubscribeOpt.Header("id", string(i)))
 		if err != nil {
 			t.logger.Info("Error subscribing to destination")
 			return err
@@ -166,7 +167,7 @@ func (t *Trigger) Stop() error {
 
 // Execute executes any handlers defined immediately on startup
 func newActionHandler(t *Trigger, handler trigger.Handler, msg interface{}, destination string) {
-	t.logger.Infof("Inside ActionHandler")
+	t.logger.Debugf("Inside ActionHandler")
 
 	triggerData := map[string]interface{}{
 		"message":        msg,
