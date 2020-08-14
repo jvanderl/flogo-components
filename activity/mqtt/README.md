@@ -17,11 +17,10 @@ Inputs and Outputs:
 
 ```json
 {
-  "input":[
-   {
+  "settings":[
+    {
       "name": "broker",
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     {
       "name": "id",
@@ -34,22 +33,22 @@ Inputs and Outputs:
     {
       "name": "password",
       "type": "string"
-    },
+    }
+  ],
+  "input":[
+
     {
       "name": "topic",
-      "type": "string",
-      "required": true
+      "type": "string"
     },
     {
       "name": "qos",
       "type": "integer",
-      "required": true,
       "allowed" : ["0", "1", "2"]
     },
     {
       "name": "message",
-      "type": "string",
-      "required": true
+      "type": "string"
     }
   ],
   "output": [
@@ -63,10 +62,13 @@ Inputs and Outputs:
 ## Settings
 | Setting   | Description    |
 |:----------|:---------------|
-| broker    | the MQTT Broker URI (tcp://[hostname]:[port])|
+| broker    | The MQTT Broker URI (tcp://[hostname]:[port])|
 | id        | The MQTT Client ID |         
 | user      | The UserID used when connecting to the MQTT broker |
 | password  | The Password used when connecting to the MQTT broker |
+
+## Inputs
+| Input   | Description    |
 | topic     | Topic on which the message is published |
 | qos       | MQTT Quality of Service |
 | message   | The message payload |

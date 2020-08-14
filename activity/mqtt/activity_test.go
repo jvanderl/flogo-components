@@ -1,64 +1,39 @@
 package mqtt
 
 import (
-	"fmt"
-	"github.com/TIBCOSoftware/flogo-lib/core/activity"
-	"github.com/TIBCOSoftware/flogo-contrib/action/flow/test"
-	"io/ioutil"
 	"testing"
+
+	"github.com/project-flogo/core/activity"
+	"github.com/project-flogo/core/support/test"
+	"github.com/stretchr/testify/assert"
 )
 
-var activityMetadata *activity.Metadata
+func TestRegister(t *testing.T) {
 
-func getActivityMetadata() *activity.Metadata {
-	if activityMetadata == nil {
-		jsonMetadataBytes, err := ioutil.ReadFile("activity.json")
-		if err != nil {
-			panic("No Json Metadata found for activity.json path")
-		}
-		activityMetadata = activity.NewMetadata(string(jsonMetadataBytes))
-	}
-	return activityMetadata
+	ref := activity.GetRef(&Activity{})
+	act := activity.Get(ref)
+
+	assert.NotNil(t, act)
 }
 
-func TestCreate(t *testing.T) {
-	act := NewActivity(getActivityMetadata())
-	if act == nil {
-		t.Error("Activity Not Created")
-		t.Fail()
-		return
-	}
-}
+func TestPlain(t *testing.T) {
 
-func TestEval(t *testing.T) {
+	settings := &Settings{Broker: "tcp://192.168.8.127:1883", Id: "flogo-tester"}
 
-	defer func() {
-		if r := recover(); r != nil {
-			t.Failed()
-			t.Errorf("panic during execution: %v", r)
-		}
-	}()
+	iCtx := test.NewActivityInitContext(settings, nil)
+	act, err := New(iCtx)
+	assert.Nil(t, err)
 
-	act := NewActivity(getActivityMetadata())
-	tc := test.NewTestActivityContext(getActivityMetadata())
-	//setup attrs
+	tc := test.NewActivityContext(act.Metadata())
+	tc.SetInput("Topic", "bla")
+	tc.SetInput("Qos", 0)
+	tc.SetInput("Message", "blabla")
+	done, err := act.Eval(tc)
+	assert.Nil(t, err)
+	assert.True(t, done)
 
-	fmt.Println("Publishing a flogo test message to topic 'flogo' on broker 'localhost:1883'")
-
-	tc.SetInput("broker", "tcp://127.0.0.1:1883")
-	tc.SetInput("id", "flogo_tester")
-	tc.SetInput("topic", "flogo")
-	tc.SetInput("qos", 0)
-	tc.SetInput("message", "This is a test message from flogo")
-
-	act.Eval(tc)
-
-	//check result attr
-	result := tc.GetOutput("result")
-	fmt.Println("result: ", result)
-
-	if result == nil {
-		t.Fail()
-	}
-
+	output := &Output{}
+	err = tc.GetOutputObject(output)
+	assert.Nil(t, err)
+	assert.Equal(t, "OK", output.Result)
 }

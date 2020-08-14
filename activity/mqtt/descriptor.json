@@ -2,12 +2,12 @@
   "name": "mqtt",
   "type": "flogo:activity",
   "ref": "github.com/jvanderl/flogo-components/activity/mqtt",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "title": "Send MQTT Message",
   "description": "Pubishes message on MQTT topic",
-  "author": "Jan van der Lugt <jvanderl@tibco.com>",
-  "input":[
-   {
+  "author": "Jan van der Lugt <jvanderl@outlook.com>",
+  "settings":[
+    {
       "name": "broker",
       "type": "string"
     },
@@ -22,7 +22,10 @@
     {
       "name": "password",
       "type": "string"
-    },
+    }
+  ],
+  "input":[
+
     {
       "name": "topic",
       "type": "string"
