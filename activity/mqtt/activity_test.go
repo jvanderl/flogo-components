@@ -25,9 +25,9 @@ func TestPlain(t *testing.T) {
 	assert.Nil(t, err)
 
 	tc := test.NewActivityContext(act.Metadata())
-	tc.SetInput("Topic", "bla")
-	tc.SetInput("Qos", 0)
-	tc.SetInput("Message", "blabla")
+	tc.SetInput("topic", "bla")
+	tc.SetInput("qos", 0)
+	tc.SetInput("message", "blabla")
 	done, err := act.Eval(tc)
 	assert.Nil(t, err)
 	assert.True(t, done)

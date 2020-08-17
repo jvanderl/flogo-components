@@ -52,14 +52,14 @@ func (act *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		return true, err
 	}
 
-	ctx.Logger().Debugf("Topic: %s", input.Topic)
-	ctx.Logger().Debugf("Qos: %s", input.Qos)
-	ctx.Logger().Debugf("Message: %s", input.Message)
+	ctx.Logger().Infof("Topic: %s", input.Topic)
+	ctx.Logger().Infof("Qos: %v", input.Qos)
+	ctx.Logger().Infof("Message: %s", input.Message)
 
 	if act.conn.client.IsConnected() {
-		ctx.Logger().Debugf("Client is already connected")
+		ctx.Logger().Infof("Client is already connected")
 	} else {
-		ctx.Logger().Debugf("MQTT Publisher connecting")
+		ctx.Logger().Infof("MQTT Publisher connecting")
 		if token := act.conn.client.Connect(); token.Wait() && token.Error() != nil {
 			output := &Output{Result: "ERROR"}
 			err = ctx.SetOutputObject(output)
@@ -67,7 +67,7 @@ func (act *Activity) Eval(ctx activity.Context) (done bool, err error) {
 		}
 	}
 
-	ctx.Logger().Debugf("MQTT Publisher connected, sending message")
+	ctx.Logger().Infof("MQTT Publisher connected, sending message")
 	token := act.conn.client.Publish(input.Topic, byte(input.Qos), false, input.Message)
 	token.Wait()
 	if token.Error() != nil {
