@@ -1,4 +1,4 @@
-module github.com/jvanderl/flogo-components/activity/jvanderl
+module github.com/jvanderl/flogo-components/activity/mqtt
 
 go 1.14
 
