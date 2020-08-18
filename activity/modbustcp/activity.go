@@ -21,7 +21,7 @@ func New(ctx activity.InitContext) (activity.Activity, error) {
 
 	ctx.Logger().Debugf("Settings Server : %s", settings.Server)
 	ctx.Logger().Debugf("Settings Timeout: %s", settings.Timeout)
-	ctx.Logger().Debugf("Settings SlaveID	 : %s", settings.SlaveID)
+	ctx.Logger().Debugf("Settings SlaveID: %s", settings.SlaveID)
 
 	conn, err := getModbusTcpConnection(ctx.Logger(), settings)
 	if err != nil {

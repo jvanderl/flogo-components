@@ -28,7 +28,7 @@ Inputs and Outputs:
     },
     {
       "name": "slaveId",
-      "type": "number"
+      "type": "uint8"
     }
   ],
   "input":[
