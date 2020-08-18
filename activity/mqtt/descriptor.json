@@ -9,41 +9,54 @@
   "settings":[
     {
       "name": "broker",
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "description": "The MQTT Broker URI (tcp://[hostname]:[port])"
     },
     {
       "name": "id",
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "description": "The MQTT Connection Client ID"
     },
     {
       "name": "user",
-      "type": "string"
+      "type": "string",
+      "description": "The UserID used when connecting to the MQTT broker"
     },
     {
       "name": "password",
-      "type": "string"
+      "type": "string",
+      "description": "The Password used when connecting to the MQTT broker"
     }
   ],
   "input":[
 
     {
       "name": "topic",
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "description": "Topic on which the message is published"
     },
     {
       "name": "qos",
       "type": "integer",
-      "allowed" : ["0", "1", "2"]
+      "allowed" : [0, 1, 2],
+      "required": true,
+      "description": "MQTT Quality of Service. 0 = At most once, 1 = At least once, 2 = Exactly once."
     },
     {
       "name": "message",
-      "type": "string"
+      "type": "string",
+      "required": true,
+      "description": "The message payload"
     }
   ],
   "output": [
     {
       "name": "result",
-      "type": "string"
+      "type": "string",
+      "description": "The result of message sending"
     }
   ]
 }

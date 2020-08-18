@@ -6,14 +6,14 @@ import (
 
 type Settings struct {
 	Broker   string `md:"broker,required"` // The MQTT Broker URI (tcp://[hostname]:[port])
-	Id       string `md:"id,required"`     // The MQTT Client ID
+	Id       string `md:"id,required"`     // The MQTT Connection Client ID
 	User     string `md:"user"`            // The UserID used when connecting to the MQTT broker
 	Password string `md:"password"`        // The Password used when connecting to the MQTT broker
 }
 
 type Input struct {
 	Topic   string `md:"topic,required"`   // Topic on which the message is published
-	Qos     int    `md:"qos,required"`     // MQTT Quality of Service
+	Qos     int    `md:"qos,required"`     // MQTT Quality of Service. 0 = At most once, 1 = At least once, 2 = Exactly once.
 	Message string `md:"message,required"` // The message payload
 }
 

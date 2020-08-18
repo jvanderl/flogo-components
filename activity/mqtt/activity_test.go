@@ -18,16 +18,16 @@ func TestRegister(t *testing.T) {
 
 func TestPlain(t *testing.T) {
 
-	settings := &Settings{Broker: "tcp://192.168.8.127:1883", Id: "flogo-tester"}
+	settings := &Settings{Broker: "tcp://127.0.0.1:1883", Id: "flogo-tester"}
 
 	iCtx := test.NewActivityInitContext(settings, nil)
 	act, err := New(iCtx)
 	assert.Nil(t, err)
 
 	tc := test.NewActivityContext(act.Metadata())
-	tc.SetInput("topic", "bla")
+	tc.SetInput("topic", "flogo")
 	tc.SetInput("qos", 0)
-	tc.SetInput("message", "blabla")
+	tc.SetInput("message", "test message")
 	done, err := act.Eval(tc)
 	assert.Nil(t, err)
 	assert.True(t, done)

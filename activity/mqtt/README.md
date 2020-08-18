@@ -44,7 +44,7 @@ Inputs and Outputs:
     {
       "name": "qos",
       "type": "integer",
-      "allowed" : ["0", "1", "2"]
+      "allowed" : [0, 1, 2]
     },
     {
       "name": "message",
@@ -63,14 +63,14 @@ Inputs and Outputs:
 | Setting   | Description    |
 |:----------|:---------------|
 | broker    | The MQTT Broker URI (tcp://[hostname]:[port])|
-| id        | The MQTT Client ID |         
+| id        | The MQTT Connection Client ID |         
 | user      | The UserID used when connecting to the MQTT broker |
 | password  | The Password used when connecting to the MQTT broker |
 
 ## Inputs
 | Input   | Description    |
 | topic     | Topic on which the message is published |
-| qos       | MQTT Quality of Service |
+| qos       | MQTT Quality of Service. 0 = At most once, 1 = At least once, 2 = Exactly once. |
 | message   | The message payload |
 
 
@@ -80,46 +80,20 @@ Configure a task in flow to publish a "hello world" message on MQTT topic called
 
 ```json
 {
-  "id": 2,
-  "name": "Publish MQTT Message",
-  "type": 1,
-  "activityType": "mqtt",
-  "attributes": [
-    {
-      "name": "broker",
-      "value": "tcp://localhost:1883",
-      "type": "string"
+  "id": "mqtt_3",
+  "name": "Send MQTT Message",
+  "description": "Pubishes message on MQTT topic",
+  "activity": {
+    "ref": "#mqtt",
+    "input": {
+      "message": "hello, world",
+      "qos": 0,
+      "topic": "flogo"
     },
-    {
-      "name": "id",
-      "value": "testmqtt",
-      "type": "string"
-    },
-    {
-      "name": "user",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "name": "password",
-      "value": "",
-      "type": "string"
-    },
-    {
-      "name": "topic",
-      "value": "flogo",
-      "type": "string"
-    },
-    {
-      "name": "qos",
-      "value": "0",
-      "type": "integer"
-    },
-    {
-      "name": "message",
-      "value": "Hello World",
-      "type": "string"
+    "settings": {
+      "broker": "tcp://127.0.0.1:1883",
+      "id": "flogo-test"
     }
-  ]
+  }
 }
 ```
