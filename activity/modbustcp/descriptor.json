@@ -1,0 +1,67 @@
+{
+  "name": "modbustcp",
+  "type": "flogo:activity",
+  "ref": "github.com/jvanderl/flogo-components/activity/modbustcp",
+  "version": "0.0.1",
+  "title": "Modbus TCP Operation",
+  "description": "Performs operation on a Modbus TCP server",
+  "author": "Jan van der Lugt <jvanderl@outlook.com>",
+  "settings":[
+    {
+      "name": "server",
+      "type": "string",
+      "required": true,
+      "description": "The Modbus Server Address and Port ([hostname]:[port])"
+    },
+    {
+      "name": "timeout",
+      "type": "integer",
+      "required": true,
+      "description": "Timeout when connecting to server (seconds)"
+    },
+    {
+      "name": "SlaveId",
+      "type": "number",
+      "required": true,
+      "description": "The ID for that identifies your flogo app as Modbus Slave"
+    }
+  ],
+  "input":[
+
+    {
+      "name": "operation",
+      "type": "string",
+      "allowed" : ["ReadCoils", "ReadDiscreteInputs", "ReadInputRegisters", "ReadHoldingRegisters", "WriteSingleCoil", "WriteMultipleCoils", "WriteSingleRegister", "WriteMultipleRegisters"],
+      "required": true,
+      "description": "The operation to perform"
+    },
+    {
+      "name": "address",
+      "type": "integer",
+      "required": true,
+      "description": "The address where to perform the operation"
+    },
+    {
+      "name": "numElements",
+      "type": "integer",
+      "description": "The number of coils/inputs/registers to be read/written"
+    },
+    {
+      "name": "data",
+      "type": "any",
+      "description": "The data needed to perform the operation"
+    }
+  ],
+  "output": [
+    {
+      "name": "result",
+      "type": "string",
+      "description": "The result status of the operation sending. 'OK' when successful."
+    },
+    {
+      "name": "data",
+      "type": "any",
+      "description": "The data returned from the operation"
+    }
+  ]
+}

@@ -15,6 +15,7 @@ Collection of custom built flogo components
 * [jsontodata](activity/jsontodata): Convert JSON string to data object
 * [kafka](activity/kafka): Send message to Kafka
 * [matchresponse](activity/matchresponse): response to input text based on seach data
+* [modbustcp](activity/modbustcp): Performs operations on a Modbus TCP server
 * [mqtt](activity/mqtt): Publish MQTT Message
 * [redis](activity/redis): Interact with Redis keyspace
 * [replace](activity/replace): Find and replace characters in up to 8 strings
@@ -43,6 +44,6 @@ Collection of custom built flogo components
 
 
 ## Related Information
-These components are built for TIBCO flogo.
+These components are built for Project Flogo.
 Please check (http://www.flogo.io/) for more information.
-On Github: (https://github.com/TIBCOSoftware/flogo)
+On Github: (https://github.com/project-flogo)
