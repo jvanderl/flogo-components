@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/goburrow/modbus"
+	"github.com/project-flogo/core/data/coerce"
 	"github.com/project-flogo/core/support/log"
 )
 
@@ -46,10 +47,14 @@ func getModbusTcpConnection(logger log.Logger, settings *Settings) (*ModbusTcpCo
 
 	mbhandler := modbus.NewTCPClientHandler(settings.Server)
 	mbhandler.Timeout = time.Duration(settings.Timeout) * time.Second
-	mbhandler.SlaveId = settings.SlaveID
+	tmpInt, err := coerce.ToInt(settings.SlaveID)
+	if err != nil {
+		return nil, err
+	}
+	mbhandler.SlaveId = byte(tmpInt)
 	//handler.Logger = logger
 
-	err := mbhandler.Connect()
+	err = mbhandler.Connect()
 	if err != nil {
 		logger.Debugf("Error connecting to Modbus Server: %v\n", err)
 		return nil, err
