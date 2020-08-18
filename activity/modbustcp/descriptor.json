@@ -21,7 +21,7 @@
     },
     {
       "name": "slaveId",
-      "type": "number",
+      "type": "uint8",
       "required": true,
       "description": "The ID for that identifies your flogo app as Modbus Slave"
     }
