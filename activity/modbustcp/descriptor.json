@@ -20,7 +20,7 @@
       "description": "Timeout when connecting to server (seconds)"
     },
     {
-      "name": "SlaveId",
+      "name": "slaveId",
       "type": "number",
       "required": true,
       "description": "The ID for that identifies your flogo app as Modbus Slave"

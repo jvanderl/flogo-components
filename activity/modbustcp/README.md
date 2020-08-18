@@ -27,7 +27,7 @@ Inputs and Outputs:
       "type": "integer"
     },
     {
-      "name": "SlaveId",
+      "name": "slaveId",
       "type": "number"
     }
   ],
