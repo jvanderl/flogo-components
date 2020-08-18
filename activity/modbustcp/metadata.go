@@ -6,8 +6,8 @@ import (
 
 type Settings struct {
 	Server  string `md:"server,required"`  // The Modbus Server Address and Port ([hostname]:[port])
-	Timeout int64  `md:"timeout,required"` // Timeout when connecting to server (seconds)
-	SlaveID uint8  `md:"slaveId,required"` // The ID for that identifies your flogo app as Modbus Slave
+	Timeout int    `md:"timeout,required"` // Timeout when connecting to server (seconds)
+	SlaveID int    `md:"slaveId,required"` // The ID for that identifies your flogo app as Modbus Slave
 }
 
 type Input struct {
