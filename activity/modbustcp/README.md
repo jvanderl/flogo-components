@@ -49,6 +49,11 @@ Inputs and Outputs:
     {
       "name": "data",
       "type": "any"
+    },
+    {
+      "name": "returnAs",
+      "type": "string",
+      "allowed" : ["Default", "Bool", "Int8", "Int16", "Int32", "Int64", "Uint16", "Uint32", "Uint64", "Float32", "Float64"]
     }
   ],
   "output": [
@@ -78,6 +83,7 @@ Inputs and Outputs:
 | address     | The address where to perform the operation |
 | numElements | The number of coils/inputs/registers to be read/written |
 | data        | The data needed to perform the operation (only used for write operations) |
+| returnAs    | The type of data that is returned
 
 ## Outputs
 | Output  | Description    |
