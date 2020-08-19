@@ -15,6 +15,7 @@ type Input struct {
 	Address     uint16      `md:"address,required"`   // The address where to perform the operation
 	NumElements uint16      `md:"numElements"`        // The number of coils/inputs/registers to be read/written
 	Data        interface{} `md:"data"`               // The data needed to perform the operation
+	ReturnAs    string      `md:"returnAs"`           // Return Type ("Default", "Bool", "Int8", "Int16", "Int32", "Int64", "Uint16", "Uint32", "Uint64", "Float32", "Float64")
 }
 
 func (i *Input) ToMap() map[string]interface{} {
@@ -22,6 +23,7 @@ func (i *Input) ToMap() map[string]interface{} {
 		"operation": i.Operation,
 		"address":   i.Address,
 		"data":      i.Data,
+		"returnAs":  i.ReturnAs,
 	}
 }
 
@@ -46,6 +48,11 @@ func (i *Input) FromMap(values map[string]interface{}) error {
 		if err != nil {
 			return err
 		}
+	}
+	if val, ok := values["returnAs"]; ok {
+		i.ReturnAs, err = coerce.ToString(val)
+	} else {
+		i.ReturnAs = "Default"
 	}
 	return nil
 }

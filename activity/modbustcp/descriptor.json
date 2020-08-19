@@ -50,6 +50,12 @@
       "name": "data",
       "type": "any",
       "description": "The data needed to perform the operation"
+    },
+    {
+      "name": "returnAs",
+      "type": "string",
+      "allowed" : ["Default", "Bool", "Int8", "Int16", "Int32", "Int64", "Uint16", "Uint32", "Uint64", "Float32", "Float64"], 
+      "description": "The type of data that is returned"
     }
   ],
   "output": [
