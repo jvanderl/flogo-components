@@ -3,6 +3,7 @@ package mqtt
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
 	"github.com/project-flogo/core/data/metadata"
@@ -150,13 +151,21 @@ type mqttOnEvent func(actualTopic string, message string)
 func newActionHandler(handler trigger.Handler) mqttOnEvent {
 
 	return func(actualTopic string, message string) {
-
-		output := &Output{}
-		output.Message = message
-		output.ActualTopic = actualTopic
-		_, err := handler.Handle(context.Background(), output.ToMap())
-		if err != nil {
-			//handle error
+		handlerSetting := &HandlerSettings{}
+		err := metadata.MapToStruct(handler.Settings(), handlerSetting, true)
+		if err == nil {
+			if strings.HasSuffix(handlerSetting.Topic, "/#") {
+				// is wildcard, now check actual topic starts with wildcard
+				if strings.HasPrefix(actualTopic, strings.TrimSuffix(handlerSetting.Topic, "/#")) {
+					output := &Output{}
+					output.Message = message
+					output.ActualTopic = actualTopic
+					_, err := handler.Handle(context.Background(), output.ToMap())
+					if err != nil {
+						//handle error
+					}
+				}
+			}
 		}
 	}
 }
