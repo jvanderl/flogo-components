@@ -1,0 +1,55 @@
+{
+  "name": "mqtt",
+  "type": "flogo:trigger",
+  "ref": "github.com/jvanderl/flogo-components/trigger/mqtt",
+  "version": "0.0.1",
+  "title": "Receive MQTT Message",
+  "description": "MQTT Topic Subscriber",
+  "author": "Jan van der Lugt <jvanderl@outlook.com>",
+  "homepage": "https://github.com/jvanderl/flogo-components/tree/master/trigger/mqtt",
+  "settings":[
+    {
+      "name": "broker",
+      "type": "string",
+      "description": "The MQTT server to connect to (tcp://[hostname]:[port])"
+    },
+    {
+      "name": "id",
+      "type": "string",
+      "description": "The connection ID"
+    },
+    {
+      "name": "user",
+      "type": "string",
+      "description": "User name"
+    },
+    {
+      "name": "password",
+      "type": "string",
+      "description": "Password"
+    }
+  ],
+  "handler": {
+    "settings": [
+      {
+        "name": "topic",
+        "type": "string"
+      },
+      {
+        "name": "qos",
+        "type": "integer",
+        "allowed" : [0, 1, 2]
+      }
+    ]
+  },
+  "output": [
+    {
+      "name": "message",
+      "type": "string"
+    },
+    {
+      "name": "actualtopic",
+      "type": "string"
+    }
+  ]
+}
