@@ -118,7 +118,7 @@ func TestWriteSingleCoil(t *testing.T) {
 	tc := test.NewActivityContext(act.Metadata())
 	tc.SetInput("operation", "WriteSingleCoil")
 	tc.SetInput("address", 300)
-	tc.SetInput("data", 0xFF00)
+	tc.SetInput("data", 1)
 	done, err := act.Eval(tc)
 	assert.Nil(t, err)
 	assert.True(t, done)

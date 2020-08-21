@@ -96,6 +96,9 @@ func (act *Activity) Eval(ctx activity.Context) (done bool, err error) {
 			return false, nil
 		}
 		coilValue := uint16(tmpInt)
+		if coilValue == 1 {
+			coilValue = 0xFF00
+		}
 		results, err = act.conn.client.WriteSingleCoil(input.Address, coilValue)
 		break
 	case "WriteMultipleCoils":
