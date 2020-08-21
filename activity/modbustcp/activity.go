@@ -61,6 +61,12 @@ func (act *Activity) Eval(ctx activity.Context) (done bool, err error) {
 	ctx.Logger().Debugf("NumElements: %v", input.NumElements)
 	ctx.Logger().Debugf("Data: %v", input.Data)
 
+	err = act.conn.handler.Connect()
+	if err != nil {
+		ctx.Logger().Errorf("Error reconnecting to Modbus Server: %v\n", err)
+		return false, err
+	}
+
 	output := &Output{}
 	var results interface{}
 	switch input.Operation {
