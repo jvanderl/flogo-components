@@ -13,16 +13,22 @@ import (
 
 var triggerMd = trigger.NewMetadata(&Settings{}, &HandlerSettings{}, &Output{})
 
+var logger log.Logger
+
 func init() {
 	_ = trigger.Register(&Trigger{}, &Factory{})
 }
 
 type Trigger struct {
-	settings   *Settings
-	id         string
-	conn       *MqttConnection
-	handlers   []trigger.Handler
-	mqttEvents []mqttOnEvent
+	settings *Settings
+	id       string
+	conn     *MqttConnection
+	handlers []*Handler
+}
+
+type Handler struct {
+	handler trigger.Handler
+	topic   string
 }
 
 type Factory struct {
@@ -49,12 +55,14 @@ func (t *Trigger) Metadata() *trigger.Metadata {
 
 func (t *Trigger) Initialize(ctx trigger.InitContext) error {
 
+	logger = ctx.Logger()
+	logger.Infof("**** IN INIT ****")
 	var err error
 	t.conn, err = getMqttConnection(ctx.Logger(), t.settings)
 	if t.conn.client.IsConnected() {
-		ctx.Logger().Debugf("Client is already connected")
+		logger.Debugf("Client is already connected")
 	} else {
-		ctx.Logger().Debugf("MQTT Publisher connecting")
+		logger.Debugf("MQTT Publisher connecting")
 		if token := t.conn.client.Connect(); token.Wait() && token.Error() != nil {
 			return token.Error()
 		}
@@ -65,12 +73,14 @@ func (t *Trigger) Initialize(ctx trigger.InitContext) error {
 		if err != nil {
 			return err
 		}
-		t.handlers = append(t.handlers, handler)
-		err = t.subscribeTopic(ctx.Logger(), handler, t.conn.client)
+		//t.handlers = append(t.handlers, handler)
+		//err = t.subscribeTopic(ctx.Logger(), handler, t.conn.client)
+		err = t.subscribeTopic(s.Topic, s.Qos, t.conn.client)
 		if err != nil {
 			return err
 		}
-		t.mqttEvents = append(t.mqttEvents, registerMqttEventHandler(s.Topic, newActionHandler(handler)))
+		t.handlers = append(t.handlers, &Handler{handler: handler, topic: s.Topic})
+		//t.mqttEvents = append(t.mqttEvents, registerMqttEventHandler(s.Topic, newActionHandler(handler)))
 	}
 
 	return err
@@ -88,6 +98,18 @@ func (t *Trigger) Start() error {
 func (t *Trigger) Stop() error {
 
 	for _, handler := range t.handlers {
+		if token := t.conn.client.Unsubscribe(handler.topic); token.Wait() && token.Error() != nil {
+			//log.Errorf("Error unsubscribing from topic %s: %s", handlerCfg.GetSetting("topic"), token.Error())
+		}
+	}
+	_ = t.conn.Stop
+	return nil
+}
+
+/*
+func (t *Trigger) Stop() error {
+
+	for _, handler := range t.handlers {
 		handlerSetting := &HandlerSettings{}
 		err := metadata.MapToStruct(handler.Settings(), handlerSetting, true)
 		if err == nil {
@@ -99,7 +121,8 @@ func (t *Trigger) Stop() error {
 	_ = t.conn.Stop
 	return nil
 }
-
+*/
+/*
 func (t *Trigger) readMessages() {
 	for {
 		incoming := <-newMsg
@@ -113,7 +136,47 @@ func (t *Trigger) readMessages() {
 
 	}
 }
+*/
+func (t *Trigger) readMessages() {
+	for {
+		incoming := <-newMsg
+		topic := incoming[0]
+		message := incoming[1]
+		fmt.Printf("RECEIVED TOPIC: %s MESSAGE: %s\n", topic, message)
 
+		for _, val := range t.handlers {
+			if strings.HasSuffix(val.topic, "/#") {
+				// is wildcard, now check actual topic starts with wildcard
+				if strings.HasPrefix(topic, strings.TrimSuffix(val.topic, "/#")) {
+					output := &Output{}
+					output.Message = message
+					output.ActualTopic = topic
+					_, err := val.handler.Handle(context.Background(), output.ToMap())
+					if err != nil {
+						//handle error
+					}
+				}
+			}
+		}
+
+	}
+}
+
+func (t *Trigger) subscribeTopic(topic string, qos int, client mqtt.Client) error {
+
+	logger.Debugf("Subscribing to topic [%s]", topic)
+
+	if token := client.Subscribe(topic, byte(qos), nil); token.Wait() && token.Error() != nil {
+		logger.Errorf("Error subscribing to topic %s: %s", topic, token.Error())
+		return (token.Error())
+	} else {
+		logger.Infof("Subscribed to topic %s", topic)
+	}
+
+	return nil
+}
+
+/*
 func (t *Trigger) subscribeTopic(logger log.Logger, handler trigger.Handler, client mqtt.Client) error {
 
 	handlerSetting := &HandlerSettings{}
@@ -138,7 +201,8 @@ func (t *Trigger) subscribeTopic(logger log.Logger, handler trigger.Handler, cli
 
 	return nil
 }
-
+*/
+/*
 // registerMqttEventHandler is used for mqtt event handler registration
 func registerMqttEventHandler(topic string, onEvent mqttOnEvent) mqttOnEvent {
 	//ignore
@@ -169,3 +233,4 @@ func newActionHandler(handler trigger.Handler) mqttOnEvent {
 		}
 	}
 }
+*/
