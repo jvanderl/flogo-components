@@ -2,7 +2,6 @@ package mqtt
 
 import (
 	"context"
-	"fmt"
 	"strings"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
@@ -56,7 +55,7 @@ func (t *Trigger) Metadata() *trigger.Metadata {
 func (t *Trigger) Initialize(ctx trigger.InitContext) error {
 
 	logger = ctx.Logger()
-	logger.Infof("**** IN INIT ****")
+
 	var err error
 	t.conn, err = getMqttConnection(ctx.Logger(), t.settings)
 	if t.conn.client.IsConnected() {
@@ -99,7 +98,7 @@ func (t *Trigger) Stop() error {
 
 	for _, handler := range t.handlers {
 		if token := t.conn.client.Unsubscribe(handler.topic); token.Wait() && token.Error() != nil {
-			//log.Errorf("Error unsubscribing from topic %s: %s", handlerCfg.GetSetting("topic"), token.Error())
+			logger.Errorf("Error unsubscribing from topic %s: %s", handler.topic, token.Error())
 		}
 	}
 	_ = t.conn.Stop
@@ -142,7 +141,7 @@ func (t *Trigger) readMessages() {
 		incoming := <-newMsg
 		topic := incoming[0]
 		message := incoming[1]
-		fmt.Printf("RECEIVED TOPIC: %s MESSAGE: %s\n", topic, message)
+		logger.Infof("Received topic: %s, Message: %s\n", topic, message)
 
 		for _, val := range t.handlers {
 			if strings.HasSuffix(val.topic, "/#") {
@@ -153,7 +152,18 @@ func (t *Trigger) readMessages() {
 					output.ActualTopic = topic
 					_, err := val.handler.Handle(context.Background(), output.ToMap())
 					if err != nil {
-						//handle error
+						logger.Errorf("Error calling trigger action: %v", err)
+					}
+				}
+			} else {
+				// no wildcard, chech exact topic match
+				if topic == val.topic {
+					output := &Output{}
+					output.Message = message
+					output.ActualTopic = topic
+					_, err := val.handler.Handle(context.Background(), output.ToMap())
+					if err != nil {
+						logger.Errorf("Error calling trigger action: %v", err)
 					}
 				}
 			}

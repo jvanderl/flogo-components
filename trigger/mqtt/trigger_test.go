@@ -33,48 +33,6 @@ const testConfig string = `{
   ]
 }`
 
-const testConfig2 string = `{
-	"name": "mqtt",
-	"settings": {
-	  "broker": "tcp://127.0.0.1:1883",
-	  "id": "flogoEngine",
-	  "user": "",
-	  "password": ""
-	},
-	"handlers": [
-	  {
-		"action":{
-		  "id":"dummy"
-		},
-		"settings": {
-		  "topic": "flogo/#",
-		  "qos": 0
-		}
-	  },
-	  {
-		"action":{
-		  "id":"dummy2"
-		},
-		"settings": {
-		  "topic": "nogo",
-		  "qos": 0
-		}
-	  }
-	]
-}`
-
-/*
-,
-	  {
-		"action":{
-		  "id":"dummy2"
-		},
-		"settings": {
-		  "topic": "nogo",
-		  "qos": 0
-		}
-	  }
-*/
 func TestTrigger_Register(t *testing.T) {
 
 	ref := support.GetRef(&Trigger{})
@@ -104,7 +62,7 @@ func TestMqttTrigger_Initialize(t *testing.T) {
 
 }
 
-func TestEndpointSingle(t *testing.T) {
+func TestEndpoint(t *testing.T) {
 	f := &Factory{}
 
 	config := &trigger.Config{}
@@ -136,50 +94,6 @@ func TestEndpointSingle(t *testing.T) {
 	}
 
 	token := client.Publish("flogo/test_start", 0, false, "Test message payload!")
-	token.Wait()
-
-	client.Disconnect(250)
-
-}
-
-func TestEndpointDouble(t *testing.T) {
-	f := &Factory{}
-
-	config := &trigger.Config{}
-	err := json.Unmarshal([]byte(testConfig2), config)
-	assert.Nil(t, err)
-
-	actions := map[string]action.Action{}
-	actions["dummy"] = test.NewDummyAction(func() {
-		//do nothing
-	})
-	actions["dummy2"] = test.NewDummyAction(func() {
-		//do nothing
-	})
-	trg, err := test.InitTrigger(f, config, actions)
-	assert.Nil(t, err)
-	assert.NotNil(t, trg)
-
-	err = trg.Start()
-	assert.Nil(t, err)
-	defer trg.Stop()
-
-	opts := mqtt.NewClientOptions()
-	opts.AddBroker("tcp://127.0.0.1:1883")
-	opts.SetClientID("flogoClient")
-	opts.SetUsername("")
-	opts.SetPassword("")
-	opts.SetCleanSession(false)
-
-	client := mqtt.NewClient(opts)
-	if token := client.Connect(); token.Wait() && token.Error() != nil {
-		panic(token.Error())
-	}
-
-	token := client.Publish("flogo/test_start", 0, false, "Test to flogo topic")
-	token.Wait()
-
-	token = client.Publish("nogo", 0, false, "Test to Nogo Topic")
 	token.Wait()
 
 	client.Disconnect(250)
